@@ -173,6 +173,7 @@
     <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Filters\LogAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -184,6 +185,7 @@
       <DependentUpon>TobaccoNicotineModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LogModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Region.cs">
       <DependentUpon>TobaccoNicotineModel.tt</DependentUpon>
@@ -213,6 +215,7 @@
       <DependentUpon>TobaccoNicotineModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sql\DataSource.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +238,16 @@
     <Content Include="fonts\ionicons.svg" />
     <Content Include="fonts\materialdesignicons-webfont.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\loader.gif" />
+    <Content Include="Images\Logos\icon.png" />
+    <Content Include="Images\Logos\Nomisma - nero.png" />
+    <Content Include="Images\Logos\Nomisma.png" />
+    <Content Include="Images\Logos\tobaccoApp.png" />
+    <Content Include="Images\restaurant.png" />
+    <Content Include="Images\Sortable\asc.png" />
+    <Content Include="Images\Sortable\bg.png" />
+    <Content Include="Images\Sortable\desc.png" />
+    <Content Include="Images\Users\avatar-1.jpg" />
     <Content Include="Models\TobaccoNicotineModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>TobaccoNicotineModel.edmx</DependentUpon>
@@ -335,18 +348,6 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\ResetPassword.cshtml" />
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\SendCode.cshtml" />
-    <Content Include="Views\Account\VerifyCode.cshtml" />
     <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
     <Content Include="Views\Manage\ChangePassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
@@ -358,8 +359,15 @@
     <Content Include="Views\Excel\Index.cshtml" />
     <Content Include="Scripts\plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.css.map" />
     <Content Include="Scripts\plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.min.css.map" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Uploads\Sources\" />
+    <Folder Include="Uploads\Users\dariodenardi\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

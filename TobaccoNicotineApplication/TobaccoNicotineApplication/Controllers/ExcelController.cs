@@ -14,7 +14,7 @@ namespace TobaccoNicotineApplication.Controllers
     {
         //
         // GET: /Excel/Index
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
             return View();
@@ -23,7 +23,7 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Excel/Index
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Index(HttpPostedFileBase postedFile)
         {
             string filePath = string.Empty;

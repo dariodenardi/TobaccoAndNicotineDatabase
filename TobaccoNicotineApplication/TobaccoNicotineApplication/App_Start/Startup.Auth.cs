@@ -26,6 +26,7 @@ namespace TobaccoNicotineApplication
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
+                ExpireTimeSpan = TimeSpan.FromHours(1),
                 Provider = new CookieAuthenticationProvider
                 {
                     // Consente all'applicazione di convalidare l'indicatore di sicurezza quando l'utente esegue l'accesso.
@@ -35,15 +36,15 @@ namespace TobaccoNicotineApplication
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
             });            
-            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+            //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Consente all'applicazione di memorizzare temporaneamente le informazioni dell'utente durante la verifica del secondo fattore nel processo di autenticazione a due fattori.
-            app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(5));
+            //app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(5));
 
             // Consente all'applicazione di memorizzare il secondo fattore di verifica dell'accesso, ad esempio il numero di telefono o l'indirizzo e-mail.
             // Una volta selezionata questa opzione, il secondo passaggio di verifica durante la procedura di accesso viene memorizzato sul dispositivo usato per accedere.
             // È simile all'opzione RememberMe disponibile durante l'accesso.
-            app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
+            //app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
             // Rimuovere il commento dalle seguenti righe per abilitare l'accesso con provider di accesso di terze parti
             //app.UseMicrosoftAccountAuthentication(

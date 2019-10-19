@@ -1,41 +1,289 @@
 ﻿@model TobaccoNicotineApplication.Models.RegisterViewModel
+
 @{
-    ViewBag.Title = "Registrazione";
+    ViewBag.Title = "Register";
+    Layout = null;
 }
 
-<h2>@ViewBag.Title.</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - Tobacco&Nicotine Database</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
-    @Html.AntiForgeryToken()
-    <h4>Creare un nuovo account.</h4>
-    <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Registra" />
-        </div>
-    </div>
-}
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/style.css" rel="stylesheet" type="text/css">
+</head>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<body>
+    <div class="accountbg"></div>
+    <div class="wrapper-page">
+        <div class="panel panel-color panel-primary panel-pages">
+
+            <div class="panel-body">
+                <h3 class="text-center m-t-0 m-b-15">
+                    <a href="/Account/Login" class="logo logo-admin"><span>Tobacco</span>Database</a>
+                </h3>
+                <h4 class="text-muted text-center m-t-0"><b>Sign Up</b></h4>
+
+                <form class="form-horizontal" method="post" action="/Account/Register">
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input type="text" class="form-control" name="FirstName"
+                                   placeholder="Enter a valid name"
+                                   data-parsley-minlength="3"
+                                   data-parsley-maxlength="24"
+                                   data-parsley-pattern="^[a-zA-Z\s]+$"
+                                   data-parsley-pattern-message="Please insert only letter."
+                                   data-parsley-required-message="Please enter your first name."
+                                   data-parsley-required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input type="text" class="form-control" name="LastName"
+                                   placeholder="Enter a valid surname"
+                                   data-parsley-minlength="3"
+                                   data-parsley-maxlength="24"
+                                   data-parsley-pattern="^[a-zA-Z\s]+$"
+                                   data-parsley-pattern-message="Please insert only letter."
+                                   data-parsley-required-message="Please enter your last name."
+                                   data-parsley-required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input type="text" class="form-control" name="Position"
+                                   placeholder="Enter a valid position"
+                                   data-parsley-minlength="3"
+                                   data-parsley-maxlength="15"
+                                   data-parsley-pattern="^[a-zA-Z\s]+$"
+                                   data-parsley-pattern-message="Please insert only letter."
+                                   data-parsley-required-message="Please enter your position."
+                                   data-parsley-required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input type="email" class="form-control" name="Email"
+                                   placeholder="Enter a valid e-mail"
+                                   parsley-type="email"
+                                   data-parsley-required-message="Please enter your email."
+                                   data-parsley-required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input type="text" class="form-control" name="UserName"
+                                   placeholder="Enter a valid username"
+                                   data-parsley-required-message="Please enter your username."
+                                   data-parsley-required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input type="password" id="pass2" class="form-control" name="Password"
+                                   placeholder="Password"
+                                   data-parsley-minlength="8"
+                                   data-parsley-maxlength="24"
+                                   data-parsley-required-message="Please enter your password."
+                                   data-parsley-uppercase="1"
+                                   data-parsley-lowercase="1"
+                                   data-parsley-number="1"
+                                   data-parsley-special="1"
+                                   data-parsley-required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input type="password" class="form-control" name="ConfirmPassword"
+                                   placeholder="Re-Type Password"
+                                   data-parsley-equalto="#pass2"
+                                   data-parsley-required-message="Please re-enter your password."
+                                   data-parsley-required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" id="checkbox-signup"
+                                       data-parsley-required />
+                                <label for="checkbox-signup">
+                                    I accept <a data-toggle="modal" data-target="#myModal" href="#">Terms and Conditions</a>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group text-center m-t-40">
+                        <div class="col-xs-12">
+                            <button class="btn btn-primary btn-block btn-lg waves-effect waves-light" type="submit">Register</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group m-t-30 m-b-0">
+                        <div class="col-sm-12 text-center">
+                            <a href="/Account/Login" class="text-muted">Already have account?</a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- sample modal content -->
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">GDPR Privacy Policy</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Privacy Policy for Nomisma</h4>
+
+                    <p>At Tobacco&amp;Nicotine Database, accessible from <a href="https://nomismatobacconicotineapplication.azurewebsites.net/">nomismatobacconicotineapplication.azurewebsites.net</a>, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Tobacco&amp;Nicotine Database and how we use it.</p>
+
+                    <p>If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.</p>
+
+                    <h4>General Data Protection Regulation (GDPR)</h4>
+                    <p>We are a Data Controller of your information.</p>
+
+                    <p>Nomisma legal basis for collecting and using the personal information described in this Privacy Policy depends on the Personal Information we collect and the specific context in which we collect the information:</p>
+                    <ul>
+                        <li>Nomisma needs to perform a contract with you</li>
+                        <li>You have given Nomisma permission to do so</li>
+                        <li>Processing your personal information is in Nomisma legitimate interests</li>
+                        <li>Nomisma needs to comply with the law</li>
+                    </ul>
+
+                    <p>Nomisma will retain your personal information only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use your information to the extent necessary to comply with our legal obligations, resolve disputes, and enforce our policies.</p>
+
+                    <p>If you are a resident of the European Economic Area (EEA), you have certain data protection rights. If you wish to be informed what Personal Information we hold about you and if you want it to be removed from our systems, please contact us.</p>
+
+                    <p>In certain circumstances, you have the following data protection rights:</p>
+                    <ul>
+                        <li>The right to access, update or to delete the information we have on you.</li>
+                        <li>The right of rectification.</li>
+                        <li>The right to object.</li>
+                        <li>The right of restriction.</li>
+                        <li>The right to data portability</li>
+                        <li>The right to withdraw consent</li>
+                    </ul>
+
+                    <h4>Log Files</h4>
+
+                    <p>Tobacco&amp;Nicotine Database follows a standard procedure of using log files. These files log visitors when they visit websites. All hosting companies do this and a part of hosting services' analytics. The information collected by log files include internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks. These are not linked to any information that is personally identifiable. The purpose of the information is for analyzing trends, administering the site, tracking users' movement on the website, and gathering demographic information.</p>
+
+                    <h4>Cookies and Web Beacons</h4>
+
+                    <p>Like any other website, Tobacco&amp;Nicotine Database uses 'cookies'. These cookies are used to store information including visitors' preferences, and the pages on the website that the visitor accessed or visited. The information is used to optimize the users' experience by customizing our web page content based on visitors' browser type and/or other information.</p>
+
+                    <h4>Privacy Policies</h4>
+
+                    <P>You may consult this list to find the Privacy Policy for each of the advertising partners of Tobacco&amp;Nicotine Database.</P>
+
+                    <p>Third-party ad servers or ad networks uses technologies like cookies, JavaScript, or Web Beacons that are used in their respective advertisements and links that appear on Tobacco&amp;Nicotine Database, which are sent directly to users' browser. They automatically receive your IP address when this occurs. These technologies are used to measure the effectiveness of their advertising campaigns and/or to personalize the advertising content that you see on websites that you visit.</p>
+
+                    <p>Note that Tobacco&amp;Nicotine Database has no access to or control over these cookies that are used by third-party advertisers.</p>
+
+                    <h4>Third Party Privacy Policies</h4>
+
+                    <p>Tobacco&amp;Nicotine Database's Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to consult the respective Privacy Policies of these third-party ad servers for more detailed information. It may include their practices and instructions about how to opt-out of certain options. You may find a complete list of these Privacy Policies and their links here: Privacy Policy Links.</p>
+
+                    <p>You can choose to disable cookies through your individual browser options. To know more detailed information about cookie management with specific web browsers, it can be found at the browsers' respective websites. What Are Cookies?</p>
+
+                    <h4>Children's Information</h4>
+
+                    <p>Another part of our priority is adding protection for children while using the internet. We encourage parents and guardians to observe, participate in, and/or monitor and guide their online activity.</p>
+
+                    <p>Tobacco&amp;Nicotine Database does not knowingly collect any Personal Identifiable Information from children under the age of 13. If you think that your child provided this kind of information on our website, we strongly encourage you to contact us immediately and we will do our best efforts to promptly remove such information from our records.</p>
+
+                    <h4>Online Privacy Policy Only</h4>
+
+                    <p>Our Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in Tobacco&amp;Nicotine Database. This policy is not applicable to any information collected offline or via channels other than this website.</p>
+
+                    <h4>Consent</h4>
+
+                    <p>By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <script src="~/Scripts/jquery-1.11.3.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    <script src="~/Scripts/detect.js"></script>
+    <script src="~/Scripts/fastclick.js"></script>
+    <script src="~/Scripts/jquery.slimscroll.js"></script>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/waves.js"></script>
+    <script src="~/Scripts/wow.min.js"></script>
+    <script src="~/Scripts/jquery.nicescroll.js"></script>
+    <script src="~/Scripts/jquery.scrollTo.min.js"></script>
+    <script src="~/Scripts/app.js"></script>
+
+    <script src="~/Scripts/plugins/parsleyjs/parsley.min.js"></script>
+
+    <script>
+            //has uppercase
+            window.Parsley.addValidator('uppercase', {
+                requirementType: 'number',
+                validateString: function (value, requirement) {
+                    var uppercases = value.match(/[A-Z]/g) || [];
+                    return uppercases.length >= requirement;
+                },
+                messages: {
+                    en: 'Your password must contain at least (%s) uppercase letter.'
+                }
+            });
+
+            //has lowercase
+            window.Parsley.addValidator('lowercase', {
+                requirementType: 'number',
+                validateString: function (value, requirement) {
+                    var lowecases = value.match(/[a-z]/g) || [];
+                    return lowecases.length >= requirement;
+                },
+                messages: {
+                    en: 'Your password must contain at least (%s) lowercase letter.'
+                }
+            });
+
+            //has number
+            window.Parsley.addValidator('number', {
+                requirementType: 'number',
+                validateString: function (value, requirement) {
+                    var numbers = value.match(/[0-9]/g) || [];
+                    return numbers.length >= requirement;
+                },
+                messages: {
+                    en: 'Your password must contain at least (%s) number.'
+                }
+            });
+
+            $(document).ready(function () {
+                $('form').parsley();
+            });
+    </script>
+</body>
+</html>

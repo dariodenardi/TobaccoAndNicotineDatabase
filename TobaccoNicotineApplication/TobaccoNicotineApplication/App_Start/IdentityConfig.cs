@@ -10,25 +10,28 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.DataProtection;
 using TobaccoNicotineApplication.Models;
 
 namespace TobaccoNicotineApplication
 {
-    public class EmailService : IIdentityMessageService
+    // scadenza della password
+    // estendo l'interfaccia
+    public static class IUserStoreExtensions
     {
-        public Task SendAsync(IdentityMessage message)
+        internal static async Task StorePasswordChangedAsync(this IUserStore<ApplicationUser, string> store, string userId)
         {
-            // Inserire qui la parte di codice del servizio di posta elettronica per l'invio di un messaggio.
-            return Task.FromResult(0);
-        }
-    }
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentNullException("userId");
 
-    public class SmsService : IIdentityMessageService
-    {
-        public Task SendAsync(IdentityMessage message)
-        {
-            // Inserire qui la parte di codice del servizio SMS per l'invio di un SMS.
-            return Task.FromResult(0);
+            ApplicationUser user = await store.FindByIdAsync(userId);
+
+            if (user == null)
+                return;
+
+            user.PasswordChangeDateUtc = DateTime.UtcNow;
+
+            await store.UpdateAsync(user);
         }
     }
 
@@ -40,9 +43,9 @@ namespace TobaccoNicotineApplication
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+            ApplicationUserManager manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
             // Configurare la logica di convalida per i nomi utente
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
@@ -53,8 +56,8 @@ namespace TobaccoNicotineApplication
             // Configurare la logica di convalida per le password
             manager.PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
+                RequiredLength = 8,
+                RequireNonLetterOrDigit = false,
                 RequireDigit = true,
                 RequireLowercase = true,
                 RequireUppercase = true,
@@ -67,24 +70,56 @@ namespace TobaccoNicotineApplication
 
             // Registrare i provider di autenticazione a due fattori. Questa applicazione usa il numero di telefono e gli indirizzi e-mail come metodi per ricevere un codice di verifica dell'utente
             // Si può scrivere un provider personalizzato e inserirlo qui.
-            manager.RegisterTwoFactorProvider("Codice telefono", new PhoneNumberTokenProvider<ApplicationUser>
-            {
-                MessageFormat = "Il codice di sicurezza è {0}"
-            });
-            manager.RegisterTwoFactorProvider("Codice e-mail", new EmailTokenProvider<ApplicationUser>
-            {
-                Subject = "Codice di sicurezza",
-                BodyFormat = "Il codice di sicurezza è {0}"
-            });
-            manager.EmailService = new EmailService();
-            manager.SmsService = new SmsService();
-            var dataProtectionProvider = options.DataProtectionProvider;
+            //manager.RegisterTwoFactorProvider("Codice telefono", new PhoneNumberTokenProvider<ApplicationUser>
+            //{
+            //    MessageFormat = "Il codice di sicurezza è {0}"
+            //});
+            //manager.RegisterTwoFactorProvider("Codice e-mail", new EmailTokenProvider<ApplicationUser>
+            //{
+            //    Subject = "Codice di sicurezza",
+            //    BodyFormat = "Il codice di sicurezza è {0}"
+            //});
+            //manager.EmailService = new EmailService();
+            //manager.SmsService = new SmsService();
+            IDataProtectionProvider dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = 
+                manager.UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
+        }
+
+        // scadenza della password
+        public override async Task<IdentityResult> CreateAsync(ApplicationUser user)
+        {
+            user.PasswordChangeDateUtc = DateTime.UtcNow;
+            return await base.CreateAsync(user);
+        }
+
+        public override async Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+        {
+            IdentityResult result = await base.ChangePasswordAsync(
+              userId, currentPassword, newPassword);
+
+            if (result.Succeeded)
+            {
+                await this.Store.StorePasswordChangedAsync(userId);
+            }
+
+            return result;
+        }
+
+        public override async Task<IdentityResult> ResetPasswordAsync(string userId, string token, string newPassword)
+        {
+            IdentityResult result = await base.ResetPasswordAsync(userId, token, newPassword);
+
+            if (result.Succeeded)
+            {
+                await this.Store.StorePasswordChangedAsync(userId);
+            }
+
+            return result;
         }
     }
 
@@ -104,6 +139,35 @@ namespace TobaccoNicotineApplication
         public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
         {
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
+        }
+
+        // scadenza della password
+        public async Task<bool> CheckPasswordExpiredAsync(string email, string password)
+        {
+            ApplicationUser user = await this.UserManager.FindByEmailAsync(email);
+
+            if (user == null)
+                return false;
+
+            if (!(await this.UserManager.CheckPasswordAsync(user, password)))
+                return false;
+
+            return (DateTime.UtcNow - user.PasswordChangeDateUtc).TotalDays > 180;
+        }
+
+        public async override Task<SignInStatus> PasswordSignInAsync(string email, string password, bool isPersistent, bool shouldLockout)
+        {
+            if (await this.CheckPasswordExpiredAsync(email, password))
+            {
+                return SignInStatus.LockedOut;
+            }
+
+            ApplicationUser user = UserManager.FindByEmail(email);
+
+            if (user == null)
+                return SignInStatus.Failure;
+
+            return await base.PasswordSignInAsync(user.UserName, password, isPersistent, shouldLockout);
         }
     }
 }

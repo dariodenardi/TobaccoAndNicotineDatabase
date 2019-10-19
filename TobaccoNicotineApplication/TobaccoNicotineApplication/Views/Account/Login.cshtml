@@ -1,63 +1,121 @@
-﻿@using TobaccoNicotineApplication.Models
-@model LoginViewModel
+﻿@model TobaccoNicotineApplication.Models.LoginViewModel
+
 @{
-    ViewBag.Title = "Accedi";
+    ViewBag.Title = "Login";
+    ViewBag.Version = "v" + System.Reflection.Assembly.GetAssembly(typeof(TobaccoNicotineApplication.Controllers.AccountController)).GetName().Version;
+    Layout = null;
 }
 
-<h2>@ViewBag.Title.</h2>
-<div class="row">
-    <div class="col-md-8">
-        <section id="loginForm">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-                <h4>Usare un account locale per accedere.</h4>
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - Tobacco&Nicotine Database</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="accountbg"></div>
+    <div class="wrapper-page">
+        <div class="panel panel-color panel-primary panel-pages">
+
+            <div class="panel-body">
+                <h3 class="text-center m-t-0 m-b-15">
+                    <a href="/Account/Login" class="logo logo-admin"><span>Tobacco</span>Database</a>
+
+                    <img src="~/Images/Logos/Nomisma.png" height="101" width="204">
+                </h3>
+                <br>
+                <h4 class="text-muted text-center m-t-0"><b>Sign In</b></h4>
+
+                @if (TempData["Message"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["Message"]
                     </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <div class="checkbox">
-                            @Html.CheckBoxFor(m => m.RememberMe)
-                            @Html.LabelFor(m => m.RememberMe)
+                }
+
+                <form class="form-horizontal" method="post" action="/Account/Login">
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input type="email" class="form-control" name="Email"
+                                   placeholder="Email"
+                                   parsley-type="email"
+                                   data-parsley-required-message="Please enter your email."
+                                   data-parsley-required />
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Accedi" class="btn btn-default" />
-                    </div>
-                </div>
-                <p>
-                    @Html.ActionLink("Esegui registrazione come nuovo utente", "Register")
-                </p>
-                @* Abilitare questa opzione dopo aver abilitato la conferma dell'account per la funzionalità di reimpostazione della password
-                    <p>
-                        @Html.ActionLink("Password dimenticata?", "ForgotPassword")
-                    </p>*@
-            }
-        </section>
-    </div>
-    <div class="col-md-4">
-        <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-        </section>
-    </div>
-</div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input type="password" class="form-control" name="Password"
+                                   placeholder="Password"
+                                   data-parsley-required-message="Please enter your password."
+                                   data-parsley-required />
+                        </div>
+                    </div>
+                    @Html.ValidationMessage("", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="checkbox checkbox-primary">
+                                <input id="Remember" type="checkbox" name="rememberMe" value="true">
+                                <label for="Remember">
+                                    Remember me
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group text-center m-t-40">
+                        <div class="col-xs-12">
+                            <button class="btn btn-primary btn-block btn-lg waves-effect waves-light" type="submit">Log In</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group m-t-30 m-b-0">
+                        <div class="col-sm-5 text-left">
+                            <a href="/Account/Register" class="text-muted">Create an account</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group m-t-30 m-b-0">
+                        <div class="text-muted text-center">
+                            @ViewBag.Version
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-1.11.3.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    <script src="~/Scripts/detect.js"></script>
+    <script src="~/Scripts/fastclick.js"></script>
+    <script src="~/Scripts/jquery.slimscroll.js"></script>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/waves.js"></script>
+    <script src="~/Scripts/wow.min.js"></script>
+    <script src="~/Scripts/jquery.nicescroll.js"></script>
+    <script src="~/Scripts/jquery.scrollTo.min.js"></script>
+    <script src="~/Scripts/app.js"></script>
+
+    <script src="~/Scripts/plugins/parsleyjs/parsley.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('form').parsley();
+        });
+    </script>
+</body>
+</html>
