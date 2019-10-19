@@ -9,8 +9,3 @@
     PRIMARY KEY CLUSTERED ([Name] ASC, [Date] ASC, [Time] ASC)
 );
 
-
-GO
-CREATE UNIQUE NONCLUSTERED INDEX [RepositoryIndex]
-    ON [dbo].[Sources]([Repository] ASC);
-

@@ -1,0 +1,513 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="TobaccoNicotineDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Countries">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="smallint" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="AreaCode" Type="bit" Nullable="false" />
+          <Property Name="ContinentCode" Type="smallint" Nullable="false" />
+          <Property Name="RegionCode" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Currencies">
+          <Key>
+            <PropertyRef Name="CountryCode" />
+            <PropertyRef Name="Year" />
+          </Key>
+          <Property Name="CountryCode" Type="smallint" Nullable="false" />
+          <Property Name="Year" Type="smallint" Nullable="false" />
+          <Property Name="Value" Type="decimal" Precision="18" Scale="10" Nullable="false" />
+          <Property Name="Notes" Type="varchar" MaxLength="1000" />
+        </EntityType>
+        <EntityType Name="MappingVariableSource">
+          <Key>
+            <PropertyRef Name="Year" />
+            <PropertyRef Name="Number" />
+            <PropertyRef Name="CountryCode" />
+            <PropertyRef Name="NameSource" />
+            <PropertyRef Name="DateSource" />
+            <PropertyRef Name="TimeSource" />
+          </Key>
+          <Property Name="Year" Type="smallint" Nullable="false" />
+          <Property Name="Number" Type="smallint" Nullable="false" />
+          <Property Name="CountryCode" Type="smallint" Nullable="false" />
+          <Property Name="NameSource" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="DateSource" Type="date" Nullable="false" />
+          <Property Name="TimeSource" Type="time" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Regions">
+          <Key>
+            <PropertyRef Name="ContinentCode" />
+            <PropertyRef Name="RegionCode" />
+          </Key>
+          <Property Name="ContinentCode" Type="smallint" Nullable="false" />
+          <Property Name="RegionCode" Type="smallint" Nullable="false" />
+          <Property Name="ContinentName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="RegionName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="PmiCoding" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sources">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="Time" />
+          </Key>
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Time" Type="time" Precision="7" Nullable="false" />
+          <Property Name="Link" Type="varchar" MaxLength="2048" />
+          <Property Name="Repository" Type="varchar" MaxLength="2048" />
+          <Property Name="DateDownload" Type="date" />
+          <Property Name="Username" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Values">
+          <Key>
+            <PropertyRef Name="CountryCode" />
+            <PropertyRef Name="Number" />
+            <PropertyRef Name="Year" />
+          </Key>
+          <Property Name="CountryCode" Type="smallint" Nullable="false" />
+          <Property Name="Number" Type="smallint" Nullable="false" />
+          <Property Name="Year" Type="smallint" Nullable="false" />
+          <Property Name="NomismaCode" Type="int" Nullable="false" />
+          <Property Name="Data" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="DataPmi" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="PublicNotes" Type="varchar" MaxLength="1000" />
+          <Property Name="InternalNotes" Type="varchar" MaxLength="1000" />
+          <Property Name="PmiNotes" Type="varchar" MaxLength="1000" />
+        </EntityType>
+        <EntityType Name="Variables">
+          <Key>
+            <PropertyRef Name="Number" />
+          </Key>
+          <Property Name="Number" Type="smallint" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="PhaseCode" Type="smallint" Nullable="false" />
+          <Property Name="PhaseName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="MeasurementUnitName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="VarLc" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Countries__267ABA7A">
+          <End Role="Regions" Type="Self.Regions" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Countries" Type="Self.Countries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Regions">
+              <PropertyRef Name="ContinentCode" />
+              <PropertyRef Name="RegionCode" />
+            </Principal>
+            <Dependent Role="Countries">
+              <PropertyRef Name="ContinentCode" />
+              <PropertyRef Name="RegionCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Currencie__Count__29572725">
+          <End Role="Countries" Type="Self.Countries" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Currencies" Type="Self.Currencies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Countries">
+              <PropertyRef Name="Code" />
+            </Principal>
+            <Dependent Role="Currencies">
+              <PropertyRef Name="CountryCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__MappingVariableS__34C8D9D1">
+          <End Role="Values" Type="Self.Values" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MappingVariableSource" Type="Self.MappingVariableSource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Values">
+              <PropertyRef Name="CountryCode" />
+              <PropertyRef Name="Number" />
+              <PropertyRef Name="Year" />
+            </Principal>
+            <Dependent Role="MappingVariableSource">
+              <PropertyRef Name="CountryCode" />
+              <PropertyRef Name="Number" />
+              <PropertyRef Name="Year" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__MappingVariableS__35BCFE0A">
+          <End Role="Sources" Type="Self.Sources" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MappingVariableSource" Type="Self.MappingVariableSource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sources">
+              <PropertyRef Name="Name" />
+              <PropertyRef Name="Date" />
+              <PropertyRef Name="Time" />
+            </Principal>
+            <Dependent Role="MappingVariableSource">
+              <PropertyRef Name="NameSource" />
+              <PropertyRef Name="DateSource" />
+              <PropertyRef Name="TimeSource" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Values__CountryC__300424B4">
+          <End Role="Countries" Type="Self.Countries" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Values" Type="Self.Values" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Countries">
+              <PropertyRef Name="Code" />
+            </Principal>
+            <Dependent Role="Values">
+              <PropertyRef Name="CountryCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Values__Number__2F10007B">
+          <End Role="Variables" Type="Self.Variables" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Values" Type="Self.Values" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Variables">
+              <PropertyRef Name="Number" />
+            </Principal>
+            <Dependent Role="Values">
+              <PropertyRef Name="Number" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TobaccoNicotineDatabaseModelStoreContainer">
+          <EntitySet Name="Countries" EntityType="Self.Countries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Currencies" EntityType="Self.Currencies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MappingVariableSource" EntityType="Self.MappingVariableSource" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Regions" EntityType="Self.Regions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sources" EntityType="Self.Sources" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Values" EntityType="Self.Values" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Variables" EntityType="Self.Variables" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Countries__267ABA7A" Association="Self.FK__Countries__267ABA7A">
+            <End Role="Regions" EntitySet="Regions" />
+            <End Role="Countries" EntitySet="Countries" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Currencie__Count__29572725" Association="Self.FK__Currencie__Count__29572725">
+            <End Role="Countries" EntitySet="Countries" />
+            <End Role="Currencies" EntitySet="Currencies" />
+          </AssociationSet>
+          <AssociationSet Name="FK__MappingVariableS__34C8D9D1" Association="Self.FK__MappingVariableS__34C8D9D1">
+            <End Role="Values" EntitySet="Values" />
+            <End Role="MappingVariableSource" EntitySet="MappingVariableSource" />
+          </AssociationSet>
+          <AssociationSet Name="FK__MappingVariableS__35BCFE0A" Association="Self.FK__MappingVariableS__35BCFE0A">
+            <End Role="Sources" EntitySet="Sources" />
+            <End Role="MappingVariableSource" EntitySet="MappingVariableSource" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Values__CountryC__300424B4" Association="Self.FK__Values__CountryC__300424B4">
+            <End Role="Countries" EntitySet="Countries" />
+            <End Role="Values" EntitySet="Values" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Values__Number__2F10007B" Association="Self.FK__Values__Number__2F10007B">
+            <End Role="Variables" EntitySet="Variables" />
+            <End Role="Values" EntitySet="Values" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TobaccoNicotineDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="Int16" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AreaCode" Type="Boolean" Nullable="false" />
+          <Property Name="ContinentCode" Type="Int16" Nullable="false" />
+          <Property Name="RegionCode" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Regions" Relationship="Self.FK__Countries__267ABA7A" FromRole="Countries" ToRole="Regions" />
+          <NavigationProperty Name="Currencies" Relationship="Self.FK__Currencie__Count__29572725" FromRole="Countries" ToRole="Currencies" />
+          <NavigationProperty Name="Values" Relationship="Self.FK__Values__CountryC__300424B4" FromRole="Countries" ToRole="Values" />
+        </EntityType>
+        <EntityType Name="Currency">
+          <Key>
+            <PropertyRef Name="CountryCode" />
+            <PropertyRef Name="Year" />
+          </Key>
+          <Property Name="CountryCode" Type="Int16" Nullable="false" />
+          <Property Name="Year" Type="Int16" Nullable="false" />
+          <Property Name="Value" Type="Decimal" Precision="18" Scale="10" Nullable="false" />
+          <Property Name="Notes" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Countries" Relationship="Self.FK__Currencie__Count__29572725" FromRole="Currencies" ToRole="Countries" />
+        </EntityType>
+        <EntityType Name="Region">
+          <Key>
+            <PropertyRef Name="ContinentCode" />
+            <PropertyRef Name="RegionCode" />
+          </Key>
+          <Property Name="ContinentCode" Type="Int16" Nullable="false" />
+          <Property Name="RegionCode" Type="Int16" Nullable="false" />
+          <Property Name="ContinentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RegionName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PmiCoding" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Countries" Relationship="Self.FK__Countries__267ABA7A" FromRole="Regions" ToRole="Countries" />
+        </EntityType>
+        <EntityType Name="Source">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="Time" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Time" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="Link" Type="String" MaxLength="2048" FixedLength="false" Unicode="false" />
+          <Property Name="Repository" Type="String" MaxLength="2048" FixedLength="false" Unicode="false" />
+          <Property Name="DateDownload" Type="DateTime" Precision="0" />
+          <Property Name="Username" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Values" Relationship="Self.MappingVariableSource" FromRole="Sources" ToRole="Values" />
+        </EntityType>
+        <EntityType Name="Value">
+          <Key>
+            <PropertyRef Name="CountryCode" />
+            <PropertyRef Name="Number" />
+            <PropertyRef Name="Year" />
+          </Key>
+          <Property Name="CountryCode" Type="Int16" Nullable="false" />
+          <Property Name="Number" Type="Int16" Nullable="false" />
+          <Property Name="Year" Type="Int16" Nullable="false" />
+          <Property Name="NomismaCode" Type="Int32" Nullable="false" />
+          <Property Name="Data" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="DataPmi" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="PublicNotes" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="InternalNotes" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="PmiNotes" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Countries" Relationship="Self.FK__Values__CountryC__300424B4" FromRole="Values" ToRole="Countries" />
+          <NavigationProperty Name="Variables" Relationship="Self.FK__Values__Number__2F10007B" FromRole="Values" ToRole="Variables" />
+          <NavigationProperty Name="Sources" Relationship="Self.MappingVariableSource" FromRole="Values" ToRole="Sources" />
+        </EntityType>
+        <EntityType Name="Variable">
+          <Key>
+            <PropertyRef Name="Number" />
+          </Key>
+          <Property Name="Number" Type="Int16" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PhaseCode" Type="Int16" Nullable="false" />
+          <Property Name="PhaseName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MeasurementUnitName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="VarLc" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Values" Relationship="Self.FK__Values__Number__2F10007B" FromRole="Variables" ToRole="Values" />
+        </EntityType>
+        <Association Name="FK__Countries__267ABA7A">
+          <End Role="Regions" Type="TobaccoNicotineDatabaseModel.Region" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Countries" Type="TobaccoNicotineDatabaseModel.Country" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Regions">
+              <PropertyRef Name="ContinentCode" />
+              <PropertyRef Name="RegionCode" />
+            </Principal>
+            <Dependent Role="Countries">
+              <PropertyRef Name="ContinentCode" />
+              <PropertyRef Name="RegionCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Currencie__Count__29572725">
+          <End Role="Countries" Type="TobaccoNicotineDatabaseModel.Country" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Currencies" Type="TobaccoNicotineDatabaseModel.Currency" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Countries">
+              <PropertyRef Name="Code" />
+            </Principal>
+            <Dependent Role="Currencies">
+              <PropertyRef Name="CountryCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Values__CountryC__300424B4">
+          <End Role="Countries" Type="TobaccoNicotineDatabaseModel.Country" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Values" Type="TobaccoNicotineDatabaseModel.Value" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Countries">
+              <PropertyRef Name="Code" />
+            </Principal>
+            <Dependent Role="Values">
+              <PropertyRef Name="CountryCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Values__Number__2F10007B">
+          <End Role="Variables" Type="TobaccoNicotineDatabaseModel.Variable" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Values" Type="TobaccoNicotineDatabaseModel.Value" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Variables">
+              <PropertyRef Name="Number" />
+            </Principal>
+            <Dependent Role="Values">
+              <PropertyRef Name="Number" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MappingVariableSource">
+          <End Role="Values" Type="TobaccoNicotineDatabaseModel.Value" Multiplicity="*" />
+          <End Role="Sources" Type="TobaccoNicotineDatabaseModel.Source" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="TobaccoNicotineDatabase" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Countries" EntityType="TobaccoNicotineDatabaseModel.Country" />
+          <EntitySet Name="Currencies" EntityType="TobaccoNicotineDatabaseModel.Currency" />
+          <EntitySet Name="Regions" EntityType="TobaccoNicotineDatabaseModel.Region" />
+          <EntitySet Name="Sources" EntityType="TobaccoNicotineDatabaseModel.Source" />
+          <EntitySet Name="Values" EntityType="TobaccoNicotineDatabaseModel.Value" />
+          <EntitySet Name="Variables" EntityType="TobaccoNicotineDatabaseModel.Variable" />
+          <AssociationSet Name="FK__Countries__267ABA7A" Association="Self.FK__Countries__267ABA7A">
+            <End Role="Regions" EntitySet="Regions" />
+            <End Role="Countries" EntitySet="Countries" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Currencie__Count__29572725" Association="Self.FK__Currencie__Count__29572725">
+            <End Role="Countries" EntitySet="Countries" />
+            <End Role="Currencies" EntitySet="Currencies" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Values__CountryC__300424B4" Association="Self.FK__Values__CountryC__300424B4">
+            <End Role="Countries" EntitySet="Countries" />
+            <End Role="Values" EntitySet="Values" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Values__Number__2F10007B" Association="Self.FK__Values__Number__2F10007B">
+            <End Role="Variables" EntitySet="Variables" />
+            <End Role="Values" EntitySet="Values" />
+          </AssociationSet>
+          <AssociationSet Name="MappingVariableSource" Association="Self.MappingVariableSource">
+            <End Role="Values" EntitySet="Values" />
+            <End Role="Sources" EntitySet="Sources" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TobaccoNicotineDatabaseModelStoreContainer" CdmEntityContainer="TobaccoNicotineDatabase">
+          <EntitySetMapping Name="Countries">
+            <EntityTypeMapping TypeName="TobaccoNicotineDatabaseModel.Country">
+              <MappingFragment StoreEntitySet="Countries">
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AreaCode" ColumnName="AreaCode" />
+                <ScalarProperty Name="ContinentCode" ColumnName="ContinentCode" />
+                <ScalarProperty Name="RegionCode" ColumnName="RegionCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Currencies">
+            <EntityTypeMapping TypeName="TobaccoNicotineDatabaseModel.Currency">
+              <MappingFragment StoreEntitySet="Currencies">
+                <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Regions">
+            <EntityTypeMapping TypeName="TobaccoNicotineDatabaseModel.Region">
+              <MappingFragment StoreEntitySet="Regions">
+                <ScalarProperty Name="ContinentCode" ColumnName="ContinentCode" />
+                <ScalarProperty Name="RegionCode" ColumnName="RegionCode" />
+                <ScalarProperty Name="ContinentName" ColumnName="ContinentName" />
+                <ScalarProperty Name="RegionName" ColumnName="RegionName" />
+                <ScalarProperty Name="PmiCoding" ColumnName="PmiCoding" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sources">
+            <EntityTypeMapping TypeName="TobaccoNicotineDatabaseModel.Source">
+              <MappingFragment StoreEntitySet="Sources">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Link" ColumnName="Link" />
+                <ScalarProperty Name="Repository" ColumnName="Repository" />
+                <ScalarProperty Name="DateDownload" ColumnName="DateDownload" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Values">
+            <EntityTypeMapping TypeName="TobaccoNicotineDatabaseModel.Value">
+              <MappingFragment StoreEntitySet="Values">
+                <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="NomismaCode" ColumnName="NomismaCode" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="DataPmi" ColumnName="DataPmi" />
+                <ScalarProperty Name="PublicNotes" ColumnName="PublicNotes" />
+                <ScalarProperty Name="InternalNotes" ColumnName="InternalNotes" />
+                <ScalarProperty Name="PmiNotes" ColumnName="PmiNotes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Variables">
+            <EntityTypeMapping TypeName="TobaccoNicotineDatabaseModel.Variable">
+              <MappingFragment StoreEntitySet="Variables">
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PhaseCode" ColumnName="PhaseCode" />
+                <ScalarProperty Name="PhaseName" ColumnName="PhaseName" />
+                <ScalarProperty Name="MeasurementUnitName" ColumnName="MeasurementUnitName" />
+                <ScalarProperty Name="VarLc" ColumnName="VarLc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="MappingVariableSource" TypeName="TobaccoNicotineDatabaseModel.MappingVariableSource" StoreEntitySet="MappingVariableSource">
+            <EndProperty Name="Values">
+              <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+              <ScalarProperty Name="Number" ColumnName="Number" />
+              <ScalarProperty Name="Year" ColumnName="Year" />
+            </EndProperty>
+            <EndProperty Name="Sources">
+              <ScalarProperty Name="Name" ColumnName="NameSource" />
+              <ScalarProperty Name="Date" ColumnName="DateSource" />
+              <ScalarProperty Name="Time" ColumnName="TimeSource" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Nessuno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
