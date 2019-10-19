@@ -150,9 +150,9 @@ namespace TobaccoNicotineApplication.Controllers
 
                         }
                     }
-                } // using db
+                } // using db*/
 
-            } // posted file*/
+            } // posted file
 
             return View();
         }
