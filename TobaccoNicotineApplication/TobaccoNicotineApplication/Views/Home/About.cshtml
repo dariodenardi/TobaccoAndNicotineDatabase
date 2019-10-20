@@ -1,7 +1,41 @@
-﻿@{
-    ViewBag.Title = "About";
-}
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
+﻿@using TobaccoNicotineApplication.Utilities;
 
-<p>Use this area to provide additional information.</p>
+@{
+    ViewBag.Title = "About";
+    ViewBag.PageTitle = "About";
+    ViewBag.TitlePrincipal = "Application Information";
+}
+
+<div class="panel panel-color panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">File Version Info</h3>
+    </div>
+    <div class="panel-body">
+        <img src="~/Images/Logos/tobaccoApp.png" alt="T&N logo" width="642" height="196">
+        <br />
+        <h4>
+            Application Version:
+            <small>@ApplicationVersion.GetProductName()</small>
+        </h4>
+        <h4>
+            Assembly Version:
+            <small>@ApplicationVersion.GetAssemblyName()</small>
+        </h4>
+        <h4>
+            File Version:
+            <small>@ApplicationVersion.GetFileVersion()</small>
+        </h4>
+        <h4>
+            Description:
+            <small>@ApplicationVersion.GetDescription()</small>
+        </h4>
+        <h4>
+            Copyright:
+            <small>@ApplicationVersion.GetCopyright()</small>
+        </h4>
+        <h4>
+            Language:
+            <small>@ApplicationVersion.GetLanguage()</small>
+        </h4>
+    </div>
+</div>

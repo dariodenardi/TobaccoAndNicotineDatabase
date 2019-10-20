@@ -1,10 +1,33 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
 
 @{
-    ViewBag.Title = "Bloccato";
+    ViewBag.Title = "Lockout";
+    Layout = null;
 }
 
-<hgroup>
-    <h1 class="text-danger">Bloccato.</h1>
-    <h2 class="text-danger">Questo account è stato bloccato, riprovare più tardi.</h2>
-</hgroup>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - Tobacco&Nicotine Database</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+    <!-- Begin page -->
+    <div class="accountbg"></div>
+    <div class="wrapper-page">
+        <div class="ex-page-content text-center">
+            <h1 class="text-white">Locked</h1>
+            <h2 class="text-white">This account has been blocked, try again later.</h2><br>
+        </div>
+    </div>
+
+</body>
+</html>

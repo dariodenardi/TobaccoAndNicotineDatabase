@@ -1,45 +1,261 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+@using TobaccoNicotineApplication.Models;
+
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Applicazione ASP.NET</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title - Tobacco&Nicotine Database</title>
+    <!--Styles.Render("~/Content/css")-->
+    <!--Scripts.Render("~/bundles/modernizr")-->
 
+    @RenderSection("styles", required: false)
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/materialdesignicons.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/ionicons.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/style.css" rel="stylesheet" type="text/css">
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Nome applicazione", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+@{
+    string userPhoto = "";
+    string userPosition = "";
+    string pathImage = Path.Combine("~/Uploads/Users/", "avatar-1.jpg"); ;
+    string photo = "";
+    string position = "";
+    // prevenzione se si cancellano i cookie
+    if (User.Identity.IsAuthenticated == true)
+    {
+        ApplicationUser user = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(User.Identity.GetUserId());
+
+        userPhoto = user.Photo;
+        userPosition = user.Position;
+
+        photo = userPhoto;
+        if (photo != null)
+        {
+            pathImage = Path.Combine("~/Uploads/Users/", User.Identity.Name, photo);
+        }
+
+        position = userPosition;
+    } else
+    {
+        Response.Redirect("~/Account/Login");
+    }
+}
+
+<body class="fixed-left">
+
+    <!-- Begin page -->
+    <div id="wrapper">
+
+        <!-- Top Bar Start -->
+        <div class="topbar">
+            <!-- LOGO -->
+            <div class="topbar-left">
+                <div class="text-center">
+                    <a href="/Home/Index" class="logo"><span>Tobacco</span>Database</a>
+                    <a href="/Home/Index" class="logo-sm"><span>TD</span></a>
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Chi siamo", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contatti", "Contact", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
+            <!-- Button mobile view to collapse sidebar menu -->
+            <div class="navbar navbar-default" role="navigation">
+                <div class="container">
+                    <div class="">
+                        <div class="pull-left">
+                            <button type="button" class="button-menu-mobile open-left waves-effect waves-light">
+                                <i class="ion-navicon"></i>
+                            </button>
+                            <span class="clearfix"></span>
+                        </div>
+
+                        <ul class="nav navbar-nav navbar-right pull-right">
+                            <li class="dropdown hidden-xs">
+                            </li>
+                            <li class="hidden-xs">
+                                <a href="#" id="btn-fullscreen" class="waves-effect waves-light notification-icon-box"><i class="mdi mdi-fullscreen"></i></a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
+                                    <img src="@Url.Content(pathImage)" alt="user-img" class="img-circle" />
+                                    <span class="profile-username">
+                                        @User.Identity.Name
+                                        <br />
+                                        <small>@position</small>
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/User/Details/?username=@User.Identity.Name"> Profile</a></li>
+                                    <li><a href="/User/WhiteScreen/?a=User&b=Lock"> Lock screen</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="javascript:document.getElementById('logoutForm').submit()"> Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--/.nav-collapse -->
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Applicazione ASP.NET</p>
-        </footer>
-    </div>
+        <!-- Top Bar End -->
+        <!-- ========== Left Sidebar Start ========== -->
+        <div class="left side-menu">
+            <div class="sidebar-inner slimscrollleft">
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+                <div class="user-details">
+                    <div class="text-center">
+                        <img src="@Url.Content(pathImage)" alt="user-img" class="img-circle" />
+                    </div>
+                    <div class="user-info">
+                        <a class="dropdown-toggle">@User.Identity.Name</a>
+                        <p class="text-muted m-0"><i class="fa fa-dot-circle-o text-success"></i> Online</p>
+                    </div>
+                </div>
+                <!--- Divider -->
+
+                <div id="sidebar-menu">
+                    <ul>
+                        <li>
+                            <a href="/Home/Index" class="waves-effect"><i class="mdi mdi-home"></i><span> Dashboard </span></a>
+                        </li>
+
+                        <li class="has_sub">
+                            <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-database"></i> <span> Views </span> <span class="pull-right"><i class="mdi mdi-plus"></i></span></a>
+                            <ul class="list-unstyled">
+                                <li><a href="/Country/Index"> Countries </a></li>
+                                <li><a href="/Currency/Index"> Currencies </a></li>
+                                <li><a href="/Region/Index"> Regions </a></li>
+                                <li><a href="/Source/Index"> Sources </a></li>
+                                <li><a href="/Value/Index"> Values </a></li>
+                                <li><a href="/Variable/Index"> Variables </a></li>
+                            </ul>
+                        </li>
+
+                        <li class="has_sub">
+                            <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-layers"></i><span> Excel </span><span class="pull-right"><i class="mdi mdi-plus"></i></span></a>
+                            <ul class="list-unstyled">
+                                <li><a href="/Excel/Export"> Export </a></li>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li><a href="/Excel/Import"> Import </a></li>
+                                }
+                                <li><a href="/Excel/Report"> Report </a></li>
+                            </ul>
+                        </li>
+
+                        <!-- verifico i privilegi -->
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-settings"></i><span> Settings </span><span class="pull-right"><i class="mdi mdi-plus"></i></span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="/Admin/Grant"> Grant </a></li>
+                                </ul>
+                            </li>
+                        }
+
+                        <!-- verifico i privilegi -->
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li>
+                                <a href="/Log/Index" class="waves-effect"><i class="mdi mdi-chart-bar"></i><span> Log </span></a>
+                            </li>
+                        }
+
+                        <li>
+                            <a href="/Home/About" class="waves-effect"><i class="mdi mdi-earth"></i><span> About </span></a>
+                        </li>
+
+                        <li>
+                            <a href="/Home/Contact" class="waves-effect"><i class="mdi mdi-deskphone"></i><span> Contact </span></a>
+                        </li>
+
+                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                        }
+
+                        <li>
+                            <a href="javascript:document.getElementById('logoutForm').submit()" class="waves-effect"><i class="mdi mdi-logout"></i><span> Logout </span></a>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+            </div> <!-- end sidebarinner -->
+        </div>
+        <!-- Left Sidebar End -->
+        <!-- Start right Content here -->
+        <div class="content-page">
+
+            <!-- Start content -->
+            <div class="content">
+
+                <div class="">
+                    <div class="page-header-title">
+                        <h4 class="page-title">@ViewBag.PageTitle</h4>
+                    </div>
+                </div>
+
+                <!-- Page content Wrapper -->
+                <div class="page-content-wrapper ">
+                    <!-- container -->
+                    <div class="container">
+                        <!-- row -->
+                        <div class="row">
+
+                            <div class="col-sm-12">
+                                <div class="panel panel-primary">
+                                    <div class="panel-body">
+                                        <h4 class="m-t-0">@ViewBag.TitlePrincipal</h4>
+
+                                        <!--RenderBody possiamo indicare il punto, nel layout della pagina, dove dovrà essere posizionato l'intero contenuto della View che sarà renderizzata.-->
+                                        @RenderBody()
+
+                                        <div style="height: 100px"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- row -->
+
+                    </div> <!-- container -->
+
+                </div> <!-- Page content Wrapper -->
+
+            </div> <!-- content -->
+
+            <footer class="footer">
+                © 2019 Dario De Nardi
+            </footer>
+
+        </div>
+        <!-- End Right content here -->
+
+    </div>
+    <!-- END wrapper -->
+    <script src="~/Scripts/jquery-1.11.3.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    <script src="~/Scripts/detect.js"></script>
+    <script src="~/Scripts/fastclick.js"></script>
+    <script src="~/Scripts/jquery.slimscroll.js"></script>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/waves.js"></script>
+    <script src="~/Scripts/wow.min.js"></script>
+    <script src="~/Scripts/jquery.nicescroll.js"></script>
+    <script src="~/Scripts/jquery.scrollTo.min.js"></script>
+    <script src="~/Scripts/app.js"></script>
+
     @RenderSection("scripts", required: false)
+    <!--Scripts.Render("~/bundles/jquery")-->
+    <!--Scripts.Render("~/bundles/bootstrap")-->
+
 </body>
 </html>
