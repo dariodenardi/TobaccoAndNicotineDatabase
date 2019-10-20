@@ -188,6 +188,7 @@
     <Compile Include="Models\Currency.cs">
       <DependentUpon>TobaccoNicotineModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ExcelViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LogModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -220,8 +221,10 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sql\DataSource.cs" />
+    <Compile Include="Sql\ExportRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\ApplicationVersion.cs" />
+    <Compile Include="Utilities\StaticName.cs" />
     <Compile Include="Utilities\ValidateAntiForgeryTokenOnAllPosts.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +256,8 @@
     <Content Include="Images\Sortable\asc.png" />
     <Content Include="Images\Sortable\bg.png" />
     <Content Include="Images\Sortable\desc.png" />
+    <Content Include="Sql\Queries\Queries.sql" />
+    <Content Include="Sql\Queries\Values.sql" />
     <Content Include="Uploads\Users\avatar-1.jpg" />
     <Content Include="Models\TobaccoNicotineModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -368,6 +373,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Excel\Export.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Uploads\Sources\" />

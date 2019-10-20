@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
@@ -6,10 +7,15 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TobaccoNicotineApplication.Filters;
 using TobaccoNicotineApplication.Models;
+using TobaccoNicotineApplication.Sql;
+using TobaccoNicotineApplication.Utilities;
 
 namespace TobaccoNicotineApplication.Controllers
 {
+    [Authorize]
+    [ValidateAntiForgeryTokenOnAllPosts]
     public class ExcelController : Controller
     {
         //
@@ -156,5 +162,589 @@ namespace TobaccoNicotineApplication.Controllers
 
             return View();
         }
+
+        //
+        // GET: /Excel/Export
+        [Log]
+        public ActionResult Export()
+        {
+            IEnumerable<short> years = new List<short>();
+            IEnumerable<Variable> variables;
+            IEnumerable<Country> countries;
+            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                countries = db.Countries.ToList();
+
+                foreach (Country c in countries)
+                    db.Entry(c).Reference(i => i.Regions).Load();
+
+                variables = db.Variables.ToList();
+
+                years = db.Values.Select(x => x.Year).Distinct().OrderBy(i => i).ToList();
+            }
+
+            ViewBag.Countries = countries;
+            ViewBag.Years = years;
+            ViewBag.Variables = variables;
+
+            return View();
+        }
+
+        //
+        // POST: /Excel/GenerateExcel
+        [HttpPost]
+        public JsonResult GenerateExcel(List<string> countrySelected, List<string> variableSelected, List<string> yearSelected, List<string> columnSelected)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    ExcelWorksheet ws = package.Workbook.Worksheets.Add("TS");
+
+                    // your code here......
+
+                    int column = 1;
+
+                    if (columnSelected.Contains("NEW ID TS"))
+                    {
+                        ws.Cells[1, column].Value = "NEW ID TS";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Continent_code"))
+                    {
+                        ws.Cells[1, column].Value = "Continent_code";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Continent_name"))
+                    {
+                        ws.Cells[1, column].Value = "Continent_name";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Region_code"))
+                    {
+                        ws.Cells[1, column].Value = "Region_code";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Region_name"))
+                    {
+                        ws.Cells[1, column].Value = "Region_name";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Country_code"))
+                    {
+                        ws.Cells[1, column].Value = "Country_code";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("PMI_coding"))
+                    {
+                        ws.Cells[1, column].Value = "PMI_coding";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Country_name"))
+                    {
+                        ws.Cells[1, column].Value = "Country_name";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Data_collection_year"))
+                    {
+                        ws.Cells[1, column].Value = "Data_collection_year";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Supply chain phase_code"))
+                    {
+                        ws.Cells[1, column].Value = "Supply chain phase_code";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Supply chain phase_name"))
+                    {
+                        ws.Cells[1, column].Value = "Supply chain phase_name";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Variable_number"))
+                    {
+                        ws.Cells[1, column].Value = "Variable_number";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Variable_name"))
+                    {
+                        ws.Cells[1, column].Value = "Variable_name";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Measurement_unit"))
+                    {
+                        ws.Cells[1, column].Value = "Measurement_unit";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Variable"))
+                    {
+                        ws.Cells[1, column].Value = "Variable";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Data"))
+                    {
+                        ws.Cells[1, column].Value = "Data";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Data_US$"))
+                    {
+                        ws.Cells[1, column].Value = "Data_US$";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Year"))
+                    {
+                        ws.Cells[1, column].Value = "Year";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Source"))
+                    {
+                        ws.Cells[1, column].Value = "Source";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Link"))
+                    {
+                        ws.Cells[1, column].Value = "Link";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Exchange_Rate_US$"))
+                    {
+                        ws.Cells[1, column].Value = "Exchange_Rate_US$";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Notes"))
+                    {
+                        ws.Cells[1, column].Value = "Notes";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("VAR LC"))
+                    {
+                        ws.Cells[1, column].Value = "VAR LC";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Area_code"))
+                    {
+                        ws.Cells[1, column].Value = "Area_code";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("COMMENTI NOMISMA (interno)"))
+                    {
+                        ws.Cells[1, column].Value = "COMMENTI NOMISMA (interno)";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("CHI ha inserito/modificato il dato"))
+                    {
+                        ws.Cells[1, column].Value = "CHI ha inserito/modificato il dato";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("collection date (consultation or download)"))
+                    {
+                        ws.Cells[1, column].Value = "collection date (consultation or download)";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("reference data repository"))
+                    {
+                        ws.Cells[1, column].Value = "reference data repository";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("workin comments_PMI"))
+                    {
+                        ws.Cells[1, column].Value = "workin comments_PMI";
+                        column++;
+                    }
+
+                    // change font e size
+                    ws.Cells.Style.Font.Name = "Calibri";
+                    ws.Cells.Style.Font.Size = 11;
+                    // change color header
+                    for (int i = 0; i < ws.Dimension.Columns; i++)
+                    {
+                        ws.Cells[1, 1 + i].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        ws.Cells[1, 1 + i].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+                        ws.Cells[1, 1 + i].Style.Font.Bold = true;
+                    }
+                    // change zoom view
+                    ws.View.ZoomScale = 80;
+
+                    int rowStart = 2;
+                    foreach (ExportView export in ExportRepository.getExport(countrySelected, variableSelected, yearSelected, columnSelected))
+                    {
+                        column = 1;
+                        if (columnSelected.Contains("NEW ID TS"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.NomismaCode;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Continent_code"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.ContinentCode;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Continent_name"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.ContinentName;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Region_code"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.RegionCode;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Region_name"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.RegionName;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Country_code"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.CountryCode;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("PMI_coding"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.PmiCode;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Country_name"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.CountryName;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Data_collection_year"))
+                        {
+                            ws.Cells[rowStart, column].Value = DateTime.Now.Year;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Supply chain phase_code"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.PhaseCode;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Supply chain phase_name"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.PhaseName;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Variable_number"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.Number;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Variable_name"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.VariableName;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Measurement_unit"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.MeasurementUnitName;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Variable"))
+                        {
+                            ws.Cells[rowStart, column].Value = String.Concat(export.PhaseCode, "_", export.Number, "_", export.VariableName);
+                            column++;
+                        }
+
+                        // se il valore non è nullo
+                        if (export.Data != null)
+                        {
+                            // se la variabile è economica
+                            if (export.VarLc == true)
+                            {
+                                if (!export.CurrencyValue.HasValue)
+                                {
+                                    if (columnSelected.Contains("Data"))
+                                    {
+                                        ws.Cells[rowStart, column].Value = "";
+                                        column++;
+                                    }
+
+                                    if (columnSelected.Contains("Data_US$"))
+                                    {
+                                        ws.Cells[rowStart, column].Value = "";
+                                        column++;
+                                    }
+                                }
+                                else
+                                {
+                                    if (columnSelected.Contains("Data"))
+                                    {
+                                        ws.Cells[rowStart, column].Value = export.Data;
+                                        column++;
+                                    }
+
+                                    if (columnSelected.Contains("Data_US$"))
+                                    {
+                                        if (export.CurrencyValue.Value != 0)
+                                            ws.Cells[rowStart, column].Value = export.Data / export.CurrencyValue.Value;
+                                        else
+                                            ws.Cells[rowStart, column].Value = "";
+                                        column++;
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                if (columnSelected.Contains("Data"))
+                                {
+                                    ws.Cells[rowStart, column].Value = export.Data;
+                                    column++;
+                                }
+
+                                if (columnSelected.Contains("Data_US$"))
+                                {
+                                    ws.Cells[rowStart, column].Value = "";
+                                    column++;
+                                }
+
+                            }
+
+                            if (columnSelected.Contains("Year"))
+                            {
+                                ws.Cells[rowStart, column].Value = export.Year;
+                                column++;
+                            }
+                        }
+                        else
+                        {
+                            if (columnSelected.Contains("Data"))
+                            {
+                                ws.Cells[rowStart, column].Value = "";
+                                column++;
+                            }
+
+                            if (columnSelected.Contains("Data_US$"))
+                            {
+                                ws.Cells[rowStart, column].Value = "";
+                                column++;
+                            }
+
+                            if (columnSelected.Contains("Year"))
+                            {
+                                ws.Cells[rowStart, column].Value = "";
+                                column++;
+                            }
+                        }
+
+                        if (export.SourceName != null)
+                        {
+                            if (columnSelected.Contains("Source"))
+                            {
+                                ws.Cells[rowStart, column].Value = export.SourceName;
+                                column++;
+                            }
+                        }
+                        else
+                        {
+                            if (columnSelected.Contains("Source"))
+                            {
+                                ws.Cells[rowStart, column].Value = "";
+                                column++;
+                            }
+                        }
+
+                        if (export.SourceName != null)
+                        {
+                            if (columnSelected.Contains("Link"))
+                            {
+                                ws.Cells[rowStart, column].Value = export.Link;
+                                column++;
+                            }
+                        }
+                        else
+                        {
+                            if (columnSelected.Contains("Link"))
+                            {
+                                ws.Cells[rowStart, column].Value = "";
+                                column++;
+                            }
+                        }
+
+                        if (export.VarLc == true)
+                        {
+                            if (export.CurrencyValue.HasValue)
+                            {
+                                if (columnSelected.Contains("Exchange_Rate_US$"))
+                                {
+                                    ws.Cells[rowStart, column].Value = export.CurrencyValue.Value;
+                                    column++;
+                                }
+                            }
+                            else
+                            {
+                                if (columnSelected.Contains("Exchange_Rate_US$"))
+                                {
+                                    ws.Cells[rowStart, column].Value = "";
+                                    column++;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (columnSelected.Contains("Exchange_Rate_US$"))
+                            {
+                                ws.Cells[rowStart, column].Value = "";
+                                column++;
+                            }
+                        }
+
+                        if (columnSelected.Contains("Notes"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.PublicNotes;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("VAR LC"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.VarLc == true ? "1" : "";
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Area_code"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.AreaCode == true ? "1" : "";
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("COMMENTI NOMISMA (interno)"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.InternalNotes;
+                            column++;
+                        }
+
+                        if (export.SourceName != null)
+                        {
+                            if (columnSelected.Contains("CHI ha inserito/modificato il dato"))
+                            {
+                                ws.Cells[rowStart, column].Value = export.Username;
+                                column++;
+                            }
+                        }
+                        else
+                        {
+                            if (columnSelected.Contains("CHI ha inserito/modificato il dato"))
+                            {
+                                ws.Cells[rowStart, column].Value = "";
+                                column++;
+                            }
+                        }
+
+                        if (export.SourceName != null)
+                        {
+                            if (columnSelected.Contains("collection date (consultation or download)"))
+                            {
+                                ws.Cells[rowStart, column].Value = String.Format("{0:MM/dd/yyyy}", export.DateDownload);
+                                column++;
+                            }
+                        }
+                        else
+                        {
+                            if (columnSelected.Contains("collection date (consultation or download)"))
+                            {
+                                ws.Cells[rowStart, column].Value = "";
+                                column++;
+                            }
+                        }
+
+                        if (export.SourceName != null)
+                        {
+                            if (columnSelected.Contains("reference data repository"))
+                            {
+                                ws.Cells[rowStart, column].Value = export.Repository;
+                                column++;
+                            }
+                        }
+                        else
+                        {
+                            if (columnSelected.Contains("reference data repository"))
+                            {
+                                ws.Cells[rowStart, column].Value = "";
+                                column++;
+                            }
+                        }
+
+                        if (columnSelected.Contains("workin comments_PMI"))
+                        {
+                            ws.Cells[rowStart, column].Value = "";
+                            column++;
+                        }
+
+                        rowStart++;
+                    }
+
+                    //
+
+                    ws.Cells[ws.Dimension.Address].AutoFitColumns();
+
+                    package.SaveAs(memoryStream);
+
+                    TempData["fileStream"] = memoryStream.ToArray();
+
+                    return Json("ok", JsonRequestBehavior.AllowGet);
+                } // using package
+            } // using memorystream
+        }
+
+        //
+        // GET: /Excel/DownloadFile
+        public ActionResult DownloadFile()
+        {
+            if (TempData["fileStream"] != null)
+            {
+                byte[] data = TempData["fileStream"] as byte[];
+                return File(data, "application/vnd.ms-excel", "ExportTobaccoNicotineDatabase.xlsx");
+            }
+            else
+            {
+                // Problem - Log the error, generate a blank file,
+                //           redirect to another controller action - whatever fits with your application
+                return new EmptyResult();
+            }
+        }
+
     }
 }
