@@ -172,7 +172,6 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
-        [Log]
         public ActionResult ResetPassword(string code)
         {
             return code == null ? View("Error") : View();
@@ -204,7 +203,6 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // GET: /Account/ResetPasswordConfirmation
         [AllowAnonymous]
-        [Log]
         public ActionResult ResetPasswordConfirmation()
         {
             return View();

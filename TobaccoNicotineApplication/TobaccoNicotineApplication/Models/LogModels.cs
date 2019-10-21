@@ -22,16 +22,9 @@ namespace TobaccoNicotineApplication.Models
 
     public class LogContext : DbContext
     {
-        private static readonly LogContext _logContext = new LogContext();
-
         public LogContext()
             : base("SecurityConnection")
         {
-        }
-
-        public static LogContext GetLogContext()
-        {
-            return _logContext;
         }
 
         public DbSet<Log> Log { get; set; }

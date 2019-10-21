@@ -22,13 +22,15 @@ namespace TobaccoNicotineApplication.Filters
                 // The IP Address of the Request
                 IPAddress = request.ServerVariables["HTTP_X_FORWARDED_FOR"] ?? request.UserHostAddress,
                 // The URL that was accessed
-                AreaAccessed = request.RawUrl + " " + request.HttpMethod,
+                AreaAccessed = request.RawUrl,
             };
 
             // Stores Log in the Database
-            LogContext context = LogContext.GetLogContext();
-            context.Log.Add(log);
-            context.SaveChanges();
+            using (LogContext context = new LogContext())
+            {
+                context.Log.Add(log);
+                context.SaveChanges();
+            }
 
             // Finishes executing the Action as normal 
             base.OnActionExecuting(filterContext);

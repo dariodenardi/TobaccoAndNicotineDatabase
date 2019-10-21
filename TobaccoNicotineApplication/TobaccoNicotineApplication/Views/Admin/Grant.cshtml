@@ -1,0 +1,216 @@
+﻿@model TobaccoNicotineApplication.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Grant";
+    ViewBag.PageTitle = "Grant";
+    ViewBag.TitlePrincipal = "List of Users";
+
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem
+    {
+        Text = "20",
+        Value = "20"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "30",
+        Value = "30",
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "40",
+        Value = "40"
+    });
+}
+
+@section styles {
+    <!-- Sweet Alert -->
+    <link href="~/Scripts/plugins/bootstrap-sweetalert/sweet-alert.css" rel="stylesheet" type="text/css">
+}
+
+<div class="col-lg-12">
+    <!-- Start panel -->
+    <div class="panel panel-default panel-dark">
+        <div class="panel-heading">
+            <h3 class="panel-title">Summary</h3>
+        </div>
+        <div class="panel-body">
+            <p class="text-muted m-b-30">
+                <b>DETAILS:</b> ADMIN, WRITER, READER
+            </p>
+            <p class="text-muted m-b-30">
+                <b>EDIT:</b> ADMIN, WRITER
+            </p>
+            <p class="text-muted m-b-30">
+                <b>DELETE:</b> ADMIN
+            </p>
+            <p class="text-muted m-b-30">
+                <b>CREATE:</b> ADMIN, WRITER
+            </p>
+            <p class="text-muted m-b-30">
+                <b>EXPORT:</b> ADMIN, WRITER, READER
+            </p>
+            <p class="text-muted m-b-30">
+                <b>IMPORT:</b> ADMIN, WRITER
+            </p>
+            <p class="text-muted m-b-30">
+                <b>REPORT:</b> ADMIN, READER, WRITER
+            </p>
+        </div>
+    </div>
+    <!-- End panel -->
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th width="50%">Username <img id="idSortable" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableUser()" style="width:auto;"></th>
+                    <th width="50%">Grant</th>
+                </tr>
+            </thead>
+            <tbody id="SetUserList"></tbody>
+            <tr id="LoadingStatus"></tr>
+        </table>
+    </div>
+
+    <div style="display: inline-grid">
+        @Html.Label("Show entries", new { @class = "control-label" })
+        @Html.DropDownList("showEntry", listItems, new { @class = "form-control", @onchange = "FilterUser()" })
+    </div>
+    <br />
+    <br />
+    <div class="col-md-12 text-center">
+        @*<ul class="pagination pagination-lg pager" id="myPager"></ul>*@
+        <ul class="pagination m-b-5" id="myPager"></ul>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/pagination.js"></script>
+
+    <!-- Sweet-Alert  -->
+    <script src="~/Scripts/plugins/bootstrap-sweetalert/sweet-alert.min.js" type="text/javascript"></script>
+
+    <script>
+        // ValidateAntiForgeryTokenOnAllPosts
+        var token = $('[name=__RequestVerificationToken]').val();
+
+        var rolesList = new Array();
+
+        // carico script quando finisce di caricare la pagina
+        $('document').ready(function () {
+
+            $.get("/Admin/GetRolesList", function (data) {
+                rolesList = data;
+            }, "json");
+
+            $("#LoadingStatus").html("Loading....");
+            $.get("/Admin/GetUsersList", null, DataBind);
+
+        });
+
+        // inserisco gli elementi nella table
+        function DataBind(UserList) {
+            var SetData = $("#SetUserList");
+            for (var i = 0; i < UserList.length; i++) {
+
+                var Data = "<tr class='row_" + UserList[i] + "'>" +
+                    "<td>" + UserList[i] + "</td>" +
+                    "<td>"
+                    + "<select id=\"" + 'select_' + UserList[i] + "\" >";
+
+                for (var j = 0; j < rolesList.length; j++) {
+                    Data = Data + "<option>" + rolesList[j] + "</option>";
+                }
+
+                Data = Data + "</select > "
+                    + "<a href='#' class='btn btn-dark btn-sm waves-effect' onclick='SaveUser(\"" + UserList[i] + "\")' ><span class='glyphicon glyphicon-ok'></span></a>"
+                    + "</td>" + "</tr>";
+
+                SetData.append(Data);
+                getRoleName(UserList[i]);
+            }
+            $("#LoadingStatus").html(" ");
+            var page = $("#showEntry").val();
+            $('#SetUserList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+        }
+
+        function getRoleName(UserName) {
+
+            $.ajax({
+                type: "GET",
+                url: "/Admin/GetRoleByUserName?UserName=" + UserName,
+                success: function (data) {
+                    document.getElementById('select_' + UserName).selectedIndex = parseInt(data - 1);
+                }
+            })
+
+        }
+
+        // Save User
+        var SaveUser = function (UserName) {
+            var grant = $("#select_" + UserName).val();
+
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Edit",
+                data: {
+                    userName: UserName,
+                    grant: grant
+                },
+                headers: { '__RequestVerificationToken': token },
+                success: function (data) {
+                    if (data == true)
+                        swal({ title: "Good job", text: "Your changes have been applied!", type: "success" });
+                    else
+                        swal("An error has occurred!", "Please wait a few minutes and try again.", "error");
+                }
+            })
+
+        }
+
+        // Filter User
+        function FilterUser() {
+
+            var sortable;
+            var pathImg = document.getElementById("idSortable").src;
+            if (pathImg.includes("asc"))
+                sortable = "asc";
+            else if (pathImg.includes("desc"))
+                sortable = "desc";
+            else //caso in cui non è stato cliccato nessun filtro
+                sortable = null;
+
+            $.ajax({
+                type: "POST",
+                url: "/Admin/GetUsersList",
+                data: {
+                    order: (sortable != null) ? sortable : ""
+                },
+                headers: { "__RequestVerificationToken": token },
+                success: function (result) {
+                    $("#SetUserList").empty();
+                    $("#myPager").empty();
+                    DataBind(result);
+                }
+            })
+        }
+
+        // Sortable User
+        function SortableUser() {
+
+            // cambio immagine
+            var pathImg = document.getElementById("idSortable").src;
+            if (pathImg.includes("asc"))
+                document.getElementById("idSortable").src = "/Images/Sortable/desc.png";
+            else if (pathImg.includes("desc"))
+                document.getElementById("idSortable").src = "/Images/Sortable/asc.png";
+            else // se è ancora l'immagine predefinita
+                document.getElementById("idSortable").src = "/Images/Sortable/asc.png";
+
+            FilterUser();
+
+        }
+
+    </script>
+}
