@@ -13,6 +13,7 @@ using TobaccoNicotineApplication.Models;
 namespace TobaccoNicotineApplication.Controllers
 {
     [Authorize]
+    [NoCache]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -59,10 +60,10 @@ namespace TobaccoNicotineApplication.Controllers
         public ActionResult Login()
         {
             //Display only when user is not logged in
-            if (!User.Identity.IsAuthenticated)
-                return View();
-            else
+            if (User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Home");
+            else
+                return View();
         }
 
         //
@@ -81,6 +82,7 @@ namespace TobaccoNicotineApplication.Controllers
                 case SignInStatus.Success:
                     // messaggio temp
                     TempData["Message"] = "Welcome!";
+
                     return RedirectToAction("Index", "Home");
                 case SignInStatus.LockedOut:
                     bool ok = await this.SignInManager.CheckPasswordExpiredAsync(model.Email, model.Password);
@@ -108,10 +110,10 @@ namespace TobaccoNicotineApplication.Controllers
         public ActionResult Register()
         {
             //Display only when user is not logged in
-            if (!User.Identity.IsAuthenticated)
-                return View();
-            else
+            if (User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Home");
+            else
+                return View();
         }
 
         //
@@ -208,6 +210,10 @@ namespace TobaccoNicotineApplication.Controllers
             return View();
         }
 
+        //
+        // POST: /Account/Lock
+        /*forums.asp.net/t/2130729.aspx?How+to+create+a+lockscreen+for+identity+User+and+Unlock+Screen+with+Identity+User+Password*/
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -288,3 +294,4 @@ namespace TobaccoNicotineApplication.Controllers
         #endregion
     }
 }
+ 

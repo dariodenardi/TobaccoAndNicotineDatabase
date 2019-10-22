@@ -15,6 +15,7 @@ using TobaccoNicotineApplication.Utilities;
 namespace TobaccoNicotineApplication.Controllers
 {
     [Authorize]
+    [NoCache]
     [ValidateAntiForgeryTokenOnAllPosts]
     public class ExcelController : Controller
     {

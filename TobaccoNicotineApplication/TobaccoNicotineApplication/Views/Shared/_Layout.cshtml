@@ -2,6 +2,16 @@
 @using Microsoft.AspNet.Identity.Owin;
 @using TobaccoNicotineApplication.Models;
 
+@{
+    ApplicationUser user = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(User.Identity.GetUserId());
+
+    string pathImage = Path.Combine("~/Uploads/Users/", "avatar-1.jpg");
+    if (!String.IsNullOrEmpty(user.Photo))
+    {
+        pathImage = Path.Combine("~/Uploads/Users/", user.UserName, user.Photo);
+    }
+}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,34 +31,6 @@
     <link href="~/Content/ionicons.css" rel="stylesheet" type="text/css">
     <link href="~/Content/style.css" rel="stylesheet" type="text/css">
 </head>
-
-@{
-    string userPhoto = "";
-    string userPosition = "";
-    string pathImage = Path.Combine("~/Uploads/Users/", "avatar-1.jpg"); ;
-    string photo = "";
-    string position = "";
-    // prevenzione se si cancellano i cookie
-    if (User.Identity.IsAuthenticated == true)
-    {
-        ApplicationUser user = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(User.Identity.GetUserId());
-
-        userPhoto = user.Photo;
-        userPosition = user.Position;
-
-        photo = userPhoto;
-        if (photo != null)
-        {
-            pathImage = Path.Combine("~/Uploads/Users/", User.Identity.Name, photo);
-        }
-
-        position = userPosition;
-    } else
-    {
-        Response.Redirect("~/Account/Login");
-    }
-}
-
 <body class="fixed-left">
 
     <!-- Begin page -->
@@ -84,14 +66,13 @@
                                 <a href="" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
                                     <img src="@Url.Content(pathImage)" alt="user-img" class="img-circle" />
                                     <span class="profile-username">
-                                        @User.Identity.Name
+                                        @user.UserName
                                         <br />
-                                        <small>@position</small>
+                                        <small>@user.Position</small>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="/User/Details/?username=@User.Identity.Name"> Profile</a></li>
-                                    <li><a href="/User/WhiteScreen/?a=User&b=Lock"> Lock screen</a></li>
+                                    <li><a href="/Manage/Index"> Profile</a></li>
                                     <li class="divider"></li>
                                     <li><a href="javascript:document.getElementById('logoutForm').submit()"> Logout</a></li>
                                 </ul>
@@ -112,7 +93,7 @@
                         <img src="@Url.Content(pathImage)" alt="user-img" class="img-circle" />
                     </div>
                     <div class="user-info">
-                        <a class="dropdown-toggle">@User.Identity.Name</a>
+                        <a class="dropdown-toggle">@user.UserName</a>
                         <p class="text-muted m-0"><i class="fa fa-dot-circle-o text-success"></i> Online</p>
                     </div>
                 </div>
@@ -214,7 +195,7 @@
                                     <div class="panel-body">
                                         <h4 class="m-t-0">@ViewBag.TitlePrincipal</h4>
 
-                                        <!--RenderBody possiamo indicare il punto, nel layout della pagina, dove dovrà essere posizionato l'intero contenuto della View che sarà renderizzata.-->
+                                        <!--RenderBody: possiamo indicare il punto, nel layout della pagina, dove dovrà essere posizionato l'intero contenuto della View che sarà renderizzata.-->
                                         @RenderBody()
 
                                         <div style="height: 100px"></div>
@@ -253,6 +234,7 @@
     <script src="~/Scripts/jquery.scrollTo.min.js"></script>
     <script src="~/Scripts/app.js"></script>
 
+    <!--RenderSection: in questo punto vengono posizionati gli script che si trovano nelle altre pagine.-->
     @RenderSection("scripts", required: false)
     <!--Scripts.Render("~/bundles/jquery")-->
     <!--Scripts.Render("~/bundles/bootstrap")-->

@@ -6,11 +6,13 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using TobaccoNicotineApplication.Filters;
 using TobaccoNicotineApplication.Models;
 
 namespace TobaccoNicotineApplication.Controllers
 {
     [Authorize]
+    [NoCache]
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;

@@ -11,6 +11,7 @@ using TobaccoNicotineApplication.Utilities;
 namespace TobaccoNicotineApplication.Controllers
 {
     [Authorize]
+    [NoCache]
     [ValidateAntiForgeryTokenOnAllPosts]
     public class HomeController : Controller
     {

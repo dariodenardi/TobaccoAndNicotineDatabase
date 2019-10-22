@@ -13,6 +13,7 @@ using TobaccoNicotineApplication.Utilities;
 namespace TobaccoNicotineApplication.Controllers
 {
     [Authorize(Roles = "Admin")]
+    [NoCache]
     [ValidateAntiForgeryTokenOnAllPosts]
     public class AdminController : Controller
     {

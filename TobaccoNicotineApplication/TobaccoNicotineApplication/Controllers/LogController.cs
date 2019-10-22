@@ -4,10 +4,13 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TobaccoNicotineApplication.Filters;
 using TobaccoNicotineApplication.Models;
 
 namespace TobaccoNicotineApplication.Controllers
 {
+    [Authorize(Roles = "Admin")]
+    [NoCache]
     public class LogController : Controller
     {
         //
