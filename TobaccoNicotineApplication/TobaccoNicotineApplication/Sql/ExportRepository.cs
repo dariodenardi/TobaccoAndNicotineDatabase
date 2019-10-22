@@ -233,7 +233,7 @@ namespace TobaccoNicotineApplication.Sql
                     }
 
                     string variableNumberOne = "";
-                    if (yearQuery.Contains("MR") && variableQuery.Contains("Year start tobacco growing"))
+                    if (yearQuery.Contains("MR") && variableQuery.Contains("v.[Number] = 1"))
                         variableNumberOne = " OR v3.[Number] = 1 ";
 
                     string execute;
