@@ -93,7 +93,7 @@ namespace TobaccoNicotineApplication.Sql
 
         private static string NUMBER_YEAR = "SELECT COUNT(DISTINCT v.[Year]) FROM [dbo].[Values] v";
 
-        public static List<ExportView> getExport(List<string> countrySelected, List<string> variableSelected, List<string> yearSelected, List<string> columnSelected)
+        public static List<ExportView> getExport(List<short> countrySelected, List<short> variableSelected, List<string> yearSelected, List<string> columnSelected)
         {
             List<ExportView> excelViews = new List<ExportView>();
             //
@@ -202,11 +202,7 @@ namespace TobaccoNicotineApplication.Sql
                     string countryQuery = "AND (";
                     for (int i = 0; i < countrySelected.Count; i++)
                     {
-                        // controllo il carattere '
-                        if (countrySelected[i].Contains("'"))
-                            countrySelected[i] = countrySelected[i].Replace("'", "''");
-
-                        countryQuery += "co.[Name] = '" + countrySelected[i] + "'";
+                        countryQuery += "v.[CountryCode] = " + countrySelected[i];
 
                         if (i != countrySelected.Count - 1)
                             countryQuery += " OR ";
@@ -217,11 +213,7 @@ namespace TobaccoNicotineApplication.Sql
                     string variableQuery = "AND (";
                     for (int i = 0; i < variableSelected.Count; i++)
                     {
-                        // controllo il carattere '
-                        if (variableSelected[i].Contains("'"))
-                            variableSelected[i] = variableSelected[i].Replace("'", "''");
-
-                        variableQuery += "va.[Name] = '" + variableSelected[i] + "'";
+                        variableQuery += "v.[Number] = " + variableSelected[i];
 
                         if (i != variableSelected.Count - 1)
                             variableQuery += " OR ";

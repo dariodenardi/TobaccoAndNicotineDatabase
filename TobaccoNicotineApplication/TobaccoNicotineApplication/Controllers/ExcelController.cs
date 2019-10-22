@@ -196,7 +196,7 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Excel/GenerateExcel
         [HttpPost]
-        public JsonResult GenerateExcel(List<string> countrySelected, List<string> variableSelected, List<string> yearSelected, List<string> columnSelected)
+        public JsonResult GenerateExcel(List<short> countrySelected, List<short> variableSelected, List<string> yearSelected, List<string> columnSelected)
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {

@@ -8,9 +8,11 @@
     var pmiCode = StaticName.PmiCoding();
     var continentName = StaticName.ContinentName();
     var regionName = StaticName.RegionName();
+    var countryCode = StaticName.CountryCode();
     var countryName = StaticName.CountryName();
     var measurementUnitName = StaticName.MeasurementUnitName();
     var phaseName = StaticName.PhaseName();
+    var number = StaticName.Number();
     var variableName = StaticName.VariableName();
     var varLc = StaticName.VarLc();
     var year = StaticName.Year();
@@ -38,6 +40,7 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>@countryCode</th>
                             <th>@countryName</th>
                             <th>@continentName</th>
                             <th>@regionName</th>
@@ -49,6 +52,7 @@
                         {
                             <tr>
                                 <td></td>
+                                <td>@item.Code</td>
                                 <td>@item.Name</td>
                                 <td>@item.Regions.ContinentName</td>
                                 <td>@item.Regions.RegionName</td>
@@ -76,6 +80,7 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>@number</th>
                             <th>@variableName</th>
                             <th>@phaseName</th>
                             <th>@measurementUnitName</th>
@@ -87,6 +92,7 @@
                         {
                             <tr>
                                 <td></td>
+                                <td>@item.Number</td>
                                 <td>@item.Name</td>
                                 <td>@item.PhaseName</td>
                                 <td>@item.MeasurementUnitName</td>
