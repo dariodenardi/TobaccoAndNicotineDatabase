@@ -7,13 +7,16 @@
       <Schema Namespace="TobaccoNicotineDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Countries">
           <Key>
-            <PropertyRef Name="Code" />
+            <PropertyRef Name="CountryCode" />
           </Key>
-          <Property Name="Code" Type="smallint" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="AreaCode" Type="bit" Nullable="false" />
+          <Property Name="CountryCode" Type="smallint" Nullable="false" />
           <Property Name="ContinentCode" Type="smallint" Nullable="false" />
           <Property Name="RegionCode" Type="smallint" Nullable="false" />
+          <Property Name="CountryName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="ContinentName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="RegionName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="PmiCoding" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="AreaCode" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Currencies">
           <Key>
@@ -40,17 +43,6 @@
           <Property Name="NameSource" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="DateSource" Type="date" Nullable="false" />
           <Property Name="TimeSource" Type="time" Precision="7" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Regions">
-          <Key>
-            <PropertyRef Name="ContinentCode" />
-            <PropertyRef Name="RegionCode" />
-          </Key>
-          <Property Name="ContinentCode" Type="smallint" Nullable="false" />
-          <Property Name="RegionCode" Type="smallint" Nullable="false" />
-          <Property Name="ContinentName" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="RegionName" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="PmiCoding" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="Sources">
           <Key>
@@ -93,30 +85,14 @@
           <Property Name="MeasurementUnitName" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="VarLc" Type="bit" Nullable="false" />
         </EntityType>
-        <Association Name="FK__Countries__267ABA7A">
-          <End Role="Regions" Type="Self.Regions" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Countries" Type="Self.Countries" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Regions">
-              <PropertyRef Name="ContinentCode" />
-              <PropertyRef Name="RegionCode" />
-            </Principal>
-            <Dependent Role="Countries">
-              <PropertyRef Name="ContinentCode" />
-              <PropertyRef Name="RegionCode" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Currencie__Count__29572725">
+        <Association Name="FK__Currencie__Count__60A75C0F">
           <End Role="Countries" Type="Self.Countries" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
           <End Role="Currencies" Type="Self.Currencies" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Countries">
-              <PropertyRef Name="Code" />
+              <PropertyRef Name="CountryCode" />
             </Principal>
             <Dependent Role="Currencies">
               <PropertyRef Name="CountryCode" />
@@ -159,14 +135,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Values__CountryC__300424B4">
+        <Association Name="FK__Values__CountryC__619B8048">
           <End Role="Countries" Type="Self.Countries" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
           <End Role="Values" Type="Self.Values" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Countries">
-              <PropertyRef Name="Code" />
+              <PropertyRef Name="CountryCode" />
             </Principal>
             <Dependent Role="Values">
               <PropertyRef Name="CountryCode" />
@@ -191,15 +167,10 @@
           <EntitySet Name="Countries" EntityType="Self.Countries" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Currencies" EntityType="Self.Currencies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MappingVariableSource" EntityType="Self.MappingVariableSource" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Regions" EntityType="Self.Regions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sources" EntityType="Self.Sources" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Values" EntityType="Self.Values" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Variables" EntityType="Self.Variables" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Countries__267ABA7A" Association="Self.FK__Countries__267ABA7A">
-            <End Role="Regions" EntitySet="Regions" />
-            <End Role="Countries" EntitySet="Countries" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Currencie__Count__29572725" Association="Self.FK__Currencie__Count__29572725">
+          <AssociationSet Name="FK__Currencie__Count__60A75C0F" Association="Self.FK__Currencie__Count__60A75C0F">
             <End Role="Countries" EntitySet="Countries" />
             <End Role="Currencies" EntitySet="Currencies" />
           </AssociationSet>
@@ -211,7 +182,7 @@
             <End Role="Sources" EntitySet="Sources" />
             <End Role="MappingVariableSource" EntitySet="MappingVariableSource" />
           </AssociationSet>
-          <AssociationSet Name="FK__Values__CountryC__300424B4" Association="Self.FK__Values__CountryC__300424B4">
+          <AssociationSet Name="FK__Values__CountryC__619B8048" Association="Self.FK__Values__CountryC__619B8048">
             <End Role="Countries" EntitySet="Countries" />
             <End Role="Values" EntitySet="Values" />
           </AssociationSet>
@@ -227,16 +198,18 @@
       <Schema Namespace="TobaccoNicotineDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Country">
           <Key>
-            <PropertyRef Name="Code" />
+            <PropertyRef Name="CountryCode" />
           </Key>
-          <Property Name="Code" Type="Int16" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="AreaCode" Type="Boolean" Nullable="false" />
+          <Property Name="CountryCode" Type="Int16" Nullable="false" />
           <Property Name="ContinentCode" Type="Int16" Nullable="false" />
           <Property Name="RegionCode" Type="Int16" Nullable="false" />
-          <NavigationProperty Name="Regions" Relationship="Self.FK__Countries__267ABA7A" FromRole="Countries" ToRole="Regions" />
-          <NavigationProperty Name="Currencies" Relationship="Self.FK__Currencie__Count__29572725" FromRole="Countries" ToRole="Currencies" />
-          <NavigationProperty Name="Values" Relationship="Self.FK__Values__CountryC__300424B4" FromRole="Countries" ToRole="Values" />
+          <Property Name="CountryName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ContinentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RegionName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PmiCoding" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AreaCode" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Currencies" Relationship="Self.FK__Currencie__Count__60A75C0F" FromRole="Countries" ToRole="Currencies" />
+          <NavigationProperty Name="Values" Relationship="Self.FK__Values__CountryC__619B8048" FromRole="Countries" ToRole="Values" />
         </EntityType>
         <EntityType Name="Currency">
           <Key>
@@ -247,19 +220,7 @@
           <Property Name="Year" Type="Int16" Nullable="false" />
           <Property Name="Value" Type="Decimal" Precision="18" Scale="10" Nullable="false" />
           <Property Name="Notes" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Countries" Relationship="Self.FK__Currencie__Count__29572725" FromRole="Currencies" ToRole="Countries" />
-        </EntityType>
-        <EntityType Name="Region">
-          <Key>
-            <PropertyRef Name="ContinentCode" />
-            <PropertyRef Name="RegionCode" />
-          </Key>
-          <Property Name="ContinentCode" Type="Int16" Nullable="false" />
-          <Property Name="RegionCode" Type="Int16" Nullable="false" />
-          <Property Name="ContinentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="RegionName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="PmiCoding" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Countries" Relationship="Self.FK__Countries__267ABA7A" FromRole="Regions" ToRole="Countries" />
+          <NavigationProperty Name="Countries" Relationship="Self.FK__Currencie__Count__60A75C0F" FromRole="Currencies" ToRole="Countries" />
         </EntityType>
         <EntityType Name="Source">
           <Key>
@@ -291,7 +252,7 @@
           <Property Name="PublicNotes" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="InternalNotes" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="PmiNotes" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Countries" Relationship="Self.FK__Values__CountryC__300424B4" FromRole="Values" ToRole="Countries" />
+          <NavigationProperty Name="Countries" Relationship="Self.FK__Values__CountryC__619B8048" FromRole="Values" ToRole="Countries" />
           <NavigationProperty Name="Variables" Relationship="Self.FK__Values__Number__2F10007B" FromRole="Values" ToRole="Variables" />
           <NavigationProperty Name="Sources" Relationship="Self.MappingVariableSource" FromRole="Values" ToRole="Sources" />
         </EntityType>
@@ -307,44 +268,28 @@
           <Property Name="VarLc" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Values" Relationship="Self.FK__Values__Number__2F10007B" FromRole="Variables" ToRole="Values" />
         </EntityType>
-        <Association Name="FK__Countries__267ABA7A">
-          <End Role="Regions" Type="TobaccoNicotineDatabaseModel.Region" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Countries" Type="TobaccoNicotineDatabaseModel.Country" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Regions">
-              <PropertyRef Name="ContinentCode" />
-              <PropertyRef Name="RegionCode" />
-            </Principal>
-            <Dependent Role="Countries">
-              <PropertyRef Name="ContinentCode" />
-              <PropertyRef Name="RegionCode" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Currencie__Count__29572725">
+        <Association Name="FK__Currencie__Count__60A75C0F">
           <End Role="Countries" Type="TobaccoNicotineDatabaseModel.Country" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
           <End Role="Currencies" Type="TobaccoNicotineDatabaseModel.Currency" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Countries">
-              <PropertyRef Name="Code" />
+              <PropertyRef Name="CountryCode" />
             </Principal>
             <Dependent Role="Currencies">
               <PropertyRef Name="CountryCode" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Values__CountryC__300424B4">
+        <Association Name="FK__Values__CountryC__619B8048">
           <End Role="Countries" Type="TobaccoNicotineDatabaseModel.Country" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
           <End Role="Values" Type="TobaccoNicotineDatabaseModel.Value" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Countries">
-              <PropertyRef Name="Code" />
+              <PropertyRef Name="CountryCode" />
             </Principal>
             <Dependent Role="Values">
               <PropertyRef Name="CountryCode" />
@@ -372,19 +317,14 @@
         <EntityContainer Name="TobaccoNicotineDatabase" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Countries" EntityType="TobaccoNicotineDatabaseModel.Country" />
           <EntitySet Name="Currencies" EntityType="TobaccoNicotineDatabaseModel.Currency" />
-          <EntitySet Name="Regions" EntityType="TobaccoNicotineDatabaseModel.Region" />
           <EntitySet Name="Sources" EntityType="TobaccoNicotineDatabaseModel.Source" />
           <EntitySet Name="Values" EntityType="TobaccoNicotineDatabaseModel.Value" />
           <EntitySet Name="Variables" EntityType="TobaccoNicotineDatabaseModel.Variable" />
-          <AssociationSet Name="FK__Countries__267ABA7A" Association="Self.FK__Countries__267ABA7A">
-            <End Role="Regions" EntitySet="Regions" />
-            <End Role="Countries" EntitySet="Countries" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Currencie__Count__29572725" Association="Self.FK__Currencie__Count__29572725">
+          <AssociationSet Name="FK__Currencie__Count__60A75C0F" Association="Self.FK__Currencie__Count__60A75C0F">
             <End Role="Countries" EntitySet="Countries" />
             <End Role="Currencies" EntitySet="Currencies" />
           </AssociationSet>
-          <AssociationSet Name="FK__Values__CountryC__300424B4" Association="Self.FK__Values__CountryC__300424B4">
+          <AssociationSet Name="FK__Values__CountryC__619B8048" Association="Self.FK__Values__CountryC__619B8048">
             <End Role="Countries" EntitySet="Countries" />
             <End Role="Values" EntitySet="Values" />
           </AssociationSet>
@@ -406,11 +346,14 @@
           <EntitySetMapping Name="Countries">
             <EntityTypeMapping TypeName="TobaccoNicotineDatabaseModel.Country">
               <MappingFragment StoreEntitySet="Countries">
-                <ScalarProperty Name="Code" ColumnName="Code" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="AreaCode" ColumnName="AreaCode" />
+                <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
                 <ScalarProperty Name="ContinentCode" ColumnName="ContinentCode" />
                 <ScalarProperty Name="RegionCode" ColumnName="RegionCode" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="ContinentName" ColumnName="ContinentName" />
+                <ScalarProperty Name="RegionName" ColumnName="RegionName" />
+                <ScalarProperty Name="PmiCoding" ColumnName="PmiCoding" />
+                <ScalarProperty Name="AreaCode" ColumnName="AreaCode" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -421,17 +364,6 @@
                 <ScalarProperty Name="Year" ColumnName="Year" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Regions">
-            <EntityTypeMapping TypeName="TobaccoNicotineDatabaseModel.Region">
-              <MappingFragment StoreEntitySet="Regions">
-                <ScalarProperty Name="ContinentCode" ColumnName="ContinentCode" />
-                <ScalarProperty Name="RegionCode" ColumnName="RegionCode" />
-                <ScalarProperty Name="ContinentName" ColumnName="ContinentName" />
-                <ScalarProperty Name="RegionName" ColumnName="RegionName" />
-                <ScalarProperty Name="PmiCoding" ColumnName="PmiCoding" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

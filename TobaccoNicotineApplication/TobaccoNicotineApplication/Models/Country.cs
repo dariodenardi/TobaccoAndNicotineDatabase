@@ -21,13 +21,15 @@ namespace TobaccoNicotineApplication.Models
             this.Values = new HashSet<Value>();
         }
     
-        public short Code { get; set; }
-        public string Name { get; set; }
-        public bool AreaCode { get; set; }
+        public short CountryCode { get; set; }
         public short ContinentCode { get; set; }
         public short RegionCode { get; set; }
+        public string CountryName { get; set; }
+        public string ContinentName { get; set; }
+        public string RegionName { get; set; }
+        public string PmiCoding { get; set; }
+        public bool AreaCode { get; set; }
     
-        public virtual Region Regions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Currency> Currencies { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

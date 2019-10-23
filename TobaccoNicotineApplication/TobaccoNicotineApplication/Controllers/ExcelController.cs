@@ -116,7 +116,7 @@ namespace TobaccoNicotineApplication.Controllers
                         d_2017 = decimal.Parse(row["2017"].ToString());
                         notes = row["Notes"].ToString().TrimEnd(' ');
 
-                        List<Country> countries = db.Countries.Where(x => x.Name == name).ToList();
+                        List<Country> countries = db.Countries.Where(x => x.CountryName == name).ToList();
 
                         Country country;
                         if ((country = countries.FirstOrDefault()) != null)
@@ -126,7 +126,7 @@ namespace TobaccoNicotineApplication.Controllers
                             {
                                 Currency c = new Currency();
                                 c.Year = year;
-                                c.CountryCode = country.Code;
+                                c.CountryCode = country.CountryCode;
 
                                 if (year == 2010)
                                     c.Value = d_2010;
@@ -157,7 +157,7 @@ namespace TobaccoNicotineApplication.Controllers
 
                         }
                     }
-                } // using db*/
+                }*/ // using db
 
             } // posted file
 
@@ -177,9 +177,6 @@ namespace TobaccoNicotineApplication.Controllers
                 db.Configuration.LazyLoadingEnabled = false;
 
                 countries = db.Countries.ToList();
-
-                foreach (Country c in countries)
-                    db.Entry(c).Reference(i => i.Regions).Load();
 
                 variables = db.Variables.ToList();
 
@@ -744,6 +741,80 @@ namespace TobaccoNicotineApplication.Controllers
                 // Problem - Log the error, generate a blank file,
                 //           redirect to another controller action - whatever fits with your application
                 return new EmptyResult();
+            }
+        }
+
+        //
+        // GET: /Excel/Report
+        [Log]
+        public ActionResult Report()
+        {
+            return View();
+        }
+
+        //
+        // GET: /Excel/GenerateReportRegion
+        [Log]
+        public ActionResult GenerateReportRegion(short yearA, short yearB)
+        {
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                ExcelWorksheet ws = package.Workbook.Worksheets.Add("Regions");
+
+                int rowStart = 2;
+
+                ws.Cells["A1"].Value = "Continent Code";
+                ws.Cells["B1"].Value = "Region Code";
+                ws.Cells["C1"].Value = "Region Name";
+                ws.Cells["D1"].Value = "Pmi Name";
+                ws.Cells["E1"].Value = "% of the database that is filled in";
+                ws.Cells["F1"].Value = "of which, % of the filled in database that is UPDATED";
+                ws.Cells["G1"].Value = "This Year";
+                ws.Cells["H1"].Value = "Last Year";
+
+                // change font e size
+                ws.Cells.Style.Font.Name = "Calibri";
+                ws.Cells.Style.Font.Size = 11;
+                // change color header
+                for (int i = 0; i < ws.Dimension.Columns; i++)
+                {
+                    ws.Cells[1, 1 + i].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    ws.Cells[1, 1 + i].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+                    ws.Cells[1, 1 + i].Style.Font.Bold = true;
+                }
+                // change zoom view
+                ws.View.ZoomScale = 80;
+
+                // code
+
+                /*using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+                {
+                    db.Configuration.LazyLoadingEnabled = false;
+
+                    foreach (Region r in db.Regions)
+                    {
+                        //int numerUpdate = ValueRepository.getNumerUpdateRegion(r.IdContinent, r.IdRegion, yearA, yearB);
+                        //int totValuesNotNull = ValueRepository.getTotValuesNotNullRegion(r.IdContinent, r.IdRegion, thisY);
+                        //int totValues = ValueRepository.getTotValuesRegion(r.ContinentCode, r.RegionCode, yearA);
+
+                        ws.Cells[string.Format("A{0}", rowStart)].Value = r.ContinentCode;
+                        ws.Cells[string.Format("B{0}", rowStart)].Value = r.RegionCode;
+                        ws.Cells[string.Format("C{0}", rowStart)].Value = r.PmiCoding;
+                        ws.Cells[string.Format("D{0}", rowStart)].Value = r.RegionName;
+                        //ws.Cells[string.Format("E{0}", rowStart)].Value = Math.Round((((double)totValuesNotNull / totValues) * 100));
+                        //ws.Cells[string.Format("F{0}", rowStart)].Value = Math.Round((((double)numerUpdate / totValues) * 100));
+                        ws.Cells[string.Format("G{0}", rowStart)].Value = yearA;
+                        ws.Cells[string.Format("H{0}", rowStart)].Value = yearB;
+
+                        rowStart++;
+                    }
+                }*/
+
+                // end code
+
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+
+                return File(package.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "GenerateReportRegions.xlsx");
             }
         }
 

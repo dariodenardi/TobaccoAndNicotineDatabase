@@ -10,7 +10,7 @@
     [PmiNotes]      VARCHAR (1000)  NULL,
     PRIMARY KEY CLUSTERED ([CountryCode] ASC, [Number] ASC, [Year] ASC),
     FOREIGN KEY ([Number]) REFERENCES [dbo].[Variables] ([Number]) ON DELETE CASCADE,
-    FOREIGN KEY ([CountryCode]) REFERENCES [dbo].[Countries] ([Code]) ON DELETE CASCADE
+    FOREIGN KEY ([CountryCode]) REFERENCES [dbo].[Countries] ([CountryCode]) ON DELETE CASCADE
 );
 
 

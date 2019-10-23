@@ -195,9 +195,6 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LogModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Region.cs">
-      <DependentUpon>TobaccoNicotineModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Source.cs">
       <DependentUpon>TobaccoNicotineModel.tt</DependentUpon>
     </Compile>
@@ -225,6 +222,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sql\DataSource.cs" />
     <Compile Include="Sql\ExportRepository.cs" />
+    <Compile Include="Sql\ValueRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\ApplicationVersion.cs" />
     <Compile Include="Utilities\StaticName.cs" />
@@ -259,9 +257,6 @@
     <Content Include="Images\Sortable\asc.png" />
     <Content Include="Images\Sortable\bg.png" />
     <Content Include="Images\Sortable\desc.png" />
-    <Content Include="Sql\Queries\Queries.sql" />
-    <Content Include="Sql\Queries\Values.sql" />
-    <Content Include="Uploads\Users\avatar-1.jpg" />
     <Content Include="Models\TobaccoNicotineModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>TobaccoNicotineModel.edmx</DependentUpon>
@@ -272,16 +267,12 @@
       <DependentUpon>TobaccoNicotineModel.edmx</DependentUpon>
       <LastGenOutput>TobaccoNicotineModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Sql\Queries\Queries.sql" />
+    <Content Include="Sql\Queries\Values.sql" />
+    <Content Include="Uploads\Users\avatar-1.jpg" />
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Models\TobaccoNicotineModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>TobaccoNicotineModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\TobaccoNicotineModel.edmx.diagram">
-      <DependentUpon>TobaccoNicotineModel.edmx</DependentUpon>
-    </Content>
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\fontawesome-webfont.woff" />
@@ -294,6 +285,13 @@
     <Content Include="fonts\materialdesignicons-webfont.ttf" />
     <Content Include="fonts\materialdesignicons-webfont.woff" />
     <Content Include="fonts\materialdesignicons-webfont.woff2" />
+    <EntityDeploy Include="Models\TobaccoNicotineModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TobaccoNicotineModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\TobaccoNicotineModel.edmx.diagram">
+      <DependentUpon>TobaccoNicotineModel.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.11.3.intellisense.js" />
     <Content Include="Scripts\detect.js" />
     <Content Include="Scripts\fastclick.js" />
@@ -344,7 +342,6 @@
     <Content Include="Sql\Tables\dbo.Countries.sql" />
     <Content Include="Sql\Tables\dbo.Currencies.sql" />
     <Content Include="Sql\Tables\dbo.MappingVariableSource.sql" />
-    <Content Include="Sql\Tables\dbo.Regions.sql" />
     <Content Include="Sql\Tables\dbo.Sources.sql" />
     <Content Include="Sql\Tables\dbo.Values.sql" />
     <Content Include="Sql\Tables\dbo.Variables.sql" />
@@ -379,6 +376,7 @@
     <Content Include="Views\Excel\Export.cshtml" />
     <Content Include="Views\Admin\Grant.cshtml" />
     <Content Include="Views\Log\Index.cshtml" />
+    <Content Include="Views\Excel\Report.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Uploads\Sources\" />

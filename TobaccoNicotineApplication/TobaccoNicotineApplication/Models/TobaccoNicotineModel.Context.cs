@@ -27,7 +27,6 @@ namespace TobaccoNicotineApplication.Models
     
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
-        public virtual DbSet<Region> Regions { get; set; }
         public virtual DbSet<Source> Sources { get; set; }
         public virtual DbSet<Value> Values { get; set; }
         public virtual DbSet<Variable> Variables { get; set; }

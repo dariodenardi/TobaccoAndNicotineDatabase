@@ -1,15 +1,17 @@
 ﻿CREATE TABLE [dbo].[Countries] (
-    [Code]          SMALLINT      NOT NULL,
-    [Name]          VARCHAR (255) NOT NULL,
-    [AreaCode]      BIT           NOT NULL,
+    [CountryCode]   SMALLINT      NOT NULL,
     [ContinentCode] SMALLINT      NOT NULL,
     [RegionCode]    SMALLINT      NOT NULL,
-    PRIMARY KEY CLUSTERED ([Code] ASC),
-    FOREIGN KEY ([ContinentCode], [RegionCode]) REFERENCES [dbo].[Regions] ([ContinentCode], [RegionCode]) ON DELETE CASCADE
+    [CountryName]   VARCHAR (255) NOT NULL,
+    [ContinentName] VARCHAR (255) NOT NULL,
+    [RegionName]    VARCHAR (255) NOT NULL,
+    [PmiCoding]     VARCHAR (255) NOT NULL,
+    [AreaCode]      BIT           NOT NULL,
+    PRIMARY KEY CLUSTERED ([CountryCode] ASC)
 );
 
 
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [CountryNameIndex]
-    ON [dbo].[Countries]([Name] ASC);
+    ON [dbo].[Countries]([CountryName] ASC);
 

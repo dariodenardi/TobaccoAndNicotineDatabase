@@ -51,11 +51,11 @@ namespace TobaccoNicotineApplication.Controllers
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
                 db.Configuration.LazyLoadingEnabled = false;
-                Country country = db.Countries.Where(a => a.Name == countryName).FirstOrDefault();
+                Country country = db.Countries.Where(a => a.CountryName == countryName).FirstOrDefault();
                 if (country != null)
                 {
                     // non considero la variabile 1
-                    valuesList = db.Values.Where(x => x.CountryCode == country.Code && x.Number != 1).ToList();
+                    valuesList = db.Values.Where(x => x.CountryCode == country.CountryCode && x.Number != 1).ToList();
                     stato = true;
                 }
             }
