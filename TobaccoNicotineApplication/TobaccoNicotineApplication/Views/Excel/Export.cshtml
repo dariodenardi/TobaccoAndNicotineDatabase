@@ -52,11 +52,11 @@
                         {
                             <tr>
                                 <td></td>
-                                <td>@item.Code</td>
-                                <td>@item.Name</td>
-                                <td>@item.Regions.ContinentName</td>
-                                <td>@item.Regions.RegionName</td>
-                                <td>@item.Regions.PmiCoding</td>
+                                <td>@item.CountryCode</td>
+                                <td>@item.CountryName</td>
+                                <td>@item.ContinentName</td>
+                                <td>@item.RegionName</td>
+                                <td>@item.PmiCoding</td>
                             </tr>
                         }
                     </tbody>
@@ -278,7 +278,7 @@
     </div>
 
     <div class="col-md-2 col-md-offset-5">
-        <input class="btn btn-block btn-success" type="button" id="prepareExcel" value="Download Excel">
+        <input class="btn btn-block btn-success" type="button" id="prepareExcel" value="Download">
         <img src="~/Images/loader.gif" alt="loading" width="200" height="150" id="centerLoading">
     </div>
 

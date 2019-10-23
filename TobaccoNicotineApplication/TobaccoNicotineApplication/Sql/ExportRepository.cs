@@ -10,7 +10,7 @@ namespace TobaccoNicotineApplication.Sql
 {
     public static class ExportRepository
     {
-        private static string QUERY_NO_MR_1 = " FROM [dbo].Variables va, [dbo].Regions r, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2 "
+        private static string QUERY_NO_MR_1 = " FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2 "
                                             + "ON v.[CountryCode] = cu2.[CountryCode] "
                                             + "AND v.[Year] = cu2.[Year] "
                                             + "LEFT JOIN [dbo].MappingVariableSource mvs "
@@ -22,13 +22,11 @@ namespace TobaccoNicotineApplication.Sql
                                             + "AND s.[Date] = mvs.[DateSource] "
                                             + "AND s.[Name] = mvs.[NameSource] "
                                             + "WHERE v.[Number] = va.[Number] "
-                                            + "AND r.[Regioncode] = co.[Regioncode] "
-                                            + "AND r.[ContinentCode] = co.[ContinentCode] "
-                                            + "AND v.[CountryCode] = co.[Code] ";
+                                            + "AND v.[CountryCode] = co.[CountryCode] ";
 
         private static string QUERY_NO_MR_2 = " ORDER BY v.[CountryCode], v.[Number], v.[Year]";
 
-        private static string QUERY_MR_1 = " FROM [dbo].Variables va, [dbo].Regions r, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2 "
+        private static string QUERY_MR_1 = " FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2 "
                                            + "ON v.[CountryCode] = cu2.[CountryCode] "
                                            + "AND v.[Year] = cu2.[Year] "
                                            + "LEFT JOIN [dbo].MappingVariableSource mvs "
@@ -40,9 +38,7 @@ namespace TobaccoNicotineApplication.Sql
                                            + "AND s.[Date] = mvs.[DateSource] "
                                            + "AND s.[Name] = mvs.[NameSource] "
                                            + "WHERE v.[Number] = va.[Number] "
-                                           + "AND r.[Regioncode] = co.[Regioncode] "
-                                           + "AND r.[ContinentCode] = co.[ContinentCode] "
-                                           + "AND v.[CountryCode] = co.[Code] ";
+                                           + "AND v.[CountryCode] = co.[CountryCode] ";
 
         private static string QUERY_MR_2 = " AND v.Year =(SELECT MAX(v1.Year) "
                                            + "FROM [dbo].[Values] v1 "
@@ -52,7 +48,7 @@ namespace TobaccoNicotineApplication.Sql
 
         private static string QUERY_MR_3 = " UNION ";
 
-        private static string QUERY_MR_4 = " FROM [dbo].Variables va, [dbo].Regions r, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2 "
+        private static string QUERY_MR_4 = " FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2 "
                                            + "ON v.[CountryCode] = cu2.[CountryCode] "
                                            + "AND v.[Year] = cu2.[Year] "
                                            + "LEFT JOIN [dbo].MappingVariableSource mvs "
@@ -64,9 +60,7 @@ namespace TobaccoNicotineApplication.Sql
                                            + "AND s.[Date] = mvs.[DateSource] "
                                            + "AND s.[Name] = mvs.[NameSource] "
                                            + "WHERE v.[Number] = va.[Number] "
-                                           + "AND r.[Regioncode] = co.[Regioncode] "
-                                           + "AND r.[ContinentCode] = co.[ContinentCode] "
-                                           + "AND v.[CountryCode] = co.[Code] ";
+                                           + "AND v.[CountryCode] = co.[CountryCode] ";
 
         private static string QUERY_MR_5 = " AND v.Year = (SELECT MAX(v4.[Year])"
                                                            + " FROM [dbo].[Values] v4"
@@ -122,25 +116,25 @@ namespace TobaccoNicotineApplication.Sql
                                 columnQuery += "v.[NomismaCode], ";
                                 break;
                             case "Continent_code":
-                                columnQuery += "r.[ContinentCode], ";
+                                columnQuery += "co.[ContinentCode], ";
                                 break;
                             case "Continent_name":
-                                columnQuery += "r.[ContinentName], ";
+                                columnQuery += "co.[ContinentName], ";
                                 break;
                             case "Region_code":
-                                columnQuery += "r.[RegionCode], ";
+                                columnQuery += "co.[RegionCode], ";
                                 break;
                             case "Region_name":
-                                columnQuery += "r.[RegionName], ";
+                                columnQuery += "co.[RegionName], ";
                                 break;
                             case "Country_code":
                                 columnQuery += "v.[CountryCode], ";
                                 break;
                             case "PMI_coding":
-                                columnQuery += "r.[PmiCoding], ";
+                                columnQuery += "co.[PmiCoding], ";
                                 break;
                             case "Country_name":
-                                columnQuery += "co.[Name], ";
+                                columnQuery += "co.[CountryName], ";
                                 break;
                             case "Supply chain phase_code":
                                 columnQuery += "va.[PhaseCode], ";

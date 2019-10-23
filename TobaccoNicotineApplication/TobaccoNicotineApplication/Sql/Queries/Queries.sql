@@ -8,9 +8,9 @@
 -- v4: prendo l'anno più recente perchè avrei più anni
 -- v5: ottengo la tupla completa del valore
 
-SELECT r.[ContinentCode], r.[ContinentName], r.[RegionCode], r.[RegionName], v.[CountryCode], r.[PmiCoding], co.[Name], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[Year], s.[Name], s.[Link], cu2.[Value],
+SELECT co.[ContinentCode], co.[ContinentName], co.[RegionCode], co.[RegionName], v.[CountryCode], co.[PmiCoding], co.[CountryName], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[Year], s.[Name], s.[Link], cu2.[Value],
 v.[PublicNotes], va.[VarLc], co.[AreaCode], v.[InternalNotes], s.[DateDownload], s.[Repository], s.[Username]
-FROM [dbo].Variables va, [dbo].Regions r, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2
+FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2
 ON v.[CountryCode] = cu2.[CountryCode]
 AND v.[Year] = cu2.[Year]
 LEFT JOIN [dbo].MappingVariableSource mvs
@@ -22,9 +22,7 @@ ON s.[Time] = mvs.[TimeSource]
 AND s.[Date] = mvs.[DateSource]
 AND s.[Name] = mvs.[NameSource]
 WHERE v.[Number] = va.[Number]
-AND r.[RegionCode] = co.[RegionCode]
-AND r.[ContinentCode] = co.[ContinentCode]
-AND v.[CountryCode] = co.[Code]
+AND v.[CountryCode] = co.[CountryCode]
 AND v.CountryCode = 108
 AND v.Year =(SELECT MAX(v1.Year)
 				FROM [dbo].[Values] v1
@@ -32,9 +30,9 @@ AND v.Year =(SELECT MAX(v1.Year)
 				AND v1.[CountryCode] = v.[CountryCode]
 				AND v1.[Number] = v.[Number])
 UNION
-SELECT r.[ContinentCode], r.[ContinentName], r.[RegionCode], r.[RegionName], v.[CountryCode], r.[PmiCoding], co.[Name], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[Year], s.[Name], s.[Link], cu2.[Value],
+SELECT co.[ContinentCode], co.[ContinentName], co.[RegionCode], co.[RegionName], v.[CountryCode], co.[PmiCoding], co.[CountryName], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[Year], s.[Name], s.[Link], cu2.[Value],
 v.[PublicNotes], va.[VarLc], co.[AreaCode], v.[InternalNotes], s.[DateDownload], s.[Repository], s.[Username]
-FROM [dbo].Variables va, [dbo].Regions r, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2
+FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2
 ON v.[CountryCode] = cu2.[CountryCode]
 AND v.[Year] = cu2.[Year]
 LEFT JOIN [dbo].MappingVariableSource mvs
@@ -46,9 +44,7 @@ ON s.[Time] = mvs.[TimeSource]
 AND s.[Date] = mvs.[DateSource]
 AND s.[Name] = mvs.[NameSource]
 WHERE v.[Number] = va.[Number]
-AND r.[RegionCode] = co.[RegionCode]
-AND r.[ContinentCode] = co.[ContinentCode]
-AND v.[CountryCode] = co.[Code]
+AND v.[CountryCode] = co.[CountryCode]
 AND v.CountryCode = 108
 AND v.Year = (SELECT MAX(v4.[Year])
 					FROM [dbo].[Values] v4
@@ -78,9 +74,9 @@ ORDER BY v.[CountryCode], v.[Number], v.[Year]
 
 --NO MR:
 
-SELECT r.[ContinentCode], r.[ContinentName], r.[RegionCode], r.[RegionName], v.[CountryCode], r.[PmiCoding], co.[Name], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[Year], s.[Name], s.[Link], cu2.[Value],
+SELECT co.[ContinentCode], co.[ContinentName], co.[RegionCode], co.[RegionName], v.[CountryCode], co.[PmiCoding], co.[CountryName], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[Year], s.[Name], s.[Link], cu2.[Value],
 v.[PublicNotes], va.[VarLc], co.[AreaCode], v.[InternalNotes], s.[DateDownload], s.[Repository], s.[Username]
-FROM [dbo].Variables va, [dbo].Regions r, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2
+FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2
 ON v.[CountryCode] = cu2.[CountryCode]
 AND v.[Year] = cu2.[Year]
 LEFT JOIN [dbo].MappingVariableSource mvs
@@ -92,8 +88,6 @@ ON s.[Time] = mvs.[TimeSource]
 AND s.[Date] = mvs.[DateSource]
 AND s.[Name] = mvs.[NameSource]
 WHERE v.[Number] = va.[Number]
-AND r.[RegionCode] = co.[RegionCode]
-AND r.[ContinentCode] = co.[ContinentCode]
-AND v.[CountryCode] = co.[Code]
+AND v.[CountryCode] = co.[CountryCode]
 AND v.CountryCode = 108
 ORDER BY v.[CountryCode], v.[Number], v.[Year]
