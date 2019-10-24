@@ -127,14 +127,15 @@ namespace TobaccoNicotineApplication.Controllers
             {
                 if (postedFile != null)
                 {
-                    string path = Server.MapPath("~/Uploads/");
+                    string path = Server.MapPath("~/Uploads");
 
                     ApplicationUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                     if (user != null)
                     {
                         if (!Directory.Exists(path + "/Users/" + user.UserName))
                             Directory.CreateDirectory(path + "/Users/" + user.UserName);
-                        else
+
+                        if (System.IO.File.Exists(path + "/Users/" + user.UserName + "/" + Path.GetFileName(user.Photo)))
                             System.IO.File.Delete(path + "/Users/" + user.UserName + "/" + Path.GetFileName(user.Photo));
                     }
 

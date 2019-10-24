@@ -269,7 +269,7 @@
     </Content>
     <Content Include="Sql\Queries\Queries.sql" />
     <Content Include="Sql\Queries\Values.sql" />
-    <Content Include="Uploads\Users\avatar-1.jpg" />
+    <Content Include="Images\avatar-1.jpg" />
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

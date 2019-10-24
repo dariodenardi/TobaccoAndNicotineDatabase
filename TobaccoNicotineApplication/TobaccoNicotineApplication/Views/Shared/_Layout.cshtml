@@ -5,8 +5,10 @@
 @{
     ApplicationUser user = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(User.Identity.GetUserId());
 
-    string pathImage = Path.Combine("~/Uploads/Users/", "avatar-1.jpg");
-    if (!String.IsNullOrEmpty(user.Photo))
+    string pathImage = Path.Combine("~/Images/", "avatar-1.jpg");
+    var relativePath = "~/Uploads/Users/" + user.UserName + "/" + Path.GetFileName(user.Photo);
+    var absolutePath = Server.MapPath(relativePath);
+    if (System.IO.File.Exists(absolutePath))
     {
         pathImage = Path.Combine("~/Uploads/Users/", user.UserName, user.Photo);
     }
