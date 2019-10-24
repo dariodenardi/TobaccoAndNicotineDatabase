@@ -787,9 +787,9 @@ namespace TobaccoNicotineApplication.Controllers
 
                 // code
 
-                /*using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+                using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
                 {
-                    db.Configuration.LazyLoadingEnabled = false;
+                    /*db.Configuration.LazyLoadingEnabled = false;
 
                     foreach (Region r in db.Regions)
                     {
@@ -807,8 +807,8 @@ namespace TobaccoNicotineApplication.Controllers
                         ws.Cells[string.Format("H{0}", rowStart)].Value = yearB;
 
                         rowStart++;
-                    }
-                }*/
+                    }*/
+                }
 
                 // end code
 

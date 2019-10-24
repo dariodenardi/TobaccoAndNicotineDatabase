@@ -94,7 +94,3 @@ AND v1.Year = @yearThis
 -- QUERY_MAX_YEAR_AVAILABLE
 SELECT MAX(v1.Year)
 FROM [dbo].[Values] v1
-
--- QUERY_MAX_YEAR_MENUS_UNO_AVAILABLE
-SELECT CAST(MAX(v1.Year - 1) AS SMALLINT)
-FROM [dbo].[Values] v1

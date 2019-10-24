@@ -22,7 +22,7 @@ namespace TobaccoNicotineApplication
         internal static async Task StorePasswordChangedAsync(this IUserStore<ApplicationUser, string> store, string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
-                throw new ArgumentNullException("userId");
+                return;
 
             ApplicationUser user = await store.FindByIdAsync(userId);
 
@@ -99,8 +99,7 @@ namespace TobaccoNicotineApplication
 
         public override async Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
         {
-            IdentityResult result = await base.ChangePasswordAsync(
-              userId, currentPassword, newPassword);
+            IdentityResult result = await base.ChangePasswordAsync(userId, currentPassword, newPassword);
 
             if (result.Succeeded)
             {
