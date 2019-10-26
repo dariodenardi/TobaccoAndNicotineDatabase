@@ -68,12 +68,6 @@ namespace TobaccoNicotineApplication.Utilities
             return "Year";
         }
 
-
-
-
-
-
-
         public static string Number()
         {
             return "Number";
@@ -124,24 +118,19 @@ namespace TobaccoNicotineApplication.Utilities
             return "Source Name";
         }
 
-        public static string Username()
-        {
-            return "Username";
-        }
-
         public static string UploadDate()
         {
             return "Upload Date";
         }
 
+        public static string UploadTime()
+        {
+            return "Upload Time";
+        }
+
         public static string DownloadDate()
         {
             return "Download Date";
-        }
-
-        public static string SuggestionName()
-        {
-            return "Suggestion Name";
         }
 
         public static string Link()
@@ -152,11 +141,6 @@ namespace TobaccoNicotineApplication.Utilities
         public static string SourceNote()
         {
             return "Source Note";
-        }
-
-        public static string UploadTime()
-        {
-            return "Upload Time";
         }
 
         public static string DownloadTime()
@@ -172,16 +156,6 @@ namespace TobaccoNicotineApplication.Utilities
         public static string UserName()
         {
             return "Name";
-        }
-
-        public static string Surname()
-        {
-            return "Surname";
-        }
-
-        public static string Position()
-        {
-            return "Position";
         }
 
         public static string Value()
