@@ -1,4 +1,6 @@
-﻿@model TobaccoNicotineApplication.Models.RegisterViewModel
+﻿@using EUCookies;
+
+@model TobaccoNicotineApplication.Models.RegisterViewModel
 
 @{
     ViewBag.Title = "Register";
@@ -16,6 +18,7 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="~/Content/font-awesome.css" rel="stylesheet" type="text/css">
     <link href="~/Content/style.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/cookies_eu.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -148,6 +151,7 @@
             </div>
         </div>
     </div>
+    @Html.Raw(Consent.Instance.Install())
 
     <!-- sample modal content -->
     <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -247,46 +251,50 @@
 
     <script src="~/Scripts/plugins/parsleyjs/parsley.min.js"></script>
 
+    <!-- cookies message -->
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/Scripts/cookies_eu.js"></script>
+
     <script>
-            //has uppercase
-            window.Parsley.addValidator('uppercase', {
-                requirementType: 'number',
-                validateString: function (value, requirement) {
-                    var uppercases = value.match(/[A-Z]/g) || [];
-                    return uppercases.length >= requirement;
-                },
-                messages: {
-                    en: 'Your password must contain at least (%s) uppercase letter.'
-                }
-            });
+        //has uppercase
+        window.Parsley.addValidator('uppercase', {
+            requirementType: 'number',
+            validateString: function (value, requirement) {
+                var uppercases = value.match(/[A-Z]/g) || [];
+                return uppercases.length >= requirement;
+            },
+            messages: {
+                en: 'Your password must contain at least (%s) uppercase letter.'
+            }
+        });
 
-            //has lowercase
-            window.Parsley.addValidator('lowercase', {
-                requirementType: 'number',
-                validateString: function (value, requirement) {
-                    var lowecases = value.match(/[a-z]/g) || [];
-                    return lowecases.length >= requirement;
-                },
-                messages: {
-                    en: 'Your password must contain at least (%s) lowercase letter.'
-                }
-            });
+        //has lowercase
+        window.Parsley.addValidator('lowercase', {
+            requirementType: 'number',
+            validateString: function (value, requirement) {
+                var lowecases = value.match(/[a-z]/g) || [];
+                return lowecases.length >= requirement;
+            },
+            messages: {
+                en: 'Your password must contain at least (%s) lowercase letter.'
+            }
+        });
 
-            //has number
-            window.Parsley.addValidator('number', {
-                requirementType: 'number',
-                validateString: function (value, requirement) {
-                    var numbers = value.match(/[0-9]/g) || [];
-                    return numbers.length >= requirement;
-                },
-                messages: {
-                    en: 'Your password must contain at least (%s) number.'
-                }
-            });
+        //has number
+        window.Parsley.addValidator('number', {
+            requirementType: 'number',
+            validateString: function (value, requirement) {
+                var numbers = value.match(/[0-9]/g) || [];
+                return numbers.length >= requirement;
+            },
+            messages: {
+                en: 'Your password must contain at least (%s) number.'
+            }
+        });
 
-            $(document).ready(function () {
-                $('form').parsley();
-            });
+        $(document).ready(function () {
+            $('form').parsley();
+        });
     </script>
 </body>
 </html>

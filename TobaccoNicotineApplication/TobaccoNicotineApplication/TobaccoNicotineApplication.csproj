@@ -48,6 +48,9 @@
     <Reference Include="EPPlus, Version=4.5.3.2, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <HintPath>..\packages\EPPlus.4.5.3.2\lib\net40\EPPlus.dll</HintPath>
     </Reference>
+    <Reference Include="EUCookies, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EUCookies.NET.1.0.4\lib\net40\EUCookies.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
@@ -238,6 +241,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\cookies_eu.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\ionicons.css" />
@@ -268,6 +272,11 @@
       <DependentUpon>TobaccoNicotineModel.edmx</DependentUpon>
       <LastGenOutput>TobaccoNicotineModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\cookies_eu.js" />
+    <None Include="Scripts\jquery-1.11.3.intellisense.js" />
+    <Content Include="Scripts\jquery-1.11.3.js" />
+    <Content Include="Scripts\jquery-1.11.3.min.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\plugins\dropzone\dist\basic.css" />
     <Content Include="Scripts\plugins\dropzone\dist\dropzone-amd-module.js" />
     <Content Include="Scripts\plugins\dropzone\dist\dropzone.css" />
@@ -301,11 +310,8 @@
     <Content Include="Models\TobaccoNicotineModel.edmx.diagram">
       <DependentUpon>TobaccoNicotineModel.edmx</DependentUpon>
     </Content>
-    <None Include="Scripts\jquery-1.11.3.intellisense.js" />
     <Content Include="Scripts\detect.js" />
     <Content Include="Scripts\fastclick.js" />
-    <Content Include="Scripts\jquery-1.11.3.js" />
-    <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery-1.11.3.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.blockUI.js" />

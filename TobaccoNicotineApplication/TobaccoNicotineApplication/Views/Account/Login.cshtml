@@ -1,4 +1,6 @@
-﻿@model TobaccoNicotineApplication.Models.LoginViewModel
+﻿@using EUCookies;
+
+@model TobaccoNicotineApplication.Models.LoginViewModel
 
 @{
     ViewBag.Title = "Login";
@@ -17,6 +19,7 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="~/Content/font-awesome.css" rel="stylesheet" type="text/css">
     <link href="~/Content/style.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/cookies_eu.css" rel="stylesheet" type="text/css">
 </head>
 <body>
     <div class="accountbg"></div>
@@ -96,6 +99,7 @@
 
         </div>
     </div>
+    @Html.Raw(Consent.Instance.Install())
 
     <script src="~/Scripts/jquery-1.11.3.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
@@ -111,6 +115,10 @@
     <script src="~/Scripts/app.js"></script>
 
     <script src="~/Scripts/plugins/parsleyjs/parsley.min.js"></script>
+
+    <!-- cookies message -->
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/Scripts/cookies_eu.js"></script>
 
     <script>
         $(document).ready(function () {

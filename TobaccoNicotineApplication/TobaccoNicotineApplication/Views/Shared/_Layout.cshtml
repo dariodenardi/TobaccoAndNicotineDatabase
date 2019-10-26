@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNet.Identity;
+﻿@using EUCookies;
+@using Microsoft.AspNet.Identity;
 @using Microsoft.AspNet.Identity.Owin;
 @using TobaccoNicotineApplication.Models;
 
@@ -32,6 +33,7 @@
     <link href="~/Content/materialdesignicons.css" rel="stylesheet" type="text/css">
     <link href="~/Content/ionicons.css" rel="stylesheet" type="text/css">
     <link href="~/Content/style.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/cookies_eu.css" rel="stylesheet" type="text/css">
 </head>
 <body class="fixed-left">
 
@@ -215,7 +217,7 @@
             <footer class="footer">
                 © 2019 Dario De Nardi
             </footer>
-
+            @Html.Raw(Consent.Instance.Install())
         </div>
         <!-- End Right content here -->
 
@@ -235,6 +237,10 @@
     <script src="~/Scripts/jquery.nicescroll.js"></script>
     <script src="~/Scripts/jquery.scrollTo.min.js"></script>
     <script src="~/Scripts/app.js"></script>
+
+    <!-- cookies message -->
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/Scripts/cookies_eu.js"></script>
 
     <!--RenderSection: in questo punto vengono posizionati gli script che si trovano nelle altre pagine.-->
     @RenderSection("scripts", required: false)
