@@ -261,12 +261,13 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Source/LoadSource
         [HttpPost]
-        public ActionResult LoadSource(HttpPostedFileBase file)
+        public JsonResult LoadSource(HttpPostedFileBase file)
         {
             string path = Server.MapPath("~/Uploads");
             try
             {
-                string errorFind = "";
+                string message = "File uploaded.";
+                bool status = true;
                 using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
                 {
                     db.Configuration.ProxyCreationEnabled = false;
@@ -275,7 +276,7 @@ namespace TobaccoNicotineApplication.Controllers
                     string[] slitFileNames = file.FileName.Split('_');
                     if (slitFileNames.Length > 0)
                     {
-                        // converto la prima parte che dovrebbe essere un id
+                        // converto la prima parte che dovrebbe essere un numero
                         int number = int.Parse(slitFileNames[0]);
                         Value value = db.Values.Where(x => x.NomismaCode == short.Parse(slitFileNames[0])).FirstOrDefault();
 
@@ -291,10 +292,7 @@ namespace TobaccoNicotineApplication.Controllers
 
                                 // vedo se esiste già il file
                                 if (System.IO.File.Exists(path + "/Sources" + "/" + filePath + "/" + source.Repository))
-                                {
-                                    return Json(new { success = false, response = "File already exists." }, JsonRequestBehavior.AllowGet);
-                                    //System.IO.File.Delete(path + "/Sources" + "/" + filePath + "/" + source.Repository);
-                                }
+                                    return Json(new { success = false, response = "File already exists.", filePath }, JsonRequestBehavior.AllowGet);
 
                                 // creo l'eventuale cartella della fonte
                                 if (!Directory.Exists(path + "/Sources" + "/" + filePath))
@@ -313,25 +311,46 @@ namespace TobaccoNicotineApplication.Controllers
                             }
                             else
                             {
-                                errorFind += file.FileName + ": source not found.";
+                                status = false;
+                                message += file.FileName + ": source not found.";
                             }
                         }
                         else
                         {
-                            errorFind += file.FileName + ": value not found.";
+                            status = false;
+                            message = file.FileName + ": value not found.";
                         }
                     } // if split
                     else
                     {
-                        errorFind += file.FileName + ": name isn't correct.";
+                        status = false;
+                        message = file.FileName + ": name isn't correct.";
                     }
 
-                    return Json(new { success = true, response = "File uploaded." }, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = status, response = message }, JsonRequestBehavior.AllowGet);
                 } // using db
             }
             catch (Exception exception)
             {
                 return Json(new { success = false, response = exception.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //
+        // POST: /Source/DeleteFile
+        [HttpPost]
+        public JsonResult DeleteFile(string filePath)
+        {
+            string path = Server.MapPath("~/Uploads");
+            try
+            {
+                System.IO.File.Delete(path + "/Sources" + "/" + filePath);
+
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
             }
         }
 
