@@ -11,7 +11,8 @@ namespace TobaccoNicotineApplication.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Variable
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,12 +20,27 @@ namespace TobaccoNicotineApplication.Models
         {
             this.Values = new HashSet<Value>();
         }
-    
+
+        [Required(ErrorMessage = "Number is required.")]
         public short Number { get; set; }
+
+        [Required(ErrorMessage = "Variable Name is required.")]
+        [StringLength(100, MinimumLength = 5, ErrorMessage = "Variable Name must be at least 5 characters.")]
         public string Name { get; set; }
+
+        [Required(ErrorMessage = "Phase Code is required.")]
         public short PhaseCode { get; set; }
+
+        [Required(ErrorMessage = "Phase Name is required.")]
+        [StringLength(30, MinimumLength = 4, ErrorMessage = "Phase Name must be at least 4 characters.")]
+        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only characters are valid.")]
         public string PhaseName { get; set; }
+
+        [Required(ErrorMessage = "Measurement Unit Name is required.")]
+        [StringLength(30, MinimumLength = 1, ErrorMessage = "Continent Name must be at least 1 characters.")]
         public string MeasurementUnitName { get; set; }
+
+        [Required(ErrorMessage = "Var Lc is required.")]
         public bool VarLc { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

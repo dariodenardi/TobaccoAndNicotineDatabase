@@ -1,0 +1,1139 @@
+﻿@using TobaccoNicotineApplication.Utilities
+@using System.ComponentModel.DataAnnotations
+
+@model TobaccoNicotineApplication.Models.Variable
+
+@{
+    ViewBag.Title = "Index";
+    ViewBag.PageTitle = "Variables";
+    ViewBag.TitlePrincipal = "List of Variables";
+
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem
+    {
+        Text = "20",
+        Value = "20"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "30",
+        Value = "30",
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "40",
+        Value = "40"
+    });
+}
+
+@{
+    string phaseCode = StaticName.PhaseCode();
+    string phaseName = StaticName.PhaseName();
+    string number = StaticName.Number();
+    string variableName = StaticName.VariableName();
+    string unitName = StaticName.MeasurementUnitName();
+    string varLc = StaticName.VarLc();
+
+    StringLengthAttribute variableNameLenAttr = typeof(TobaccoNicotineApplication.Models.Variable).GetProperty("Name").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
+    StringLengthAttribute phaseNameLenAttr = typeof(TobaccoNicotineApplication.Models.Variable).GetProperty("PhaseName").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
+    StringLengthAttribute unitNameLenAttr = typeof(TobaccoNicotineApplication.Models.Variable).GetProperty("MeasurementUnitName").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
+}
+
+@section styles {
+    <!-- Plugin -->
+    <link href="~/Scripts/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Sweet Alert -->
+    <link href="~/Scripts/plugins/bootstrap-sweetalert/sweet-alert.css" rel="stylesheet" type="text/css">
+
+    <!-- Chosen -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chosen/1.1.0/chosen.css">
+}
+
+<div class="panel-group panel-group-joined" id="accordion-variable">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a id="collapseTitleOne" data-toggle="collapse" data-parent="#accordion-variable" href="#collapseOne">
+                    Filter
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <!--Filter-->
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.Label(number, new { @class = "control-label col-md-2" })
+                    </dt>
+
+                    <dd>
+                        <select id="numberString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
+                    </dd>
+
+                    <dt>
+                        @Html.Label(variableName, new { @class = "control-label col-md-2" })
+                    </dt>
+
+                    <dd>
+                        <select id="variableNameString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
+                    </dd>
+
+                    <dt>
+                        @Html.Label(phaseCode, new { @class = "control-label col-md-2" })
+                    </dt>
+
+                    <dd>
+                        <select id="phaseCodeString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
+                    </dd>
+
+                    <dt>
+                        @Html.Label(phaseName, new { @class = "control-label col-md-2" })
+                    </dt>
+
+                    <dd>
+                        <select id="phaseNameString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
+                    </dd>
+
+                    <dt>
+                        @Html.Label(varLc, new { @class = "control-label col-md-2" })
+                    </dt>
+
+                    <dd>
+                        <select id="varLcString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
+                    </dd>
+
+                    <dt>
+                        @Html.Label(unitName, new { @class = "control-label col-md-2" })
+                    </dt>
+
+                    <dd>
+                        <select id="measurementUnitString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
+                    </dd>
+                </dl>
+
+                <button type="submit" class="btn btn-primary waves-effect" onclick='FilterVariable()'>Filter</button>
+                <!--Filter-->
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a id="collapseTitleTwo" data-toggle="collapse" data-parent="#accordion-variable" href="#collapseTwo" class="collapsed">
+                    Rows
+                </a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse">
+            <div class="panel-body">
+                <!--Table-->
+                <button type="button" class="btn btn-default" onclick="toggle2()">Select/Deselect All</button>
+                <button type="button" class="btn btn-default" onclick="Copy()">Copy to Clipboard</button>
+                <button type="button" class="btn btn-default" onclick="Paste()">Paste from Clipboard</button>
+                <br />
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="5%"></th>
+                                    <th width="18%">@variableName <img id="idSortable1" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableName()" style="width:auto;"></th>
+                                    <th width="18%">@phaseCode <img id="idSortable2" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortablePhaseCode()" style="width:auto;"></th>
+                                    <th width="18%">@phaseName <img id="idSortable3" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortablePhaseName()" style="width:auto;"></th>
+                                    <th width="18%">@varLc <img id="idSortable4" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableVarLc()" style="width:auto;"></th>
+                                    <th width="18%">@unitName <img id="idSortable5" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableUnitName()" style="width:auto;"></th>
+                                    <th width="5%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="SetVariableList"></tbody>
+                            <tr id="LoadingStatus"></tr>
+                        </table>
+                    </div>
+
+                    <div style="display: inline-grid">
+                        @Html.Label("Show entries", new { @class = "control-label" })
+                        @Html.DropDownList("showEntry", listItems, new { @class = "form-control", @onchange = "FilterVariable(0)" })
+                    </div>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Writer"))
+                    {
+                        <br />
+                        <br />
+                        <button type="button" class="btn btn-success" onclick="AddNewVariable()">Add New Variable</button>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <button type="button" class="btn btn-danger" onclick="deleteRows()">Delete Variable/s</button>
+                    }
+                    <br />
+                    <br />
+                    <div class="col-md-12 text-center">
+                        <!--<ul class="pagination pagination-lg pager" id="myPager"></ul>-->
+                        <ul class="pagination m-b-5" id="myPager"></ul>
+                    </div>
+                </div>
+                <!--Table-->
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Create A Popup Modal For Add and Details*@
+
+<div class="modal fade" id="MyModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 id="ModalTitle"></h4>
+            </div>
+
+            <div class="modal-body">
+                <!-- Start panel -->
+                <div class="col-lg">
+                    <div class="panel panel-default panel-default" id="PanelVariable">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" id="PanelTitleAddEditDetails"></h4>
+                        </div>
+                        <div class="panel-body">
+                            <!-- Start form -->
+                            <form id="form">
+                                <fieldset id="SubmitForm">
+                                    <dl class="dl-horizontal">
+
+                                        <dt>
+                                            @Html.Label(number, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            @Html.TextBoxFor(m => m.Number, new { @id = "Number", @class = "form-control", @placeholder = "Insert " + number + "*" })
+                                            @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
+                                        </dd>
+
+                                        <dt>
+                                            @Html.Label(variableName, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @id = "VarName", @maxlength = 100, @class = "form-control", @placeholder = "Insert " + variableName + "*" } })
+                                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                        </dd>
+
+                                        <dt>
+                                            @Html.Label(phaseCode, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            @Html.TextBoxFor(m => m.PhaseCode, new { @id = "PhaseCode", @class = "form-control", @placeholder = "Insert " + phaseCode + "*" })
+                                            @Html.ValidationMessageFor(model => model.PhaseCode, "", new { @class = "text-danger" })
+                                        </dd>
+
+                                        <dt>
+                                            @Html.Label(phaseName, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            @Html.TextBoxFor(m => m.PhaseName, new { @id = "PhaseName", @class = "form-control", @placeholder = "Insert " + phaseName + "*" })
+                                            @Html.ValidationMessageFor(model => model.PhaseName, "", new { @class = "text-danger" })
+                                        </dd>
+
+                                        <dt>
+                                            @Html.Label(varLc, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            @Html.EditorFor(model => model.VarLc, new { htmlAttributes = new { @id = "VarLc", @class = "form-control", @placeholder = "Insert " + varLc + "*" } })
+                                            @Html.ValidationMessageFor(model => model.VarLc, "", new { @class = "text-danger" })
+                                        </dd>
+
+                                        <dt>
+                                            @Html.Label(unitName, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            @Html.EditorFor(model => model.MeasurementUnitName, new { htmlAttributes = new { @id = "UnitName", @class = "form-control", @placeholder = "Insert " + unitName + "*" } })
+                                            @Html.ValidationMessageFor(model => model.MeasurementUnitName, "", new { @class = "text-danger" })
+                                        </dd>
+                                    </dl>
+
+                                </fieldset>
+                            </form>
+                            <!-- End form -->
+                        </div>
+                    </div>
+                </div>
+                <!-- End panel -->
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="r">Cancel</button>
+                <button type="button" class="btn btn-default" id="CreateVariable">Save</button>
+                <button type="button" class="btn btn-default" id="ViewValues" onclick="cambiaView(this)">Values</button>
+                <button type="button" class="btn btn-default" id="ViewSources" onclick="cambiaView(this)">Sources</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*Create A PopUp Modal For DeleteConfirmation*@
+
+<div class="modal fade" id="DeleteConfirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>There is an operation to be performed...</h4>
+            </div>
+
+            <div class="modal-body">
+                <!-- Start panel -->
+                <div class="col-lg-12">
+                    <div class="panel panel-fill panel-danger">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" id="PanelTitleDelete"></h4>
+                        </div>
+                        <div class="panel-body">
+                            Are you sure you want to delete this Record/s?
+                        </div>
+                    </div>
+                </div>
+                <!-- End panel -->
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="r">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="ConfirmDelete()">Confirm</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <!-- Pagination  -->
+    <script src="~/Scripts/pagination.js"></script>
+
+    <!-- Chosen  -->
+    <script src="//cdn.jsdelivr.net/chosen/1.1.0/chosen.jquery.js"></script>
+
+    <!-- Plugins js -->
+    <script src="~/Scripts/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
+
+    <!-- Sweet-Alert  -->
+    <script src="~/Scripts/plugins/bootstrap-sweetalert/sweet-alert.min.js" type="text/javascript"></script>
+
+    <script>
+        var boolAdmin = '@User.IsInRole("Admin")';
+        var boolWriter = '@User.IsInRole("Writer")';
+        var boolReader = '@User.IsInRole("Reader")';
+
+        // ValidateAntiForgeryTokenOnAllPosts
+        var token = $('[name=__RequestVerificationToken]').val();
+
+        // carico script quando finisce di caricare la pagina
+        $('document').ready(function () {
+
+            // Scelta combobox
+            $('.chosen-select').chosen();
+
+            // Riempo campi filtri
+            loadFilter();
+
+            // Bootstrap-MaxLength (Modal)
+            $('input#VarName').maxlength({
+                alwaysShow: true,
+                placement: 'top-left'
+            });
+
+        });
+
+        // inserisco gli elementi nella table
+        function DataBind(VariableList) {
+
+            $("#LoadingStatus").html("Loading....");
+
+            var SetData = $("#SetVariableList");
+            for (var i = 0; i < VariableList.length; i++) {
+
+                var Data = "<tr class='row_" + VariableList[i].Name + "'>";
+
+                if (boolAdmin || boolWriter) {
+                    Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
+                        + "<td>" + "<input id=\"VarNameTable" + i + "\"" + "class=\"form-control\" minlength='" + @variableNameLenAttr.MinimumLength + "' maxlength='" + @variableNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + VariableList[i].Name + "\" placeholder=\"Insert " + '@variableName' + "*\" onkeypress=\"saveRow(event, 0, '" + VariableList[i].Name + "', VarNameTable" + i + ")\" >" + "</td>"
+                        + "<td>" + "<input id=\"PhaseCodeTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + VariableList[i].PhaseCode + "\" placeholder=\"Insert " + '@phaseCode' + "*\" onkeypress=\"saveRow(event, 1, '" + VariableList[i].Name + "', PhaseCodeTable" + i + ")\" >" + "</td>"
+                        + "<td>" + "<input id=\"PhaseNameTable" + i + "\"" + "class=\"form-control\" minlength='" + @phaseNameLenAttr.MinimumLength + "' maxlength='" + @phaseNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + VariableList[i].PhaseName + "\" placeholder=\"Insert " + '@phaseName' + "*\" onkeypress=\"saveRow(event, 2, '" + VariableList[i].Name + "', PhaseNameTable" + i + ")\" >" + "</td>"
+                        + "<td>" + "<select id=\"VarLcTable" + i + "\"" + "class=\"form-control\" onchange=\"saveRowCombo(0, '" + VariableList[i].Name + "', VarLcTable" + i + ")\" ><option";
+
+                    if (VariableList[i].VarLc == true) {
+                        Data += " selected>true</option><option>false</option></select></td>";
+                    } else
+                        Data += ">true</option><option selected>false</option></select></td>";
+
+                    Data += "<td>" + "<input id=\"UnitNameTable" + i + "\"" + "class=\"form-control\" minlength='" + @unitNameLenAttr.MinimumLength + "' maxlength='" + @unitNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + VariableList[i].MeasurementUnitName + "\" placeholder=\"Insert " + '@unitName' + "*\" onkeypress=\"saveRow(event, 3, '" + VariableList[i].Name + "', UnitNameTable" + i + ")\" >" + "</td>";
+
+                } else {
+                    Data = Data + "<td>" + VariableList[i].Name + "</td>" +
+                        "<td>" + VariableList[i].PhaseCode + "</td>" +
+                        "<td>" + VariableList[i].PhaseName + "</td>" +
+                        "<td>" + VariableList[i].VarLc + "</td>" +
+                        "<td>" + VariableList[i].MeasurementUnitName + "</td>";
+                }
+
+                Data = Data + "<td>" +
+                    "<a href='#' class='btn btn-info btn-sm waves-effect' onclick='DetailsVariable(\"" + VariableList[i].Name + "\")' ><span class='glyphicon glyphicon-eye-open'></span></a>";
+
+                Data = Data + "</td>" + "</tr>";
+
+                SetData.append(Data);
+
+                // aggiungo caratteri campo
+                $('input#VarNameTable' + i).maxlength({
+                    alwaysShow: true,
+                    placement: 'top-left'
+                });
+
+                $('input#PhaseNameTable' + i).maxlength({
+                    alwaysShow: true,
+                    placement: 'top-left'
+                });
+
+                $('input#UnitNameTable' + i).maxlength({
+                    alwaysShow: true,
+                    placement: 'top-left'
+                });
+            }
+
+            $("#LoadingStatus").html(" ");
+            var page = $("#showEntry").val();
+            $('#SetVariableList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+        }
+
+        function AddNewVariable() {
+            $("#form")[0].reset();
+            $("#ModalTitle").html("Add New Variable");
+            $('span[data-valmsg-for').html('');
+            $("#PanelTitleAddEditDetails").html("New Variable");
+            $("#PanelVariable").prop('class', 'panel panel-default panel-success');
+            $("#CreateVariable").prop('class', 'btn btn-success');
+            $("#CreateVariable").show();
+            $("#ViewValues").hide();
+            $("#ViewSources").hide();
+            $("#Number").prop('readonly', '');
+            $("#VarName").prop('readonly', '');
+            $("#PhaseCode").prop('readonly', '');
+            $("#PhaseName").prop('readonly', '');
+            $("#UnitName").prop('readonly', '');
+            $("#VarLc").prop('disabled', '');
+            $("#MyModal").modal();
+        }
+
+        // Show The Popup Modal For Details
+        function DetailsVariable(VariableName) {
+            $("#ModalTitle").html("Details Variable");
+            $('span[data-valmsg-for').html('');
+            $("#PanelVariable").prop('class', 'panel panel-default panel-primary');
+            $("#CreateVariable").hide();
+            $("#ViewValues").show();
+            $("#ViewSources").show();
+            $("#Number").prop('readonly', 'readonly');
+            $("#VarName").prop('readonly', 'readonly');
+            $("#PhaseCode").prop('readonly', 'readonly');
+            $("#PhaseName").prop('readonly', 'readonly');
+            $("#UnitName").prop('readonly', 'readonly');
+            $("#VarLc").prop('disabled', 'true');
+            $("#MyModal").modal();
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                cache: false,
+                traditional: true,
+                url: "/Variable/GetVariableById?VariableName=" + encodeURIComponent(VariableName),
+                success: function (data) {
+                    $("#PanelTitleAddEditDetails").html(data.Name);
+                    $("#Number").val(data.Number);
+                    $("#VarName").val(data.Name);
+                    $("#PhaseCode").val(data.PhaseCode);
+                    $("#PhaseName").val(data.PhaseName);
+                    $("#VarLc").val(data.VarLc);
+                    $("#UnitName").val(data.MeasurementUnitName);
+                }
+            })
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // invia richiesta Ajax per salvare un rows cambiato
+        function saveAjaxRequest(variableName, name, phaseCode, phaseName, varLc, unit, id) {
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                cache: false,
+                traditional: true,
+                url: "/Variable/Edit",
+                headers: { '__RequestVerificationToken': token },
+                data: {
+                    variableUnique: variableName,
+                    name: name,
+                    phaseCode: phaseCode,
+                    phaseName: phaseName,
+                    varLc: varLc,
+                    unit: unit,
+                },
+                success: function (data) {
+                    var isSuccessful = (data['success']);
+
+                    if (isSuccessful == true) {
+
+                        id.style.backgroundColor = "#5CB45B";
+                        setTimeout(function () {
+                            id.style.backgroundColor = "";
+                        }, 500);
+
+                    }
+                    else {
+                        id.style.backgroundColor = "#F03154";
+                        setTimeout(function () {
+                            id.style.backgroundColor = "";
+                        }, 500);
+
+                        var error = data['error'];
+
+                        // solo se l'errore è rilevante viene inviato
+                        if (error != "")
+                            swal("Error!", error, "error");
+
+                    }
+                }
+            })
+
+        }
+
+        function saveRowCombo(params, variableName, id) {
+
+            if (params == '0')
+                saveAjaxRequest(variableName, "", "", "", id.value, "", id);
+        }
+
+        // Save Row
+        function saveRow(e, params, variableName, id) {
+            if (e.keyCode == 13) {
+
+                var name = "";
+                var phaseCode;
+                var phaseName = "";
+                var unit = "";
+                if (params == '0')
+                    name = id.value
+                if (params == '1')
+                    phaseCode = id.value
+                if (params == '2')
+                    phaseName = id.value
+                if (params == '2')
+                    unit = id.value
+
+                saveAjaxRequest(variableName, name, phaseCode, phaseName, "", unit, id);
+
+                return false; // returning false will prevent the event from bubbling up.
+            }
+            else {
+                return true;
+            }
+        }
+
+        // Show The Popup Modal For Create
+        $("#CreateVariable").click(function () {
+            var data = $("#SubmitForm").serialize();
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                cache: false,
+                traditional: true,
+                url: "/Variable/Create",
+                headers: { '__RequestVerificationToken': token },
+                data: data,
+                success: function (data) {
+                    var isSuccessful = (data['success']);
+
+                    if (isSuccessful) {
+                        $("#MyModal").modal("hide");
+                        swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
+                            function () {
+                                FilterVariable(0);
+                            }
+                        );
+                    }
+                    else {
+                        var errors = data['errors'];
+                        displayValidationErrors(errors);
+                    }
+                }
+            })
+
+        })
+
+        function displayValidationErrors(errors) {
+
+            for (var i = 0; i < errors.length; i++) {
+                $('span[data-valmsg-for="' + errors[i].key + '"]').text(errors[i].errors[0]);
+            }
+
+        }
+
+        //Show The Popup Modal For DeleteComfirmation
+        var rowDaCancellareArray = new Array();
+        var DeleteVariable = function () {
+            $("#PanelTitleDelete").html("Delete Variable/s");
+            $("#DeleteConfirmation").modal("show");
+        }
+
+        var ConfirmDelete = function () {
+            // invio n richieste quanti sono i row da cancellare
+            for (var i = 0, n = rowDaCancellareArray.length; i < n; i++) {
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    cache: false,
+                    traditional: true,
+                    url: "/Variable/Delete",
+                    data: { VariableName: rowDaCancellareArray[i] },
+                    headers: { "__RequestVerificationToken": token },
+                    success: function (result) {
+                        if (result == true) {
+                            $("#DeleteConfirmation").modal("hide");
+                            swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
+                                function () {
+                                    FilterVariable(0);
+                                }
+                            );
+                        } else {
+                            swal("An error has occurred!", "Please wait a few minutes and try again.", "error");
+                        }
+
+                    }
+                })
+            }
+        }
+
+        //ComboBox element
+        function loadFilter() {
+
+            $.ajax({
+                url: "/Variable/GetFieldList",
+                type: 'POST',
+                dataType: 'json',
+                cache: false,
+                traditional: true,
+                headers: { "__RequestVerificationToken": token },
+                data: {
+                    number: ($("#numberString").val() != null) ? $("#numberString").chosen().val() : undefined,
+                    variableName: ($("#variableNameString").val() != null) ? $("#variableNameString").val() : undefined,
+                    phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
+                    phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
+                    varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
+                    measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined,
+                },
+                success: function (response) {
+
+                    var numberArray;
+                    var variableNameArray;
+                    var phaseCodeArray;
+                    var phaseNameArray;
+                    var varLcArray;
+                    var measurementUnitNameArray;
+
+                    if ($("#numberString").val() == null) {
+                        $("#numberString").empty();
+                        numberArray = new Array();
+                    }
+                    if ($("#variableNameString").val() == null) {
+                        $("#variableNameString").empty();
+                        variableNameArray = new Array();
+                    }
+                    if ($("#phaseCodeString").val() == null) {
+                        $("#phaseCodeString").empty();
+                        phaseCodeArray = new Array();
+                    }
+                    if ($("#phaseNameString").val() == null) {
+                        $("#phaseNameString").empty();
+                        phaseNameArray = new Array();
+                    }
+                    if ($("#varLcString").val() == null) {
+                        $("#varLcString").empty();
+                        varLcArray = new Array();
+                    }
+                    if ($("#measurementUnitString").val() == null) {
+                        $("#measurementUnitString").empty();
+                        measurementUnitNameArray = new Array();
+                    }
+
+                    $.each(response, function (index, row) {
+                        if ($("#numberString").val() == null)
+                            if (numberArray.includes(row.Number) == false)
+                                numberArray.push(row.Number);
+
+                        if ($("#variableNameString").val() == null)
+                            if (variableNameArray.includes(row.Name) == false)
+                                variableNameArray.push(row.Name);
+
+                        if ($("#phaseCodeString").val() == null)
+                            if (phaseCodeArray.includes(row.PhaseCode) == false)
+                                phaseCodeArray.push(row.PhaseCode);
+
+                        if ($("#phaseNameString").val() == null)
+                            if (phaseNameArray.includes(row.PhaseName) == false)
+                                phaseNameArray.push(row.PhaseName);
+
+                        if ($("#varLcString").val() == null)
+                            if (varLcArray.includes(row.VarLc) == false)
+                                varLcArray.push(row.VarLc);
+
+                        if ($("#measurementUnitString").val() == null)
+                            if (measurementUnitNameArray.includes(row.MeasurementUnitName) == false)
+                                measurementUnitNameArray.push(row.MeasurementUnitName);
+                                
+                    });
+
+                    // ordino array
+                    if ($("#numberString").val() == null) {
+                        numberArray.sort(function (a, b) {
+                            return parseInt(a) - parseInt(b);
+                        });
+                        for (var i = 0, n = numberArray.length; i < n; i++) {
+                            $("#numberString").append("<option value='" + numberArray[i] + "'>" + numberArray[i] + "</option>");
+                        }
+                    }
+
+                    if ($("#variableNameString").val() == null) {
+                        variableNameArray.sort();
+                        for (var i = 0, n = variableNameArray.length; i < n; i++) {
+                            $("#variableNameString").append("<option value='" + variableNameArray[i] + "'>" + variableNameArray[i] + "</option>");
+                        }
+                    }
+
+                    if ($("#phaseCodeString").val() == null) {
+                        phaseCodeArray.sort(function (a, b) {
+                            return parseInt(a) - parseInt(b);
+                        });
+                        for (var i = 0, n = phaseCodeArray.length; i < n; i++) {
+                            $("#phaseCodeString").append("<option value='" + phaseCodeArray[i] + "'>" + phaseCodeArray[i] + "</option>");
+                        }
+                    }
+
+                    if ($("#phaseNameString").val() == null) {
+                        phaseNameArray.sort();
+                        for (var i = 0, n = phaseNameArray.length; i < n; i++) {
+                            $("#phaseNameString").append("<option value='" + phaseNameArray[i] + "'>" + phaseNameArray[i] + "</option>");
+                        }
+                    }
+
+                    if ($("#varLcString").val() == null) {
+                        varLcArray.sort();
+                        for (var i = 0, n = varLcArray.length; i < n; i++) {
+                            $("#varLcString").append("<option value='" + varLcArray[i] + "'>" + varLcArray[i] + "</option>");
+                        }
+                    }
+
+                    if ($("#measurementUnitString").val() == null) {
+                        measurementUnitNameArray.sort();
+                        for (var i = 0, n = measurementUnitNameArray.length; i < n; i++) {
+                            $("#measurementUnitString").append("<option value='" + measurementUnitNameArray[i] + "'>" + measurementUnitNameArray[i] + "</option>");
+                        }
+                    }
+
+                    $('#numberString').trigger("chosen:updated");
+                    $('#variableNameString').trigger("chosen:updated");
+                    $('#phaseCodeString').trigger("chosen:updated");
+                    $('#phaseNameString').trigger("chosen:updated");
+                    $('#measurementUnitString').trigger("chosen:updated");
+                    $('#varLcString').trigger("chosen:updated");
+
+                }
+            });
+
+        }
+
+        // Filter Variable
+        function FilterVariable(selectSortable) {
+
+            var sortable1;
+            var pathImg1 = document.getElementById("idSortable1").src;
+            if (pathImg1.includes("asc"))
+                sortable1 = "asc";
+            else if (pathImg1.includes("desc"))
+                sortable1 = "desc";
+            else //caso in cui non è stato cliccato nessun filtro
+                sortable1 = null;
+
+            var sortable2;
+            var pathImg2 = document.getElementById("idSortable2").src;
+            if (pathImg2.includes("asc"))
+                sortable2 = "asc";
+            else if (pathImg2.includes("desc"))
+                sortable2 = "desc";
+            else //caso in cui non è stato cliccato nessun filtro
+                sortable2 = null;
+
+            var sortable3;
+            var pathImg3 = document.getElementById("idSortable3").src;
+            if (pathImg3.includes("asc"))
+                sortable3 = "asc";
+            else if (pathImg3.includes("desc"))
+                sortable3 = "desc";
+            else //caso in cui non è stato cliccato nessun filtro
+                sortable3 = null;
+
+            var sortable4;
+            var pathImg4 = document.getElementById("idSortable4").src;
+            if (pathImg4.includes("asc"))
+                sortable4 = "asc";
+            else if (pathImg4.includes("desc"))
+                sortable4 = "desc";
+            else //caso in cui non è stato cliccato nessun filtro
+                sortable4 = null;
+
+            var sortable5;
+            var pathImg5 = document.getElementById("idSortable5").src;
+            if (pathImg5.includes("asc"))
+                sortable5 = "asc";
+            else if (pathImg5.includes("desc"))
+                sortable5 = "desc";
+            else //caso in cui non è stato cliccato nessun filtro
+                sortable5 = null;
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                cache: false,
+                traditional: true,
+                url: "/Variable/GetVariableList",
+                headers: { "__RequestVerificationToken": token },
+                data: (($("#numberString").val() != null) ? 'number=' : '') + (($("#numberString").val() != null) ? encodeURIComponent($("#numberString").val()) + '&' : '') +
+                    (($("#variableNameString").val() != null) ? 'variableName=' : '') + (($("#variableNameString").val() != null) ? encodeURIComponent($("#variableNameString").val()) + '&' : '') +
+                    (($("#phaseCodeString").val() != null) ? 'phaseCode=' : '') + (($("#phaseCodeString").val() != null) ? encodeURIComponent($("#phaseCodeString").val()) + '&' : '') +
+                    (($("#phaseNameString").val() != null) ? 'phaseName=' : '') + (($("#phaseNameString").val() != null) ? encodeURIComponent($("#phaseNameString").val()) + '&' : '') +
+                    (($("#varLcString").val() != null) ? 'varLc=' : '') + (($("#varLcString").val() != null) ? encodeURIComponent($("#varLcString").val()) + '&' : '') +
+                    (($("#measurementUnitString").val() != null) ? 'measurementUnit=' : '') + (($("#measurementUnitString").val() != null) ? encodeURIComponent($("#measurementUnitString").val()) : '') +
+                    ((sortable1 != null && selectSortable == 1) ? 'orderName=' : '') + ((sortable1 != null && selectSortable == 1) ? sortable1 + '&' : '') +
+                    ((sortable2 != null && selectSortable == 2) ? 'orderPhaseCode=' : '') + ((sortable2 != null && selectSortable == 2) ? sortable2 : '') +
+                    ((sortable3 != null && selectSortable == 3) ? 'orderPhaseName=' : '') + ((sortable3 != null && selectSortable == 3) ? sortable3 : '') +
+                    ((sortable4 != null && selectSortable == 4) ? 'orderVarLc=' : '') + ((sortable4 != null && selectSortable == 4) ? sortable4 : '') +
+                    ((sortable5 != null && selectSortable == 5) ? 'orderUnitName=' : '') + ((sortable5 != null && selectSortable == 5) ? sortable5 : ''),
+                success: function (result) {
+                    $("#SetVariableList").empty();
+                    $("#myPager").empty();
+                    DataBind(result);
+                    // resetto l'immagine dei filtri
+                    if (selectSortable == 0) {
+                        document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+                    } else if (selectSortable == 1) {
+                        document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+                    } else if (selectSortable == 2) {
+                        document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+                    } else if (selectSortable == 3) {
+                        document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+                    } else if (selectSortable == 4) {
+                        document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+                    } else if (selectSortable == 5) {
+                        document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                        document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                    }
+                    // passo al tab dei row
+                    $("#collapseOne").prop('class', 'panel-collapse collapse');
+                    $("#collapseTwo").prop('class', 'panel-collapse collapse in');
+                    $("#collapseTitleOne").prop('class', 'collapsed');
+                    $("#collapseTitleTwo").prop('class', '');
+                }
+            })
+
+        }
+
+        //Sortable Variable
+
+        function SortableName() {
+
+            // cambio immagine
+            var pathImg1 = document.getElementById("idSortable1").src;
+            if (pathImg1.includes("asc"))
+                document.getElementById("idSortable1").src = "/Images/Sortable/desc.png";
+            else if (pathImg1.includes("desc"))
+                document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
+            else // se è ancora l'immagine predefinita
+                document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
+
+            FilterVariable(1);
+
+        }
+
+        function SortablePhaseCode() {
+
+            // cambio immagine
+            var pathImg2 = document.getElementById("idSortable2").src;
+            if (pathImg2.includes("asc"))
+                document.getElementById("idSortable2").src = "/Images/Sortable/desc.png";
+            else if (pathImg2.includes("desc"))
+                document.getElementById("idSortable2").src = "/Images/Sortable/asc.png";
+            else // se è ancora l'immagine predefinita
+                document.getElementById("idSortable2").src = "/Images/Sortable/asc.png";
+
+            FilterVariable(2);
+
+        }
+
+        function SortablePhaseName() {
+
+            // cambio immagine
+            var pathImg2 = document.getElementById("idSortable3").src;
+            if (pathImg2.includes("asc"))
+                document.getElementById("idSortable3").src = "/Images/Sortable/desc.png";
+            else if (pathImg2.includes("desc"))
+                document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
+            else // se è ancora l'immagine predefinita
+                document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
+
+            FilterVariable(3);
+
+        }
+
+        function SortableVarLc() {
+
+            // cambio immagine
+            var pathImg2 = document.getElementById("idSortable4").src;
+            if (pathImg2.includes("asc"))
+                document.getElementById("idSortable4").src = "/Images/Sortable/desc.png";
+            else if (pathImg2.includes("desc"))
+                document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
+            else // se è ancora l'immagine predefinita
+                document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
+
+            FilterVariable(4);
+
+        }
+
+        function SortableUnitName() {
+
+            // cambio immagine
+            var pathImg2 = document.getElementById("idSortable5").src;
+            if (pathImg2.includes("asc"))
+                document.getElementById("idSortable5").src = "/Images/Sortable/desc.png";
+            else if (pathImg2.includes("desc"))
+                document.getElementById("idSortable5").src = "/Images/Sortable/asc.png";
+            else // se è ancora l'immagine predefinita
+                document.getElementById("idSortable5").src = "/Images/Sortable/asc.png";
+
+            FilterVariable(5);
+
+        }
+
+        // seleziono tutti gli elementi
+        var selectAll = true;
+        function toggle2() {
+            checkboxes = document.getElementsByName('foo2');
+
+            // non ci sono elementi nella tabella
+            if (checkboxes.length == 0) {
+                swal("Attention!", "there aren't rows in the table!", "error");
+                return;
+            }
+
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+
+                checkboxes[i].checked = selectAll;
+            }
+            // cambio in true così la prossima volta viene fatto il contrario
+            if (selectAll == false)
+                selectAll = true;
+            else
+                selectAll = false;
+        }
+
+        // tasto cancella button
+        function deleteRows() {
+
+            // resetto array
+            rowDaCancellareArray = new Array();
+            // numero di checked trovati
+            var numeroCheck = 0;
+
+            var table = document.getElementById("SetVariableList");
+            for (var i = 0; i < table.children.length; i++) {
+                var riga = table.children[i];
+                // vedo la cella checkbox
+                var cellaCheckbox = riga.cells[0];
+                var c = cellaCheckbox.children[0].children[0];
+                if (c.checked) {
+                    numeroCheck++;
+                    var className = riga.className;
+                    rowDaCancellareArray.push(className.replace("row_", ""));
+                }
+            }
+
+            if (numeroCheck == 0)
+                swal("Attention!", "Select at least one a row!", "error");
+            else {
+                DeleteVariable();
+            }
+
+        }
+
+        // copio i valori selezionati
+        function Copy() {
+
+            // resetto array
+            var rowDaCopiareArray = new Array();
+            // numero di checked trovati
+            var numeroCheck = 0;
+
+            var table = document.getElementById("SetVariableList");
+            for (var i = 0; i < table.children.length; i++) {
+                var riga = table.children[i];
+                // vedo la cella checkbox
+                var cellaCheckbox = riga.cells[0];
+                var c = cellaCheckbox.children[0].children[0];
+                if (c.checked) {
+                    numeroCheck++;
+                    // salvo tutti i valori della riga
+                    var valori_riga = "";
+                    for (var t = 1, n = riga.children.length - 1; t < n; t++) {
+                        valori_riga += riga.children[t].children[0].value + "\t";
+                    }
+                    // aggiungo riga
+                    rowDaCopiareArray.push(valori_riga.trim('\t'));
+                }
+            }
+
+            if (numeroCheck == 0)
+                swal("Attention!", "Select at least one a row!", "error");
+            else {
+                var stringaFinale = "";
+                for (var i = 0, n = rowDaCopiareArray.length; i < n; i++) {
+                    stringaFinale += rowDaCopiareArray[i] + "\n";
+                }
+                copyToClipboard(stringaFinale.trim('\n'));
+            }
+
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    // Success!
+                    swal({
+                        title: "Row/s copied!",
+                        timer: 1000,
+                        showConfirmButton: false
+                    });
+                })
+                .catch(err => {
+                    swal("Something went wrong!", err, "error");
+                    //console.log('Something went wrong', err);
+                });
+        }
+
+        // incollo i valori selezionati
+        function pasteFromClipboard(numeroCheck) {
+            navigator.clipboard.readText()
+                .then(text => {
+                    // `text` contains the text read from the clipboard
+                    // suddivido i valori a capo
+                    var res = text.trim('\n').split("\n");
+
+                    // controllo se il numero di slit è minore delle righe selezionate
+                    if ((res.length) < numeroCheck) {
+                        swal("Attention!", "Number of rows is different from the copied values!", "error");
+                        return;
+                    }
+
+                    // serve per i valori dell'array dello slit
+                    var m = 0;
+                    var table = document.getElementById("SetVariableList");
+                    for (var i = 0; i < table.children.length; i++) {
+                        var riga = table.children[i];
+                        // vedo la cella checkbox
+                        var cellaCheckbox = riga.cells[0];
+                        var c = cellaCheckbox.children[0].children[0];
+                        if (c.checked) {
+                            // suddivido ancora per quanto riguarda la linea
+                            var res2 = res[m].split('\t');
+
+                            if (res2.length < 2) {
+                                swal("Attention!", "Number of columns is different from the copied values!", "error");
+                                return;
+                            }
+
+                            var variableName = riga.children[1].children[0].value;
+                            var name = res2[0].trim('\r').trim('\n');
+                            var phaseCode = res2[1].trim('\r').trim('\n');
+                            var phaseName = res2[2].trim('\r').trim('\n');
+                            var varLc = res2[3].trim('\r').trim('\n');
+                            var unit = res2[4].trim('\r').trim('\n');
+
+                            // cambio valori riga
+                            riga.children[1].children[0].value = name;
+                            riga.children[2].children[0].value = phaseCode;
+                            riga.children[3].children[0].value = phaseName;
+                            riga.children[4].children[0].value = varLc;
+                            riga.children[5].children[0].value = unit;
+
+                            // invio richiesta ajax per salvare
+                            saveAjaxRequest(variableName, name, phaseCode, phaseName, varLc, unit, riga)
+
+                            m++;
+                        }
+                    }
+
+                })
+                .catch(err => {
+                    // maybe user didn't grant access to read from clipboard
+                    swal("Something went wrong!", err, "error");
+                    //console.log('Something went wrong', err);
+                });
+        }
+
+        function Paste() {
+            var numeroCheck = 0;
+
+            var table = document.getElementById("SetVariableList");
+            for (var i = 0, n = table.children.length; i < n; i++) {
+                var riga = table.children[i];
+                // vedo la cella checkbox
+                var cellaCheckbox = riga.cells[0];
+                var c = cellaCheckbox.children[0].children[0];
+                if (c.checked) {
+                    numeroCheck++;
+                }
+            }
+
+            if (numeroCheck == 0)
+                swal("Attention!", "Select at least one a row!", "error");
+            else {
+                pasteFromClipboard(numeroCheck);
+            }
+        }
+    </script>
+}

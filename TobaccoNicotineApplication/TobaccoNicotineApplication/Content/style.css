@@ -4493,7 +4493,21 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
 #PanelTitleAddEditDetails { color: white }
 
 /* cambio cursore immagine  */
-#idSortable:hover { cursor: pointer  }
+#idSortable1:hover {
+    cursor: pointer
+}
+#idSortable2:hover {
+    cursor: pointer
+}
+#idSortable3:hover {
+    cursor: pointer
+}
+#idSortable4:hover {
+    cursor: pointer
+}
+#idSortable5:hover {
+    cursor: pointer
+}
 
 /* immagine loading */
 #centerLoading {
