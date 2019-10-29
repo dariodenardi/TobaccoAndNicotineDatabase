@@ -11,7 +11,8 @@ namespace TobaccoNicotineApplication.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Country
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,14 +21,37 @@ namespace TobaccoNicotineApplication.Models
             this.Currencies = new HashSet<Currency>();
             this.Values = new HashSet<Value>();
         }
-    
+
+        [Required(ErrorMessage = "Country Code is required.")]
         public short CountryCode { get; set; }
+
+        [Required(ErrorMessage = "Continent Code is required.")]
         public short ContinentCode { get; set; }
+
+        [Required(ErrorMessage = "Region Code is required.")]
         public short RegionCode { get; set; }
+
+        [Required(ErrorMessage = "Country Name is required.")]
+        [StringLength(70, MinimumLength = 4, ErrorMessage = "Country Name must be at least 4 characters.")]
+        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only characters are valid.")]
         public string CountryName { get; set; }
+
+        [Required(ErrorMessage = "Continent Name is required")]
+        [StringLength(30, MinimumLength = 2, ErrorMessage = "Continent Name must be at least 2 characters.")]
+        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only characters are valid.")]
         public string ContinentName { get; set; }
+
+        [Required(ErrorMessage = "Region Name is required")]
+        [StringLength(30, MinimumLength = 2, ErrorMessage = "Region Name must be at least 2 characters.")]
+        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only characters are valid.")]
         public string RegionName { get; set; }
+
+        [Required(ErrorMessage = "Pmi Coding is required.")]
+        [StringLength(30, MinimumLength = 2, ErrorMessage = "Pmi Coding must be at least 2 characters.")]
+        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only characters are valid.")]
         public string PmiCoding { get; set; }
+
+        [Required(ErrorMessage = "Area Code is required.")]
         public bool AreaCode { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -359,21 +359,21 @@
             var SetData = $("#SetVariableList");
             for (var i = 0; i < VariableList.length; i++) {
 
-                var Data = "<tr class='row_" + VariableList[i].Name + "'>";
+                var Data = "<tr class='row_" + VariableList[i].Number + "'>";
 
                 if (boolAdmin || boolWriter) {
                     Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
-                        + "<td>" + "<input id=\"VarNameTable" + i + "\"" + "class=\"form-control\" minlength='" + @variableNameLenAttr.MinimumLength + "' maxlength='" + @variableNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + VariableList[i].Name + "\" placeholder=\"Insert " + '@variableName' + "*\" onkeypress=\"saveRow(event, 0, '" + VariableList[i].Name + "', VarNameTable" + i + ")\" >" + "</td>"
-                        + "<td>" + "<input id=\"PhaseCodeTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + VariableList[i].PhaseCode + "\" placeholder=\"Insert " + '@phaseCode' + "*\" onkeypress=\"saveRow(event, 1, '" + VariableList[i].Name + "', PhaseCodeTable" + i + ")\" >" + "</td>"
-                        + "<td>" + "<input id=\"PhaseNameTable" + i + "\"" + "class=\"form-control\" minlength='" + @phaseNameLenAttr.MinimumLength + "' maxlength='" + @phaseNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + VariableList[i].PhaseName + "\" placeholder=\"Insert " + '@phaseName' + "*\" onkeypress=\"saveRow(event, 2, '" + VariableList[i].Name + "', PhaseNameTable" + i + ")\" >" + "</td>"
-                        + "<td>" + "<select id=\"VarLcTable" + i + "\"" + "class=\"form-control\" onchange=\"saveRowCombo(0, '" + VariableList[i].Name + "', VarLcTable" + i + ")\" ><option";
+                        + "<td>" + "<input id=\"VarNameTable" + i + "\"" + "class=\"form-control\" minlength='" + @variableNameLenAttr.MinimumLength + "' maxlength='" + @variableNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + VariableList[i].Name + "\" placeholder=\"Insert " + '@variableName' + "*\" onkeypress=\"saveRow(event, 0, '" + VariableList[i].Number + "', VarNameTable" + i + ")\" >" + "</td>"
+                        + "<td>" + "<input id=\"PhaseCodeTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + VariableList[i].PhaseCode + "\" placeholder=\"Insert " + '@phaseCode' + "*\" onkeypress=\"saveRow(event, 1, '" + VariableList[i].Number + "', PhaseCodeTable" + i + ")\" >" + "</td>"
+                        + "<td>" + "<input id=\"PhaseNameTable" + i + "\"" + "class=\"form-control\" minlength='" + @phaseNameLenAttr.MinimumLength + "' maxlength='" + @phaseNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + VariableList[i].PhaseName + "\" placeholder=\"Insert " + '@phaseName' + "*\" onkeypress=\"saveRow(event, 2, '" + VariableList[i].Number + "', PhaseNameTable" + i + ")\" >" + "</td>"
+                        + "<td>" + "<select id=\"VarLcTable" + i + "\"" + "class=\"form-control\" onchange=\"saveRowCombo(0, '" + VariableList[i].Number + "', VarLcTable" + i + ")\" ><option";
 
                     if (VariableList[i].VarLc == true) {
                         Data += " selected>true</option><option>false</option></select></td>";
                     } else
                         Data += ">true</option><option selected>false</option></select></td>";
 
-                    Data += "<td>" + "<input id=\"UnitNameTable" + i + "\"" + "class=\"form-control\" minlength='" + @unitNameLenAttr.MinimumLength + "' maxlength='" + @unitNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + VariableList[i].MeasurementUnitName + "\" placeholder=\"Insert " + '@unitName' + "*\" onkeypress=\"saveRow(event, 3, '" + VariableList[i].Name + "', UnitNameTable" + i + ")\" >" + "</td>";
+                    Data += "<td>" + "<input id=\"UnitNameTable" + i + "\"" + "class=\"form-control\" minlength='" + @unitNameLenAttr.MinimumLength + "' maxlength='" + @unitNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + VariableList[i].MeasurementUnitName + "\" placeholder=\"Insert " + '@unitName' + "*\" onkeypress=\"saveRow(event, 3, '" + VariableList[i].Number + "', UnitNameTable" + i + ")\" >" + "</td>";
 
                 } else {
                     Data = Data + "<td>" + VariableList[i].Name + "</td>" +
@@ -384,7 +384,7 @@
                 }
 
                 Data = Data + "<td>" +
-                    "<a href='#' class='btn btn-info btn-sm waves-effect' onclick='DetailsVariable(\"" + VariableList[i].Name + "\")' ><span class='glyphicon glyphicon-eye-open'></span></a>";
+                    "<a href='#' class='btn btn-info btn-sm waves-effect' onclick='DetailsVariable(\"" + VariableList[i].Number + "\")' ><span class='glyphicon glyphicon-eye-open'></span></a>";
 
                 Data = Data + "</td>" + "</tr>";
 
@@ -432,7 +432,7 @@
         }
 
         // Show The Popup Modal For Details
-        function DetailsVariable(VariableName) {
+        function DetailsVariable(Number) {
             $("#ModalTitle").html("Details Variable");
             $('span[data-valmsg-for').html('');
             $("#PanelVariable").prop('class', 'panel panel-default panel-primary');
@@ -451,7 +451,7 @@
                 dataType: 'json',
                 cache: false,
                 traditional: true,
-                url: "/Variable/GetVariableById?VariableName=" + encodeURIComponent(VariableName),
+                url: "/Variable/GetVariableById?number=" + Number,
                 success: function (data) {
                     $("#PanelTitleAddEditDetails").html(data.Name);
                     $("#Number").val(data.Number);
@@ -469,7 +469,7 @@
         }
 
         // invia richiesta Ajax per salvare un rows cambiato
-        function saveAjaxRequest(variableName, name, phaseCode, phaseName, varLc, unit, id) {
+        function saveAjaxRequest(number, name, phaseCode, phaseName, varLc, unit, id) {
 
             $.ajax({
                 type: "POST",
@@ -479,7 +479,7 @@
                 url: "/Variable/Edit",
                 headers: { '__RequestVerificationToken': token },
                 data: {
-                    variableUnique: variableName,
+                    number: number,
                     name: name,
                     phaseCode: phaseCode,
                     phaseName: phaseName,
@@ -515,14 +515,14 @@
 
         }
 
-        function saveRowCombo(params, variableName, id) {
+        function saveRowCombo(params, number, id) {
 
             if (params == '0')
-                saveAjaxRequest(variableName, "", "", "", id.value, "", id);
+                saveAjaxRequest(number, "", "", "", id.value, "", id);
         }
 
         // Save Row
-        function saveRow(e, params, variableName, id) {
+        function saveRow(e, params, number, id) {
             if (e.keyCode == 13) {
 
                 var name = "";
@@ -538,7 +538,7 @@
                 if (params == '2')
                     unit = id.value
 
-                saveAjaxRequest(variableName, name, phaseCode, phaseName, "", unit, id);
+                saveAjaxRequest(number, name, phaseCode, phaseName, "", unit, id);
 
                 return false; // returning false will prevent the event from bubbling up.
             }
@@ -603,7 +603,7 @@
                     cache: false,
                     traditional: true,
                     url: "/Variable/Delete",
-                    data: { VariableName: rowDaCancellareArray[i] },
+                    data: { number: rowDaCancellareArray[i] },
                     headers: { "__RequestVerificationToken": token },
                     success: function (result) {
                         if (result == true) {
@@ -1074,6 +1074,9 @@
                     var table = document.getElementById("SetVariableList");
                     for (var i = 0; i < table.children.length; i++) {
                         var riga = table.children[i];
+
+                        var className = riga.className;
+                        var number = className.replace("row_", "");
                         // vedo la cella checkbox
                         var cellaCheckbox = riga.cells[0];
                         var c = cellaCheckbox.children[0].children[0];
@@ -1086,7 +1089,6 @@
                                 return;
                             }
 
-                            var variableName = riga.children[1].children[0].value;
                             var name = res2[0].trim('\r').trim('\n');
                             var phaseCode = res2[1].trim('\r').trim('\n');
                             var phaseName = res2[2].trim('\r').trim('\n');
@@ -1101,7 +1103,7 @@
                             riga.children[5].children[0].value = unit;
 
                             // invio richiesta ajax per salvare
-                            saveAjaxRequest(variableName, name, phaseCode, phaseName, varLc, unit, riga)
+                            saveAjaxRequest(number, name, phaseCode, phaseName, varLc, unit, riga)
 
                             m++;
                         }

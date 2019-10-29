@@ -80,19 +80,19 @@ namespace TobaccoNicotineApplication.Controllers
                 else if (orderUnitName == "asc")
                     variables = variables.OrderBy(x => x.MeasurementUnitName);
 
-                return Json(variables.Select(x => new { x.Name, x.PhaseCode, x.PhaseName, x.VarLc, x.MeasurementUnitName }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(variables.Select(x => new { x.Number, x.Name, x.PhaseCode, x.PhaseName, x.VarLc, x.MeasurementUnitName }).ToList(), JsonRequestBehavior.AllowGet);
             }
         }
 
         //
         // GET: /Variable/GetVariableById
-        public JsonResult GetVariableById(string VariableName)
+        public JsonResult GetVariableById(short number)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
                 db.Configuration.LazyLoadingEnabled = false;
 
-                Variable model = db.Variables.Where(x => x.Name == VariableName).FirstOrDefault();
+                Variable model = db.Variables.Where(x => x.Number == number).FirstOrDefault();
 
                 return Json(model, JsonRequestBehavior.AllowGet);
             }
@@ -103,12 +103,12 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
         [Log]
-        public JsonResult Edit(string variableUnique, string name, short? phaseCode, string phaseName, bool? varLc, string unit)
+        public JsonResult Edit(short number, string name, short? phaseCode, string phaseName, bool? varLc, string unit)
         {
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
-                Variable model = db.Variables.Where(x => x.Name == variableUnique).FirstOrDefault();
+                Variable model = db.Variables.Where(x => x.Number == number).FirstOrDefault();
 
                 if (model != null)
                 {
@@ -174,12 +174,12 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [Log]
-        public JsonResult Delete(string VariableName)
+        public JsonResult Delete(short number)
         {
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
-                Variable variable = db.Variables.Where(a => a.Name == VariableName).FirstOrDefault();
+                Variable variable = db.Variables.Where(a => a.Number == number).FirstOrDefault();
                 if (variable != null)
                 {
                     db.Variables.Remove(variable);
