@@ -105,6 +105,18 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
+        // GET: /Country/GetListCountryName
+        public JsonResult GetListCountryName()
+        {
+            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                return Json(db.Countries.Select(x => new { x.CountryName, x.CountryCode }).ToList(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //
         // POST: /Country/Edit
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]

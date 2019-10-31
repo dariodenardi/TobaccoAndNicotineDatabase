@@ -1,12 +1,12 @@
 ﻿@using TobaccoNicotineApplication.Utilities
 @using System.ComponentModel.DataAnnotations
 
-@model TobaccoNicotineApplication.Models.Country
+@model TobaccoNicotineApplication.Models.Currency
 
 @{
     ViewBag.Title = "Index";
-    ViewBag.PageTitle = "Countries";
-    ViewBag.TitlePrincipal = "List of Countries";
+    ViewBag.PageTitle = "Currencies";
+    ViewBag.TitlePrincipal = "List of Currencies";
 
     List<SelectListItem> listItems = new List<SelectListItem>();
     listItems.Add(new SelectListItem
@@ -35,11 +35,11 @@
     string countryCode = StaticName.CountryCode();
     string countryName = StaticName.CountryName();
     string areaCode = StaticName.AreaCode();
+    string year = StaticName.Year();
+    string value = StaticName.Value();
+    string notes = StaticName.CurrencyNote();
 
-    StringLengthAttribute countryNameLenAttr = typeof(TobaccoNicotineApplication.Models.Country).GetProperty("CountryName").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
-    StringLengthAttribute pmiCodingLenAttr = typeof(TobaccoNicotineApplication.Models.Country).GetProperty("PmiCoding").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
-    StringLengthAttribute continentNameLenAttr = typeof(TobaccoNicotineApplication.Models.Country).GetProperty("ContinentName").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
-    StringLengthAttribute regionNameLenAttr = typeof(TobaccoNicotineApplication.Models.Country).GetProperty("RegionName").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
+    StringLengthAttribute notesNameLenAttr = typeof(TobaccoNicotineApplication.Models.Currency).GetProperty("Notes").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
 }
 
 @section styles {
@@ -53,11 +53,11 @@
     <link rel="stylesheet" href="//cdn.jsdelivr.net/chosen/1.1.0/chosen.css">
 }
 
-<div class="panel-group panel-group-joined" id="accordion-country">
+<div class="panel-group panel-group-joined" id="accordion-currency">
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a id="collapseTitleOne" data-toggle="collapse" data-parent="#accordion-country" href="#collapseOne">
+                <a id="collapseTitleOne" data-toggle="collapse" data-parent="#accordion-currency" href="#collapseOne">
                     Filter
                 </a>
             </h4>
@@ -129,9 +129,17 @@
                     <dd>
                         <select id="areaCodeString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
                     </dd>
+
+                    <dt>
+                        @Html.Label(year, new { @class = "control-label col-md-2" })
+                    </dt>
+
+                    <dd>
+                        <select id="yearString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
+                    </dd>
                 </dl>
 
-                <button type="submit" class="btn btn-primary waves-effect" onclick='FilterCountry()'>Filter</button>
+                <button type="submit" class="btn btn-primary waves-effect" onclick='FilterCurrency()'>Filter</button>
                 <!--Filter-->
             </div>
         </div>
@@ -139,7 +147,7 @@
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a id="collapseTitleTwo" data-toggle="collapse" data-parent="#accordion-country" href="#collapseTwo" class="collapsed">
+                <a id="collapseTitleTwo" data-toggle="collapse" data-parent="#accordion-currency" href="#collapseTwo" class="collapsed">
                     Rows
                 </a>
             </h4>
@@ -157,32 +165,31 @@
                             <thead>
                                 <tr>
                                     <th width="5%"></th>
-                                    <th width="18%">@countryName <img id="idSortable1" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableName()" style="width:auto;"></th>
-                                    <th width="18%">@regionName <img id="idSortable2" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableRegionName()" style="width:auto;"></th>
-                                    <th width="18%">@continentName <img id="idSortable3" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableContinentName()" style="width:auto;"></th>
-                                    <th width="18%">@pmiCoding <img id="idSortable4" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortablePmi()" style="width:auto;"></th>
-                                    <th width="18%">@areaCode <img id="idSortable5" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableAreaCode()" style="width:auto;"></th>
+                                    <th width="22,5%">@countryName <img id="idSortable1" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableName()" style="width:auto;"></th>
+                                    <th width="22,5%">@year <img id="idSortable2" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableYear()" style="width:auto;"></th>
+                                    <th width="22,5%">@value <img id="idSortable3" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableValue()" style="width:auto;"></th>
+                                    <th width="22,5%">@notes <img id="idSortable4" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableNotes()" style="width:auto;"></th>
                                     <th width="5%">Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="SetCountryList"></tbody>
+                            <tbody id="SetCurrencyList"></tbody>
                             <tr id="LoadingStatus"></tr>
                         </table>
                     </div>
 
                     <div style="display: inline-grid">
                         @Html.Label("Show entries", new { @class = "control-label" })
-                        @Html.DropDownList("showEntry", listItems, new { @class = "form-control", @onchange = "FilterCountry(0)" })
+                        @Html.DropDownList("showEntry", listItems, new { @class = "form-control", @onchange = "FilterCurrency(0)" })
                     </div>
                     @if (User.IsInRole("Admin") || User.IsInRole("Writer"))
                     {
                         <br />
                         <br />
-                        <button type="button" class="btn btn-success" onclick="AddNewCountry()">Add New Country</button>
+                        <button type="button" class="btn btn-success" onclick="AddNewCurrency()">Add New Currency</button>
                     }
                     @if (User.IsInRole("Admin"))
                     {
-                        <button type="button" class="btn btn-danger" onclick="deleteRows()">Delete Country/s</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteRows()">Delete Currency/s</button>
                     }
                     <br />
                     <br />
@@ -211,7 +218,7 @@
             <div class="modal-body">
                 <!-- Start panel -->
                 <div class="col-lg">
-                    <div class="panel panel-default panel-default" id="PanelCountry">
+                    <div class="panel panel-default panel-default" id="PanelCurrency">
                         <div class="panel-heading">
                             <h4 class="panel-title" id="PanelTitleAddEditDetails"></h4>
                         </div>
@@ -219,78 +226,50 @@
                             <!-- Start form -->
                             <form id="form">
                                 <fieldset id="SubmitForm">
+
                                     <dl class="dl-horizontal">
+                                        <dt>
+                                            @Html.Label(countryName, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            <select class="form-control" id="countryList" onchange="findCountryCode()"></select>
+                                        </dd>
 
                                         <dt>
                                             @Html.Label(countryCode, new { @class = "control-label col-md-2" })
                                         </dt>
 
                                         <dd>
-                                            @Html.EditorFor(model => model.CountryCode, new { htmlAttributes = new { @id = "CountryCode", @class = "form-control", @placeholder = "Insert " + countryCode + "*" } })
+                                            @Html.EditorFor(model => model.CountryCode, new { htmlAttributes = new { @id = "CountryCode", @class = "form-control", @placeholder = "Insert " + countryCode + "*", @readonly = "readonly" } })
                                             @Html.ValidationMessageFor(model => model.CountryCode, "", new { @class = "text-danger" })
                                         </dd>
 
                                         <dt>
-                                            @Html.Label(continentCode, new { @class = "control-label col-md-2" })
+                                            @Html.Label(value, new { @class = "control-label col-md-2" })
                                         </dt>
 
                                         <dd>
-                                            @Html.TextBoxFor(m => m.ContinentCode, new { @id = "ContinentCode", @class = "form-control", @placeholder = "Insert " + continentCode + "*" })
-                                            @Html.ValidationMessageFor(model => model.ContinentCode, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.Value, new { htmlAttributes = new { @id = "Value", @class = "form-control", @placeholder = "Insert " + value + "*" } })
+                                            @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
                                         </dd>
 
                                         <dt>
-                                            @Html.Label(regionCode, new { @class = "control-label col-md-2" })
+                                            @Html.Label(year, new { @class = "control-label col-md-2" })
                                         </dt>
 
                                         <dd>
-                                            @Html.TextBoxFor(m => m.RegionCode, new { @id = "RegionCode", @class = "form-control", @placeholder = "Insert " + regionCode + "*" })
-                                            @Html.ValidationMessageFor(model => model.RegionCode, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.Year, new { htmlAttributes = new { @id = "Year", @class = "form-control", @placeholder = "Insert " + year + "*" } })
+                                            @Html.ValidationMessageFor(model => model.Year, "", new { @class = "text-danger" })
                                         </dd>
 
                                         <dt>
-                                            @Html.Label(continentName, new { @class = "control-label col-md-2" })
+                                            @Html.Label(notes, new { @class = "control-label col-md-2" })
                                         </dt>
 
                                         <dd>
-                                            @Html.EditorFor(model => model.ContinentName, new { htmlAttributes = new { @id = "ContinentName", @class = "form-control", @maxlength = continentNameLenAttr.MaximumLength, @placeholder = "Insert " + continentName + "*" } })
-                                            @Html.ValidationMessageFor(model => model.ContinentName, "", new { @class = "text-danger" })
-                                        </dd>
-
-                                        <dt>
-                                            @Html.Label(regionName, new { @class = "control-label col-md-2" })
-                                        </dt>
-
-                                        <dd>
-                                            @Html.EditorFor(model => model.RegionName, new { htmlAttributes = new { @id = "RegionName", @class = "form-control", @maxlength = regionNameLenAttr.MaximumLength, @placeholder = "Insert " + regionName + "*" } })
-                                            @Html.ValidationMessageFor(model => model.RegionName, "", new { @class = "text-danger" })
-                                        </dd>
-
-                                        <dt>
-                                            @Html.Label(pmiCoding, new { @class = "control-label col-md-2" })
-                                        </dt>
-
-                                        <dd>
-                                            @Html.EditorFor(model => model.PmiCoding, new { htmlAttributes = new { @id = "PmiCode", @class = "form-control", @maxlength = pmiCodingLenAttr.MaximumLength, @placeholder = "Insert " + pmiCoding + "*" } })
-                                            @Html.ValidationMessageFor(model => model.PmiCoding, "", new { @class = "text-danger" })
-                                        </dd>
-
-                                        <dt>
-                                            @Html.Label(countryName, new { @class = "control-label col-md-2" })
-                                        </dt>
-
-                                        <dd>
-                                            @Html.EditorFor(model => model.CountryName, new { htmlAttributes = new { @id = "CountryName", @class = "form-control", @maxlength = countryNameLenAttr.MaximumLength, @placeholder = "Insert " + countryName + "*" } })
-                                            @Html.ValidationMessageFor(model => model.CountryName, "", new { @class = "text-danger" })
-                                        </dd>
-
-                                        <dt>
-                                            @Html.Label(areaCode, new { @class = "control-label col-md-2" })
-                                        </dt>
-
-                                        <dd>
-                                            @Html.EditorFor(model => model.AreaCode, new { htmlAttributes = new { @id = "AreaCode", @class = "form-control", @placeholder = "Insert " + areaCode + "*" } })
-                                            @Html.ValidationMessageFor(model => model.AreaCode, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @id = "Notes", @class = "form-control", @maxlength = notesNameLenAttr.MaximumLength, @placeholder = "Insert " + notes } })
+                                            @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
                                         </dd>
                                     </dl>
 
@@ -305,9 +284,10 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="r">Cancel</button>
-                <button type="button" class="btn btn-default" id="CreateCountry">Save</button>
+                <button type="button" class="btn btn-default" id="CreateCurrency">Save</button>
+                <button type="button" class="btn btn-default" id="ViewRegion">Region</button>
+                <button type="button" class="btn btn-default" id="ViewCountry" onclick="cambiaView(this)">Country</button>
                 <button type="button" class="btn btn-default" id="ViewValues" onclick="cambiaView(this)">Values</button>
-                <button type="button" class="btn btn-default" id="ViewCurrencies" onclick="cambiaView(this)">Currencies</button>
                 <button type="button" class="btn btn-default" id="ViewSources" onclick="cambiaView(this)">Sources</button>
             </div>
 
@@ -380,24 +360,10 @@
 
             // Riempo campi filtri
             loadFilter();
+            loadCountrySelect();
 
             // Bootstrap-MaxLength (Modal)
-            $('input#CountryName').maxlength({
-                alwaysShow: true,
-                placement: 'top-left'
-            });
-
-            $('input#ContinentName').maxlength({
-                alwaysShow: true,
-                placement: 'top-left'
-            });
-
-            $('input#RegionName').maxlength({
-                alwaysShow: true,
-                placement: 'top-left'
-            });
-
-            $('input#PmiCode').maxlength({
+            $('input#Notes').maxlength({
                 alwaysShow: true,
                 placement: 'top-left'
             });
@@ -405,57 +371,38 @@
         });
 
         // inserisco gli elementi nella table
-        function DataBind(CountryList) {
+        function DataBind(CurrencyList) {
 
             $("#LoadingStatus").html("Loading....");
 
-            var SetData = $("#SetCountryList");
-            for (var i = 0; i < CountryList.length; i++) {
+            var SetData = $("#SetCurrencyList");
+            for (var i = 0; i < CurrencyList.length; i++) {
 
-                var Data = "<tr class='row_" + CountryList[i].CountryCode + "'>";
+                var Data = "<tr class='row_" + CurrencyList[i].CountryCode + "_" + CurrencyList[i].Year + "'>";
 
                 if (boolAdmin || boolWriter) {
                     Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
-                        + "<td>" + "<input id=\"CountryNameTable" + i + "\"" + "class=\"form-control\" minlength='" + @countryNameLenAttr.MinimumLength + "' maxlength='" + @countryNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + CountryList[i].CountryName + "\" placeholder=\"Insert " + '@countryName' + "*\" onkeypress=\"saveRow(event, 0, '" + CountryList[i].CountryCode + "', CountryNameTable" + i + ")\" >" + "</td>"
-                        + "<td>" + "<input id=\"RegionNameTable" + i + "\"" + "class=\"form-control\" minlength='" + @regionNameLenAttr.MinimumLength + "' maxlength='" + @regionNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + CountryList[i].RegionName + "\" placeholder=\"Insert " + '@regionName' + "*\" onkeypress=\"saveRow(event, 1, '" + CountryList[i].CountryCode + "', RegionNameTable" + i + ")\" >" + "</td>"
-                        + "<td>" + "<input id=\"ContinentNameTable" + i + "\"" + "class=\"form-control\" minlength='" + @continentNameLenAttr.MinimumLength + "' maxlength='" + @continentNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + CountryList[i].ContinentName + "\" placeholder=\"Insert " + '@continentName' + "*\" onkeypress=\"saveRow(event, 2, '" + CountryList[i].CountryCode + "', ContinentNameTable" + i + ")\" >" + "</td>"
-                        + "<td>" + "<input id=\"PmiCodeTable" + i + "\"" + "class=\"form-control\" minlength='" + @pmiCodingLenAttr.MinimumLength + "' maxlength='" + @pmiCodingLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + CountryList[i].PmiCoding + "\" placeholder=\"Insert " + '@pmiCoding' + "*\" onkeypress=\"saveRow(event, 3, '" + CountryList[i].CountryCode + "', PmiCodeTable" + i + ")\" >" + "</td>"
-                        + "<td>" + "<select id=\"AreaCodeTable" + i + "\"" + "class=\"form-control\" onchange=\"saveRowCombo('" + CountryList[i].CountryCode + "', AreaCodeTable" + i + ")\" ><option";
-
-                    if (CountryList[i].AreaCode == true) {
-                        Data += ">false</option><option selected>true</option></select></td>";
-                    } else
-                        Data += " selected>false</option><option>true</option></select></td>";
+                        + "<td>" + CurrencyList[i].CountryName + "</td>"
+                        + "<td>" + CurrencyList[i].Year + "</td>"
+                        + "<td>" + "<input id=\"ValueTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + CurrencyList[i].Value + "\" placeholder=\"Insert " + '@value' + "*\" onkeypress=\"saveRow(event, 1, '" + CurrencyList[i].CountryCode + "', " + CurrencyList[i].Year + ", ValueTable" + i + ")\" >" + "</td>"
+                        + "<td>" + "<input id=\"NotesTable" + i + "\"" + "class=\"form-control\" maxlength='" + @notesNameLenAttr.MaximumLength + "' type=\"textbox\" value=\"" + CurrencyList[i].Notes + "\" placeholder=\"Insert " + '@notes' + "\" onkeypress=\"saveRow(event, 2, '" + CurrencyList[i].CountryCode + "', " + CurrencyList[i].Year + ", NotesTable" + i + ")\" >" + "</td>";
 
                 } else {
-                    Data = Data + "<td>" + CountryList[i].CountryName + "</td>" +
-                        "<td>" + CountryList[i].AreaCode + "</td>";
+                    Data = Data + "<td>" + CurrencyList[i].CountryName + "</td>" +
+                        "<td>" + CurrencyList[i].Year + "</td>" +
+                        "<td>" + CurrencyList[i].Value + "</td>" +
+                        "<td>" + CurrencyList[i].Notes + "</td>";
                 }
 
                 Data = Data + "<td>" +
-                    "<a href='#' class='btn btn-info btn-sm waves-effect' onclick='DetailsCountry(\"" + CountryList[i].CountryCode + "\")' ><span class='glyphicon glyphicon-eye-open'></span></a>";
+                    "<a href='#' class='btn btn-info btn-sm waves-effect' onclick='DetailsCurrency(\"" + CurrencyList[i].CountryCode + "\", " + CurrencyList[i].Year + ")' ><span class='glyphicon glyphicon-eye-open'></span></a>";
 
                 Data = Data + "</td>" + "</tr>";
 
                 SetData.append(Data);
 
                 // aggiungo caratteri campo
-                $('input#CountryNameTable' + i).maxlength({
-                    alwaysShow: true,
-                    placement: 'top-left'
-                });
-
-                $('input#RegionNameTable' + i).maxlength({
-                    alwaysShow: true,
-                    placement: 'top-left'
-                });
-
-                $('input#ContinentNameTable' + i).maxlength({
-                    alwaysShow: true,
-                    placement: 'top-left'
-                });
-
-                $('input#PmiCodeTable' + i).maxlength({
+                $('input#NotesTable' + i).maxlength({
                     alwaysShow: true,
                     placement: 'top-left'
                 });
@@ -463,60 +410,57 @@
 
             $("#LoadingStatus").html(" ");
             var page = $("#showEntry").val();
-            $('#SetCountryList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+            $('#SetCurrencyList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
         }
 
-        // Show The Popup Modal For Add
-        function AddNewCountry() {
+        function AddNewCurrency() {
             $("#form")[0].reset();
-            $("#ModalTitle").html("Add New Country");
+            $("#ModalTitle").html("Add New Currency");
             $('span[data-valmsg-for').html('');
-            $("#PanelTitleAddEditDetails").html("New Country");
-            $("#PanelCountry").prop('class', 'panel panel-default panel-success');
-            $("#CreateCountry").prop('class', 'btn btn-success');
-            $("#CreateCountry").show();
+            $("#PanelTitleAddEditDetails").html("New Currency");
+            $("#PanelCurrency").prop('class', 'panel panel-default panel-success');
+            $("#CreateCurrency").prop('class', 'btn btn-success');
+            $("#CreateCurrency").show();
+            $("#ViewRegion").hide();
+            $("#ViewCountry").hide();
             $("#ViewValues").hide();
-            $("#ViewCurrencies").hide();
             $("#ViewSources").hide();
-            $("#ContinentCode").prop('readonly', '');
-            $("#RegionCode").prop('readonly', '');
-            $("#CountryCode").prop('readonly', '');
-            $("#CountryName").prop('readonly', '');
-            $("#AreaCode").prop('disabled', '');
+            $("#Value").prop('readonly', '');
+            $("#Year").prop('readonly', '');
+            $("#Notes").prop('readonly', '');
             $("#MyModal").modal();
         }
 
-        // Show The Popup Modal For Details
-        function DetailsCountry(countryCode) {
-            $("#ModalTitle").html("Details Country");
+        //Show The Popup Modal For Details
+
+        function DetailsCurrency(CountryCode, year) {
+            $("#ModalTitle").html("Details Currency");
             $('span[data-valmsg-for').html('');
-            $("#PanelCountry").prop('class', 'panel panel-default panel-primary');
-            $("#CreateCountry").hide();
+            $("#PanelCurrency").prop('class', 'panel panel-default panel-primary');
+            $("#CreateCurrency").hide();
+            $("#ViewRegion").show();
+            $("#ViewCountry").show();
             $("#ViewValues").show();
-            $("#ViewCurrencies").show();
             $("#ViewSources").show();
-            $("#ContinentCode").prop('readonly', 'readonly');
-            $("#RegionCode").prop('readonly', 'readonly');
-            $("#CountryCode").prop('readonly', 'readonly');
-            $("#CountryName").prop('readonly', 'readonly');
-            $("#AreaCode").prop('disabled', 'true');
+            $("#Value").prop('readonly', 'readonly');
+            $("#Year").prop('readonly', 'readonly');
+            $("#Notes").prop('readonly', 'readonly');
             $("#MyModal").modal();
             $.ajax({
                 type: "GET",
                 dataType: 'json',
                 cache: false,
                 traditional: true,
-                url: "/Country/GetCountryById?countryCode=" + countryCode,
+                url: "/Currency/GetCurrencyById?countryCode=" + CountryCode + "&year=" + year,
                 success: function (data) {
-                    $("#PanelTitleAddEditDetails").html(data.CountryName);
-                    $("#ContinentCode").val(data.ContinentCode);
-                    $("#RegionCode").val(data.RegionCode);
+                    $("#PanelTitleAddEditDetails").html(CountryName);
                     $("#CountryCode").val(data.CountryCode);
-                    $("#CountryName").val(data.CountryName);
-                    $("#ContinentName").val(data.ContinentName);
-                    $("#RegionName").val(data.RegionName);
-                    $("#PmiCode").val(data.PmiCoding);
-                    $("#AreaCode").attr('checked', data.AreaCode);
+                    $("#Value").val(data.Value);
+                    $("#Year").val(data.Year);
+                    if (data.Notes == '')
+                        $("#Notes").val(" ");
+                    else
+                        $("#Notes").val(data.Notes);
                 }
             })
         }
@@ -525,23 +469,46 @@
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
+        function loadCountrySelect() {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                cache: false,
+                traditional: true,
+                url: "/Country/GetListCountryName",
+                success: function (data) {
+                    $("#countryList").append("<option value='select'>Select Country</option>");
+                    for (var i = 0, n = data.length; i < n; i++) {
+                        $("#countryList").append("<option value='" + data[i].CountryCode + "'>" + data[i].CountryName + "</option>");
+                    }
+                }
+            })
+        }
+
+        function findCountryCode() {
+            var e = document.getElementById("countryList");
+            var select = e.options[e.selectedIndex].value;
+
+            // cambio testo
+            var textbox = document.getElementById('CountryCode');
+            textbox.value = select;
+        }
+
         // invia richiesta Ajax per salvare un rows cambiato
-        function saveAjaxRequest(countryCode, countryName, regionName, continentName, pmiCoding, areaCode, id) {
-            
+        function saveAjaxRequest(countryCode, year, value, note, id) {
+
             $.ajax({
                 type: "POST",
                 dataType: 'json',
                 cache: false,
                 traditional: true,
-                url: "/Country/Edit",
+                url: "/Currency/Edit",
                 headers: { '__RequestVerificationToken': token },
                 data: {
                     countryCode: countryCode,
-                    countryName: countryName,
-                    regionName: regionName,
-                    continentName: continentName,
-                    pmiCoding: pmiCoding,
-                    areaCode: areaCode,
+                    year: year,
+                    value: value,
+                    note: note,
                 },
                 success: function (data) {
                     var isSuccessful = (data['success']);
@@ -572,29 +539,18 @@
 
         }
 
-        function saveRowCombo(countryCode, id) {
-            saveAjaxRequest(countryCode, "", "", "", "", id.value, id);
-        }
-
         // Save Row
-        function saveRow(e, params, countryCode, id) {
+        function saveRow(e, params, countryCode, year, id) {
             if (e.keyCode == 13) {
 
-                var countryName = undefined;
-                var regionName = undefined;
-                var continentName = undefined;
-                var pmiCoding = undefined;
-                // non metto else if perchè potrei modificare tutti i valori della riga (paste)
-                if (params == '0')
-                    countryName = id.value
+                var value;
+                var note = undefined;
                 if (params == '1')
-                    regionName = id.value
+                    value = id.value
                 if (params == '2')
-                    continentName = id.value
-                if (params == '3')
-                    pmiCoding = id.value
+                    note = id.value
 
-                saveAjaxRequest(countryCode, countryName, regionName, continentName, pmiCoding, "", id);
+                saveAjaxRequest(countryCode, year, value, note, id);
 
                 return false; // returning false will prevent the event from bubbling up.
             }
@@ -603,8 +559,9 @@
             }
         }
 
-        // Show The Popup Modal For Create
-        $("#CreateCountry").click(function () {
+        //Show The Popup Modal For Create
+
+        $("#CreateCurrency").click(function () {
             var data = $("#SubmitForm").serialize();
 
             $.ajax({
@@ -612,7 +569,7 @@
                 dataType: 'json',
                 cache: false,
                 traditional: true,
-                url: "/Country/Create",
+                url: "/Currency/Create",
                 headers: { '__RequestVerificationToken': token },
                 data: data,
                 success: function (data) {
@@ -622,7 +579,7 @@
                         $("#MyModal").modal("hide");
                         swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
                             function () {
-                                FilterCountry(0);
+                                FilterCurrency(0);
                             }
                         );
                     }
@@ -643,10 +600,10 @@
 
         }
 
-        // Show The Popup Modal For DeleteComfirmation
+        //Show The Popup Modal For DeleteComfirmation
         var rowDaCancellareArray = new Array();
-        var DeleteCountry = function () {
-            $("#PanelTitleDelete").html("Delete Country/s");
+        var DeleteCurrency = function () {
+            $("#PanelTitleDelete").html("Delete Currency/s");
             $("#DeleteConfirmation").modal("show");
         }
 
@@ -658,18 +615,22 @@
                     dataType: 'json',
                     cache: false,
                     traditional: true,
-                    url: "/Country/Delete",
-                    data: { CountryName: rowDaCancellareArray[i] },
+                    url: "/Currency/Delete",
+                    data: {
+                        countryCode: rowDaCancellareArray[i].split("_")[0],
+                        year: rowDaCancellareArray[i].split("_")[1],
+                    },
                     headers: { "__RequestVerificationToken": token },
                     success: function (result) {
                         if (result == true) {
                             $("#DeleteConfirmation").modal("hide");
                             swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
                                 function () {
-                                    FilterCountry(0);
+                                    FilterCurrency(0);
                                 }
                             );
                         } else {
+                            $('#DeleteConfirmation').modal('hide');
                             swal("An error has occurred!", "Please wait a few minutes and try again.", "error");
                         }
 
@@ -741,11 +702,15 @@
                         $('#areaCodeString').empty();
                         areaCodeArray = new Array();
                     }
+                    if ($("#yearString").val() == null) {
+                        $('#yearString').empty();
+                        setTimeout(loadFilterYear(), 0);
+                    }
 
                     $.each(response, function (index, row) {
                         if ($("#pmiCodingString").val() == null)
-                            if (pmiCodingArray.includes(row.pmiCodingArray) == false)
-                                pmiCodingArray.push(row.pmiCodingArray);
+                            if (pmiCodingArray.includes(row.PmiCoding) == false)
+                                pmiCodingArray.push(row.PmiCoding);
 
                         if ($("#continentNameString").val() == null)
                             if (continentNameArray.includes(row.ContinentName) == false)
@@ -853,8 +818,38 @@
 
         }
 
-        // Filter Country
-        function FilterCountry(selectSortable) {
+        function loadFilterYear() {
+            $.ajax({
+                url: "/Currency/GetFieldList",
+                type: 'POST',
+                dataType: 'json',
+                cache: false,
+                traditional: true,
+                headers: { "__RequestVerificationToken": token },
+                data: (($("#pmiCodingString").val() != null) ? 'pmiCoding=' : '') + (($("#pmiCodingString").val() != null) ? encodeURIComponent($("#pmiCodingString").val()) + '&' : '') +
+                    (($("#continentNameString").val() != null) ? 'continentName=' : '') + (($("#continentNameString").val() != null) ? encodeURIComponent($("#continentNameString").val()) + '&' : '') +
+                    (($("#regionNameString").val() != null) ? 'regionName=' : '') + (($("#regionNameString").val() != null) ? encodeURIComponent($("#regionNameString").val()) + '&' : '') +
+                    (($("#countryNameString").val() != null) ? 'countryName=' : '') + (($("#countryNameString").val() != null) ? encodeURIComponent($("#countryNameString").val()) + '&' : '') +
+                    (($("#continentCodeString").val() != null) ? 'continentCode=' : '') + (($("#continentCodeString").val() != null) ? encodeURIComponent($("#continentCodeString").val()) + '&' : '') +
+                    (($("#regionCodeString").val() != null) ? 'regionCode=' : '') + (($("#regionCodeString").val() != null) ? encodeURIComponent($("#regionCodeString").val()) + '&' : '') +
+                    (($("#countryCodeString").val() != null) ? 'countryCode=' : '') + (($("#countryCodeString").val() != null) ? encodeURIComponent($("#countryCodeString").val()) + '&' : '') +
+                    (($("#areaCodeString").val() != null) ? 'areaCode=' : '') + (($("#areaCodeString").val() != null) ? encodeURIComponent($("#areaCodeString").val()) + '&' : '') +
+                    (($("#yearString").val() != null) ? 'year=' : '') + (($("#yearString").val() != null) ? encodeURIComponent($("#yearString").val()) : ''),
+                success: function (response) {
+
+                    $.each(response, function (index, row) {
+                        if ($("#yearString").val() == null)
+                            $("#yearString").append("<option value='" + row.Year + "'>" + row.Year + "</option>");
+                    });
+
+                    $('#yearString').trigger("chosen:updated");
+
+                }
+            });
+        }
+
+        // Filter Currency
+        function FilterCurrency(selectSortable) {
 
             var sortable1;
             var pathImg1 = document.getElementById("idSortable1").src;
@@ -892,37 +887,28 @@
             else //caso in cui non è stato cliccato nessun filtro
                 sortable4 = null;
 
-            var sortable5;
-            var pathImg5 = document.getElementById("idSortable5").src;
-            if (pathImg5.includes("asc"))
-                sortable5 = "asc";
-            else if (pathImg5.includes("desc"))
-                sortable5 = "desc";
-            else //caso in cui non è stato cliccato nessun filtro
-                sortable5 = null;
-
             $.ajax({
                 type: "POST",
                 dataType: 'json',
                 cache: false,
                 traditional: true,
-                url: "/Country/GetCountryList",
+                url: "/Currency/GetCurrencyList",
                 headers: { "__RequestVerificationToken": token },
                 data: (($("#pmiCodingString").val() != null) ? 'pmiCoding=' : '') + (($("#pmiCodingString").val() != null) ? encodeURIComponent($("#pmiCodingString").val()) + '&' : '') +
                     (($("#continentNameString").val() != null) ? 'continentName=' : '') + (($("#continentNameString").val() != null) ? encodeURIComponent($("#continentNameString").val()) + '&' : '') +
                     (($("#regionNameString").val() != null) ? 'regionName=' : '') + (($("#regionNameString").val() != null) ? encodeURIComponent($("#regionNameString").val()) + '&' : '') +
                     (($("#countryNameString").val() != null) ? 'countryName=' : '') + (($("#countryNameString").val() != null) ? encodeURIComponent($("#countryNameString").val()) + '&' : '') +
                     (($("#continentCodeString").val() != null) ? 'continentCode=' : '') + (($("#continentCodeString").val() != null) ? encodeURIComponent($("#continentCodeString").val()) + '&' : '') +
-                    (($("#regionCodeString").val() != null) ? 'regionCode=' : '') + (($("#regionCodeString").val() != null) ? encodeURIComponent($("#regionCodeString").val()) : '') +
-                    (($("#countryCodeString").val() != null) ? 'countryCode=' : '') + (($("#countryCodeString").val() != null) ? encodeURIComponent($("#countryCodeString").val()) : '') +
-                    (($("#areaCodeString").val() != null) ? 'areaCode=' : '') + (($("#areaCodeString").val() != null) ? encodeURIComponent($("#areaCodeString").val()) : '') +
+                    (($("#regionCodeString").val() != null) ? 'regionCode=' : '') + (($("#regionCodeString").val() != null) ? encodeURIComponent($("#regionCodeString").val()) + '&' : '') +
+                    (($("#countryCodeString").val() != null) ? 'countryCode=' : '') + (($("#countryCodeString").val() != null) ? encodeURIComponent($("#countryCodeString").val()) + '&' : '') +
+                    (($("#areaCodeString").val() != null) ? 'areaCode=' : '') + (($("#areaCodeString").val() != null) ? encodeURIComponent($("#areaCodeString").val()) + '&' : '') +
+                    (($("#yearString").val() != null) ? 'year=' : '') + (($("#yearString").val() != null) ? encodeURIComponent($("#yearString").val()) + '&' : '') +
                     ((sortable1 != null && selectSortable == 1) ? 'orderCountryName=' : '') + ((sortable1 != null && selectSortable == 1) ? sortable1 + '&' : '') +
-                    ((sortable2 != null && selectSortable == 1) ? 'orderContinentName=' : '') + ((sortable2 != null && selectSortable == 1) ? sortable2 + '&' : '') +
-                    ((sortable3 != null && selectSortable == 1) ? 'orderRegionName=' : '') + ((sortable3 != null && selectSortable == 1) ? sortable3 + '&' : '') +
-                    ((sortable4 != null && selectSortable == 1) ? 'orderPmi=' : '') + ((sortable4 != null && selectSortable == 1) ? sortable4 + '&' : '') +
-                    ((sortable5 != null && selectSortable == 2) ? 'orderAreaCode=' : '') + ((sortable5 != null && selectSortable == 2) ? sortable5 : ''),
+                    ((sortable2 != null && selectSortable == 2) ? 'orderYear=' : '') + ((sortable2 != null && selectSortable == 2) ? sortable2 + '&' : '') +
+                    ((sortable3 != null && selectSortable == 3) ? 'orderValue=' : '') + ((sortable3 != null && selectSortable == 3) ? sortable3 + '&' : '') +
+                    ((sortable4 != null && selectSortable == 4) ? 'orderNotes=' : '') + ((sortable4 != null && selectSortable == 4) ? sortable4 : ''),
                 success: function (result) {
-                    $("#SetCountryList").empty();
+                    $("#SetCurrencyList").empty();
                     $("#myPager").empty();
                     DataBind(result);
                     // resetto l'immagine dei filtri
@@ -931,33 +917,23 @@
                         document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
                         document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
                         document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
-                        document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
                     } else if (selectSortable == 1) {
                         document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
                         document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
                         document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
-                        document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
                     } else if (selectSortable == 2) {
                         document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
                         document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
                         document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
-                        document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
                     } else if (selectSortable == 3) {
                         document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
                         document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
                         document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
-                        document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
                     } else if (selectSortable == 4) {
                         document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
                         document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
                         document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
-                        document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
-                    } else if (selectSortable == 5) {
-                        document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
-                        document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
-                        document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
-                        document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
-                    } 
+                    }
                     // passo al tab dei row
                     $("#collapseOne").prop('class', 'panel-collapse collapse');
                     $("#collapseTwo").prop('class', 'panel-collapse collapse in');
@@ -967,7 +943,7 @@
             })
         }
 
-        // Sortable Country
+        // Sortable Currency
         function SortableName() {
 
             // cambio immagine
@@ -979,11 +955,11 @@
             else // se è ancora l'immagine predefinita
                 document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
 
-            FilterCountry(1);
+            FilterCurrency(1);
 
         }
 
-        function SortableRegionName() {
+        function SortableYear() {
 
             // cambio immagine
             var pathImg2 = document.getElementById("idSortable2").src;
@@ -994,52 +970,37 @@
             else // se è ancora l'immagine predefinita
                 document.getElementById("idSortable2").src = "/Images/Sortable/asc.png";
 
-            FilterCountry(2);
+            FilterCurrency(2);
 
         }
 
-        function SortableContinentName() {
+        function SortableValue() {
 
             // cambio immagine
-            var pathImg1 = document.getElementById("idSortable3").src;
-            if (pathImg1.includes("asc"))
-                document.getElementById("idSortable3").src = "/Images/Sortable/desc.png";
-            else if (pathImg1.includes("desc"))
-                document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
-            else // se è ancora l'immagine predefinita
-                document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
-
-            FilterCountry(3);
-
-        }
-
-        function SortablePmi() {
-
-            // cambio immagine
-            var pathImg4 = document.getElementById("idSortable4").src;
-            if (pathImg4.includes("asc"))
-                document.getElementById("idSortable4").src = "/Images/Sortable/desc.png";
-            else if (pathImg4.includes("desc"))
-                document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
-            else // se è ancora l'immagine predefinita
-                document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
-
-            FilterCountry(4);
-
-        }
-
-        function SortableAreaCode() {
-
-            // cambio immagine
-            var pathImg2 = document.getElementById("idSortable5").src;
+            var pathImg2 = document.getElementById("idSortable3").src;
             if (pathImg2.includes("asc"))
-                document.getElementById("idSortable5").src = "/Images/Sortable/desc.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/desc.png";
             else if (pathImg2.includes("desc"))
-                document.getElementById("idSortable5").src = "/Images/Sortable/asc.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
             else // se è ancora l'immagine predefinita
-                document.getElementById("idSortable5").src = "/Images/Sortable/asc.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
 
-            FilterCountry(2);
+            FilterCurrency(3);
+
+        }
+
+        function SortableNotes() {
+
+            // cambio immagine
+            var pathImg2 = document.getElementById("idSortable4").src;
+            if (pathImg2.includes("asc"))
+                document.getElementById("idSortable4").src = "/Images/Sortable/desc.png";
+            else if (pathImg2.includes("desc"))
+                document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
+            else // se è ancora l'immagine predefinita
+                document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
+
+            FilterCurrency(4);
 
         }
 
@@ -1073,7 +1034,7 @@
             // numero di checked trovati
             var numeroCheck = 0;
 
-            var table = document.getElementById("SetCountryList");
+            var table = document.getElementById("SetCurrencyList");
             for (var i = 0; i < table.children.length; i++) {
                 var riga = table.children[i];
                 // vedo la cella checkbox
@@ -1089,7 +1050,7 @@
             if (numeroCheck == 0)
                 swal("Attention!", "Select at least one a row!", "error");
             else {
-                DeleteCountry();
+                DeleteCurrency();
             }
 
         }
@@ -1102,7 +1063,7 @@
             // numero di checked trovati
             var numeroCheck = 0;
 
-            var table = document.getElementById("SetCountryList");
+            var table = document.getElementById("SetCurrencyList");
             for (var i = 0; i < table.children.length; i++) {
                 var riga = table.children[i];
                 // vedo la cella checkbox
@@ -1167,12 +1128,12 @@
 
                     // serve per i valori dell'array dello slit
                     var m = 0;
-                    var table = document.getElementById("SetCountryList");
+                    var table = document.getElementById("SetCurrencyList");
                     for (var i = 0; i < table.children.length; i++) {
                         var riga = table.children[i];
 
                         var className = riga.className;
-                        var number = className.replace("row_", "");
+                        var countryCode = className.replace("row_", "").split("_")[0];
                         // vedo la cella checkbox
                         var cellaCheckbox = riga.cells[0];
                         var c = cellaCheckbox.children[0].children[0];
@@ -1180,30 +1141,40 @@
                             // suddivido ancora per quanto riguarda la linea
                             var res2 = res[m].split('\t');
 
-                            if (res2.length < 2) {
+                            if (res2.length < 4) {
                                 swal("Attention!", "Number of columns is different from the copied values!", "error");
                                 return;
                             }
 
-                            var countryName = res2[0].trim('\r').trim('\n');
-                            var regionName = res2[1].trim('\r').trim('\n');
-                            var continentName = res2[2].trim('\r').trim('\n');
-                            var pmiCoding = res2[3].trim('\r').trim('\n');
-                            var areaCode = res2[4].trim('\r').trim('\n');
+                            var countryName;
+                            if (riga.children[1].children.length > 0)
+                                countryName = riga.children[1].children[0].value;
+                            else
+                                countryName = riga.children[1].outerText;
+
+                            var year;
+                            if (riga.children[2].children.length > 0)
+                                year = riga.children[2].children[0].value;
+                            else
+                                year = riga.children[2].outerText;
+
+                            var country = res2[0].trim('\r').trim('\n');
+                            var y = res2[1].trim('\r').trim('\n');
+
+                            if (country != countryName || year != y) {
+                                swal("Attention!", "You want to paste different countries. Also check the years", "error");
+                                return;
+                            }
+
+                            var value = res2[2];
+                            var note = res2[3];
 
                             // cambio valori riga
-                            riga.children[1].children[0].value = countryName;
-                            riga.children[2].children[0].value = regionName;
-                            riga.children[3].children[0].value = continentName;
-                            riga.children[4].children[0].value = pmiCoding;
-
-                            if (areaCode == "false")
-                                riga.children[5].children[0].selectedIndex = 0;
-                            else
-                                riga.children[5].children[0].selectedIndex = 1;
+                            riga.children[3].children[0].value = value;
+                            riga.children[4].children[0].value = note;
 
                             // invio richiesta ajax per salvare
-                            saveAjaxRequest(number, countryName, regionName, continentName, pmiCoding, areaCode, riga);
+                            saveAjaxRequest(countryCode, year, value, note, riga)
 
                             m++;
                         }
@@ -1220,7 +1191,7 @@
         function Paste() {
             var numeroCheck = 0;
 
-            var table = document.getElementById("SetCountryList");
+            var table = document.getElementById("SetCurrencyList");
             for (var i = 0, n = table.children.length; i < n; i++) {
                 var riga = table.children[i];
                 // vedo la cella checkbox

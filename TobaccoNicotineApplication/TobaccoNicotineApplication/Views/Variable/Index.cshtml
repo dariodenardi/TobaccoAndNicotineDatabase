@@ -525,10 +525,10 @@
         function saveRow(e, params, number, id) {
             if (e.keyCode == 13) {
 
-                var name = "";
+                var name = undefined;
                 var phaseCode;
-                var phaseName = "";
-                var unit = "";
+                var phaseName = undefined;
+                var unit = undefined;
                 if (params == '0')
                     name = id.value
                 if (params == '1')

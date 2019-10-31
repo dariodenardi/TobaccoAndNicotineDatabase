@@ -11,14 +11,22 @@ namespace TobaccoNicotineApplication.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Currency
     {
+        [Required(ErrorMessage = "Country Code is required.")]
         public short CountryCode { get; set; }
+
+        [Required(ErrorMessage = "Year is required.")]
         public short Year { get; set; }
+
+        [Required(ErrorMessage = "Value is required.")]
         public decimal Value { get; set; }
+
+        [StringLength(1000, ErrorMessage = "Notes must be maximum 1000 characters.")]
         public string Notes { get; set; }
-    
+
         public virtual Country Countries { get; set; }
     }
 }
