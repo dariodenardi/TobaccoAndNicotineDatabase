@@ -11,7 +11,8 @@ namespace TobaccoNicotineApplication.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Value
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,15 +20,29 @@ namespace TobaccoNicotineApplication.Models
         {
             this.Sources = new HashSet<Source>();
         }
-    
+
+        [Required(ErrorMessage = "Country Code is required.")]
         public short CountryCode { get; set; }
+
+        [Required(ErrorMessage = "Number is required.")]
         public short Number { get; set; }
+
+        [Required(ErrorMessage = "Year is required.")]
         public short Year { get; set; }
+
+        [Required(ErrorMessage = "Nomisma Code is required.")]
         public int NomismaCode { get; set; }
+
         public Nullable<decimal> Data { get; set; }
         public Nullable<decimal> DataPmi { get; set; }
+
+        [StringLength(1000, MinimumLength = 0)]
         public string PublicNotes { get; set; }
+
+        [StringLength(1000, MinimumLength = 0)]
         public string InternalNotes { get; set; }
+
+        [StringLength(1000, MinimumLength = 0)]
         public string PmiNotes { get; set; }
     
         public virtual Country Countries { get; set; }

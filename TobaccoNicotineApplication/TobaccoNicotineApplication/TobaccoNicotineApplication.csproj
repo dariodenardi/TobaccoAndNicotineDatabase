@@ -185,6 +185,7 @@
     <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SourceController.cs" />
+    <Compile Include="Controllers\ValueController.cs" />
     <Compile Include="Controllers\VariableController.cs" />
     <Compile Include="Filters\NoCacheAttribute.cs" />
     <Compile Include="Filters\LogAttribute.cs" />
@@ -395,6 +396,7 @@
     <Content Include="Views\Variable\Index.cshtml" />
     <Content Include="Views\Country\Index.cshtml" />
     <Content Include="Views\Currency\Index.cshtml" />
+    <Content Include="Views\Value\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Uploads\Sources\" />
