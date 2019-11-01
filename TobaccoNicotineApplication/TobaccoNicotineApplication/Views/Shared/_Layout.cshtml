@@ -23,17 +23,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>@ViewBag.Title - Tobacco&Nicotine Database</title>
-    <!--Styles.Render("~/Content/css")-->
-    <!--Scripts.Render("~/bundles/modernizr")-->
 
     @RenderSection("styles", required: false)
 
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="~/Content/font-awesome.css" rel="stylesheet" type="text/css">
-    <link href="~/Content/materialdesignicons.css" rel="stylesheet" type="text/css">
-    <link href="~/Content/ionicons.css" rel="stylesheet" type="text/css">
-    <link href="~/Content/style.css" rel="stylesheet" type="text/css">
-    <link href="~/Content/cookies_eu.css" rel="stylesheet" type="text/css">
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/cookies")
 </head>
 <body class="fixed-left">
 
@@ -223,29 +217,25 @@
 
     </div>
     <!-- END wrapper -->
-    <script src="~/Scripts/jquery-1.11.3.min.js"></script>
-    <script src="~/Scripts/jquery.validate.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/modernizr-2.8.3.js"></script>
-    <script src="~/Scripts/detect.js"></script>
-    <script src="~/Scripts/fastclick.js"></script>
-    <script src="~/Scripts/jquery.slimscroll.js"></script>
-    <script src="~/Scripts/jquery.blockUI.js"></script>
-    <script src="~/Scripts/waves.js"></script>
-    <script src="~/Scripts/wow.min.js"></script>
-    <script src="~/Scripts/jquery.nicescroll.js"></script>
-    <script src="~/Scripts/jquery.scrollTo.min.js"></script>
-    <script src="~/Scripts/app.js"></script>
 
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/detect")
+    @Scripts.Render("~/bundles/fastclick")
+    @Scripts.Render("~/bundles/jqueryslim")
+    @Scripts.Render("~/bundles/jqueryblock")
+    @Scripts.Render("~/bundles/waves")
+    @Scripts.Render("~/bundles/wow")
+    @Scripts.Render("~/bundles/jquerynice")
+    @Scripts.Render("~/bundles/jqueryscroll")
+    @Scripts.Render("~/bundles/app")
     <!-- cookies message -->
-    <script src="~/Scripts/jquery.cookie.js"></script>
-    <script src="~/Scripts/cookies_eu.js"></script>
+    @Scripts.Render("~/bundles/cookies")
 
     <!--RenderSection: in questo punto vengono posizionati gli script che si trovano nelle altre pagine.-->
     @RenderSection("scripts", required: false)
-    <!--Scripts.Render("~/bundles/jquery")-->
-    <!--Scripts.Render("~/bundles/bootstrap")-->
 
 </body>
 </html>
