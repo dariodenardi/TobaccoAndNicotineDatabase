@@ -27,8 +27,7 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Source/GetSourceList
         [HttpPost]
-        public JsonResult GetSourceList(string[] pmiCodeString, string[] countryNameString, string[] idContinentString, string[] idRegionString, string[] idCountryString, string[] topicString, string[] numberString, string[] variableNameString, string[] measurementUnitString, string[] varLcString,
-            string orderName, string orderDate, string orderTime, string orderLink, string orderRepository, string orderDateDownload, string orderUsername)
+        public JsonResult GetSourceList(string orderName, string orderDate, string orderTime, string orderLink, string orderRepository, string orderDateDownload, string orderUsername)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
