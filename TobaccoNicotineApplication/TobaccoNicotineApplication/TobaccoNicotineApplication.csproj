@@ -344,10 +344,8 @@
     <Content Include="Scripts\plugins\bootstrap-sweetalert\sweet-alert.css" />
     <Content Include="Scripts\plugins\bootstrap-sweetalert\sweet-alert.min.js" />
     <Content Include="Scripts\plugins\bootstrap-sweetalert\thumbs-up.jpg" />
-    <Content Include="Scripts\plugins\datatables\dataTables.bootstrap.js" />
     <Content Include="Scripts\plugins\datatables\dataTables.bootstrap.min.css" />
     <Content Include="Scripts\plugins\datatables\jquery.dataTables.min.css" />
-    <Content Include="Scripts\plugins\datatables\jquery.dataTables.min.js" />
     <Content Include="Scripts\plugins\datatables\select.bootstrap.min.css" />
     <Content Include="Scripts\plugins\jvectormap\gdp-data.js" />
     <Content Include="Scripts\plugins\jvectormap\jquery-jvectormap-2.0.2.css" />

@@ -26,6 +26,7 @@
 
     @RenderSection("styles", required: false)
 
+    <link href='//fonts.googleapis.com/css?family=PT+Sans+Caption:400,700|Roboto:500|Crete+Round:400i' rel='stylesheet' type='text/css' />
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/cookies")
 </head>
@@ -218,21 +219,21 @@
     </div>
     <!-- END wrapper -->
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/detect")
-    @Scripts.Render("~/bundles/fastclick")
-    @Scripts.Render("~/bundles/jqueryslim")
-    @Scripts.Render("~/bundles/jqueryblock")
-    @Scripts.Render("~/bundles/waves")
-    @Scripts.Render("~/bundles/wow")
-    @Scripts.Render("~/bundles/jquerynice")
-    @Scripts.Render("~/bundles/jqueryscroll")
-    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/Scripts/jquery")
+    @Scripts.Render("~/Scripts/jqueryval")
+    @Scripts.Render("~/Scripts/bootstrap")
+    @Scripts.Render("~/Scripts/modernizr")
+    @Scripts.Render("~/Scripts/detect")
+    @Scripts.Render("~/Scripts/fastclick")
+    @Scripts.Render("~/Scripts/jqueryslim")
+    @Scripts.Render("~/Scripts/jqueryblock")
+    @Scripts.Render("~/Scripts/waves")
+    @Scripts.Render("~/Scripts/wow")
+    @Scripts.Render("~/Scripts/jquerynice")
+    @Scripts.Render("~/Scripts/jqueryscroll")
+    @Scripts.Render("~/Scripts/app")
     <!-- cookies message -->
-    @Scripts.Render("~/bundles/cookies")
+    @Scripts.Render("~/Scripts/cookies")
 
     <!--RenderSection: in questo punto vengono posizionati gli script che si trovano nelle altre pagine.-->
     @RenderSection("scripts", required: false)

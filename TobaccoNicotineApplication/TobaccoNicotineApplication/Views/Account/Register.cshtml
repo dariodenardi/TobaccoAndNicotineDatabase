@@ -15,10 +15,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="~/Content/font-awesome.css" rel="stylesheet" type="text/css">
-    <link href="~/Content/style.css" rel="stylesheet" type="text/css">
-    <link href="~/Content/cookies_eu.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=PT+Sans+Caption:400,700|Roboto:500|Crete+Round:400i' rel='stylesheet' type='text/css' />
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/cookies")
 </head>
 
 <body>
@@ -236,24 +235,23 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <script src="~/Scripts/jquery-1.11.3.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/modernizr-2.8.3.js"></script>
-    <script src="~/Scripts/detect.js"></script>
-    <script src="~/Scripts/fastclick.js"></script>
-    <script src="~/Scripts/jquery.slimscroll.js"></script>
-    <script src="~/Scripts/jquery.blockUI.js"></script>
-    <script src="~/Scripts/waves.js"></script>
-    <script src="~/Scripts/wow.min.js"></script>
-    <script src="~/Scripts/jquery.nicescroll.js"></script>
-    <script src="~/Scripts/jquery.scrollTo.min.js"></script>
-    <script src="~/Scripts/app.js"></script>
-
-    <script src="~/Scripts/plugins/parsleyjs/parsley.min.js"></script>
-
+    @Scripts.Render("~/Scripts/jquery")
+    @Scripts.Render("~/Scripts/bootstrap")
+    @Scripts.Render("~/Scripts/modernizr")
+    @Scripts.Render("~/Scripts/detect")
+    @Scripts.Render("~/Scripts/fastclick")
+    @Scripts.Render("~/Scripts/jqueryslim")
+    @Scripts.Render("~/Scripts/jqueryblock")
+    @Scripts.Render("~/Scripts/waves")
+    @Scripts.Render("~/Scripts/wow")
+    @Scripts.Render("~/Scripts/jquerynice")
+    @Scripts.Render("~/Scripts/jqueryscroll")
+    @Scripts.Render("~/Scripts/app")
     <!-- cookies message -->
-    <script src="~/Scripts/jquery.cookie.js"></script>
-    <script src="~/Scripts/cookies_eu.js"></script>
+    @Scripts.Render("~/Scripts/cookies")
+
+    <!-- parsley -->
+    @Scripts.Render("~/Scripts/parsley")
 
     <script>
         //has uppercase
