@@ -73,13 +73,41 @@ namespace TobaccoNicotineApplication
                         "~/Scripts/plugins/dropzone/dist/dropzone.js"));
 
             bundles.Add(new ScriptBundle("~/Scripts/parsley").Include(
-                        "~/Scripts/plugins/parsleyjs/parsley.min.js"));
+                        "~/Scripts/plugins/parsleyjs/parsley.min.js",
+                        "~/Scripts/plugins/parsleyjs/validation.js"));
 
             bundles.Add(new ScriptBundle("~/Scripts/jvectormap").Include(
                         "~/Scripts/plugins/jvectormap/jquery-jvectormap-2.0.2.min.js",
                         "~/Scripts/plugins/jvectormap/jquery-jvectormap-world-mill-en.js",
                         "~/Scripts/plugins/jvectormap/gdp-data.js",
                         "~/Scripts/plugins/jvectormap/jvectormap.init.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/admin").Include(
+                        "~/Scripts/views/admin.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/log").Include(
+                        "~/Scripts/views/log.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/contact").Include(
+                        "~/Scripts/views/contact.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/excel").Include(
+                        "~/Scripts/views/excel.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/variable").Include(
+                        "~/Scripts/views/variable.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/value").Include(
+                        "~/Scripts/views/value.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/source").Include(
+                        "~/Scripts/views/source.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/currency").Include(
+                        "~/Scripts/views/currency.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/country").Include(
+                        "~/Scripts/views/country.js"));
 
             // style
             bundles.Add(new StyleBundle("~/Content/css").Include(

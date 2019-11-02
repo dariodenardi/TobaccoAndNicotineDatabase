@@ -281,6 +281,16 @@
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\views\contact.js" />
+    <Content Include="Scripts\views\excel.js" />
+    <Content Include="Scripts\views\currency.js" />
+    <Content Include="Scripts\views\country.js" />
+    <Content Include="Scripts\views\source.js" />
+    <Content Include="Scripts\views\value.js" />
+    <Content Include="Scripts\views\variable.js" />
+    <Content Include="Scripts\views\log.js" />
+    <Content Include="Scripts\views\admin.js" />
+    <Content Include="Scripts\plugins\parsleyjs\validation.js" />
     <Content Include="Scripts\plugins\dropzone\dist\basic.css" />
     <Content Include="Scripts\plugins\dropzone\dist\dropzone-amd-module.js" />
     <Content Include="Scripts\plugins\dropzone\dist\dropzone.css" />
