@@ -37,7 +37,7 @@ namespace TobaccoNicotineApplication.Models
         public string PhaseName { get; set; }
 
         [Required(ErrorMessage = "Measurement Unit Name is required.")]
-        [StringLength(30, MinimumLength = 1, ErrorMessage = "Continent Name must be at least 1 characters.")]
+        [StringLength(30, MinimumLength = 1, ErrorMessage = "Measurement Unit Name must be at least 1 characters.")]
         public string MeasurementUnitName { get; set; }
 
         [Required(ErrorMessage = "Var Lc is required.")]

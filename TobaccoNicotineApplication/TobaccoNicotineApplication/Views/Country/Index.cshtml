@@ -365,9 +365,9 @@
     @Scripts.Render("~/Scripts/sweetalert")
 
     <script>
-        var boolAdmin = '@User.IsInRole("Admin")';
-        var boolWriter = '@User.IsInRole("Writer")';
-        var boolReader = '@User.IsInRole("Reader")';
+        var boolAdmin = '@User.IsInRole("Admin")' == "True";
+        var boolWriter = '@User.IsInRole("Writer")' == "True";
+        var boolReader = '@User.IsInRole("Reader")' == "True";
 
         var countryNameMin = '@countryNameLenAttr.MinimumLength';
         var countryNameMax = '@countryNameLenAttr.MaximumLength';

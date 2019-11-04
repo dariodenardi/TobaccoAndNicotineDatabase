@@ -112,6 +112,8 @@ namespace TobaccoNicotineApplication.Controllers
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
+                db.Configuration.LazyLoadingEnabled = false;
+
                 Currency model = db.Currencies.Where(x => x.CountryCode == countryCode && x.Year == year).FirstOrDefault();
 
                 if (model != null)
@@ -152,6 +154,8 @@ namespace TobaccoNicotineApplication.Controllers
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
+                db.Configuration.LazyLoadingEnabled = false;
+
                 Currency currency = db.Currencies.Where(a => a.CountryCode == countryCode && a.Year == year).FirstOrDefault();
                 if (currency != null)
                 {

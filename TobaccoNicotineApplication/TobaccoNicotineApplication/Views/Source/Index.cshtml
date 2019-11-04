@@ -299,10 +299,10 @@
     @Scripts.Render("~/Scripts/dropzone")
 
     <script>
-        var boolAdmin = '@User.IsInRole("Admin")';
-        var boolWriter = '@User.IsInRole("Writer")';
-        var boolReader = '@User.IsInRole("Reader")';
-
-        @Scripts.Render("~/Scripts/source")
+        var boolAdmin = '@User.IsInRole("Admin")' == "True";
+        var boolWriter = '@User.IsInRole("Writer")' == "True";
+        var boolReader = '@User.IsInRole("Reader")' == "True";
     </script>
+
+    @Scripts.Render("~/Scripts/source")
 }

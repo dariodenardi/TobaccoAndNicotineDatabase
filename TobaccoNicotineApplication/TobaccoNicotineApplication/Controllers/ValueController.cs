@@ -136,6 +136,8 @@ namespace TobaccoNicotineApplication.Controllers
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
+                //db.Configuration.LazyLoadingEnabled = false;
+
                 Value model = db.Values.Where(x => x.Countries.CountryName == countryName && x.Year == year && x.Variables.Name == variableName).FirstOrDefault();
 
                 if (model != null)
@@ -202,6 +204,8 @@ namespace TobaccoNicotineApplication.Controllers
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
+                db.Configuration.LazyLoadingEnabled = false;
+
                 Value value = db.Values.Where(a => a.Countries.CountryName == CountryName && a.Year == year && a.Variables.Name == variableName).FirstOrDefault();
                 if (value != null)
                 {

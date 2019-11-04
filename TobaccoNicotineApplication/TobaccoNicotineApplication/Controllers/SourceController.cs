@@ -129,6 +129,8 @@ namespace TobaccoNicotineApplication.Controllers
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
+                db.Configuration.LazyLoadingEnabled = false;
+
                 Source model = db.Sources.Where(x => x.Name == SourceName && x.Date == date && x.Time == time).FirstOrDefault();
 
                 if (model != null)
@@ -170,6 +172,8 @@ namespace TobaccoNicotineApplication.Controllers
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
+                db.Configuration.LazyLoadingEnabled = false;
+
                 Source source = db.Sources.Where(x => x.Name == SourceName && x.Date == date && x.Time == time).FirstOrDefault();
                 if (source != null)
                 {

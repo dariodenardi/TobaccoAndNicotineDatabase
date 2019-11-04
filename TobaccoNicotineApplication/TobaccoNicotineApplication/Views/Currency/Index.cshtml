@@ -285,7 +285,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="r">Cancel</button>
                 <button type="button" class="btn btn-default" id="CreateCurrency">Save</button>
-                <button type="button" class="btn btn-default" id="ViewRegion">Region</button>
                 <button type="button" class="btn btn-default" id="ViewCountry" onclick="cambiaView(this)">Country</button>
                 <button type="button" class="btn btn-default" id="ViewValues" onclick="cambiaView(this)">Values</button>
                 <button type="button" class="btn btn-default" id="ViewSources" onclick="cambiaView(this)">Sources</button>
@@ -345,9 +344,9 @@
     @Scripts.Render("~/Scripts/sweetalert")
 
     <script>
-        var boolAdmin = '@User.IsInRole("Admin")';
-        var boolWriter = '@User.IsInRole("Writer")';
-        var boolReader = '@User.IsInRole("Reader")';
+        var boolAdmin = '@User.IsInRole("Admin")' == "True";
+        var boolWriter = '@User.IsInRole("Writer")' == "True";
+        var boolReader = '@User.IsInRole("Reader")' == "True";
 
         var notesNameMax = '@notesNameLenAttr.MaximumLength';
     </script>

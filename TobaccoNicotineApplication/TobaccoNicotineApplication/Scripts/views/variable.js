@@ -43,7 +43,8 @@ function DataBind(VariableList) {
             Data += "<td>" + "<input id=\"UnitNameTable" + i + "\"" + "class=\"form-control\" minlength=" + unitNameMin + " maxlength=" + unitNameMax + " type=\"textbox\" value=\"" + VariableList[i].MeasurementUnitName + "\" placeholder=\"Insert " + unitName + "*\" onkeypress=\"saveRow(event, 3, '" + VariableList[i].Number + "', UnitNameTable" + i + ")\" >" + "</td>";
 
         } else {
-            Data = Data + "<td>" + VariableList[i].Name + "</td>" +
+            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
+                "<td>" + VariableList[i].Name + "</td>" +
                 "<td>" + VariableList[i].PhaseCode + "</td>" +
                 "<td>" + VariableList[i].PhaseName + "</td>" +
                 "<td>" + VariableList[i].VarLc + "</td>" +
@@ -202,7 +203,7 @@ function saveRow(e, params, number, id) {
             phaseCode = id.value
         if (params == '2')
             phaseName = id.value
-        if (params == '2')
+        if (params == '3')
             unit = id.value
 
         saveAjaxRequest(number, name, phaseCode, phaseName, "", unit, id);
@@ -482,21 +483,25 @@ function FilterVariable(selectSortable) {
         traditional: true,
         url: "/Variable/GetVariableList",
         headers: { "__RequestVerificationToken": token },
-        data: (($("#numberString").val() != null) ? 'number=' : '') + (($("#numberString").val() != null) ? encodeURIComponent($("#numberString").val()) + '&' : '') +
-            (($("#variableNameString").val() != null) ? 'variableName=' : '') + (($("#variableNameString").val() != null) ? encodeURIComponent($("#variableNameString").val()) + '&' : '') +
-            (($("#phaseCodeString").val() != null) ? 'phaseCode=' : '') + (($("#phaseCodeString").val() != null) ? encodeURIComponent($("#phaseCodeString").val()) + '&' : '') +
-            (($("#phaseNameString").val() != null) ? 'phaseName=' : '') + (($("#phaseNameString").val() != null) ? encodeURIComponent($("#phaseNameString").val()) + '&' : '') +
-            (($("#varLcString").val() != null) ? 'varLc=' : '') + (($("#varLcString").val() != null) ? encodeURIComponent($("#varLcString").val()) + '&' : '') +
-            (($("#measurementUnitString").val() != null) ? 'measurementUnit=' : '') + (($("#measurementUnitString").val() != null) ? encodeURIComponent($("#measurementUnitString").val()) : '') +
-            ((sortable1 != null && selectSortable == 1) ? 'orderName=' : '') + ((sortable1 != null && selectSortable == 1) ? sortable1 + '&' : '') +
-            ((sortable2 != null && selectSortable == 2) ? 'orderPhaseCode=' : '') + ((sortable2 != null && selectSortable == 2) ? sortable2 : '') +
-            ((sortable3 != null && selectSortable == 3) ? 'orderPhaseName=' : '') + ((sortable3 != null && selectSortable == 3) ? sortable3 : '') +
-            ((sortable4 != null && selectSortable == 4) ? 'orderVarLc=' : '') + ((sortable4 != null && selectSortable == 4) ? sortable4 : '') +
-            ((sortable5 != null && selectSortable == 5) ? 'orderUnitName=' : '') + ((sortable5 != null && selectSortable == 5) ? sortable5 : ''),
+        data: {
+            number: ($("#numberString").val() != null) ? $("#numberString").chosen().val() : undefined,
+            variableName: ($("#variableNameString").val() != null) ? $("#variableNameString").val() : undefined,
+            phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
+            phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
+            varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
+            measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined,
+            orderName: (sortable1 != null && selectSortable == 1) ? sortable1 : '',
+            orderPhaseCode: (sortable2 != null && selectSortable == 2) ? sortable2 : '',
+            orderPhaseName: (sortable3 != null && selectSortable == 3) ? sortable3 : '',
+            orderVarLc: (sortable4 != null && selectSortable == 4) ? sortable4 : '',
+            orderUnitName: (sortable5 != null && selectSortable == 5) ? sortable5 : '',
+        },
         success: function (result) {
             $("#SetVariableList").empty();
             $("#myPager").empty();
             DataBind(result);
+            // resetto stato select all/deselect all
+            selectAll = true;
             // resetto l'immagine dei filtri
             if (selectSortable == 0) {
                 document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
@@ -687,7 +692,10 @@ function Copy() {
             // salvo tutti i valori della riga
             var valori_riga = "";
             for (var t = 1, n = riga.children.length - 1; t < n; t++) {
-                valori_riga += riga.children[t].children[0].value + "\t";
+                if (riga.children[t].children.length > 0)
+                    valori_riga += riga.children[t].children[0].value + "\t";
+                else
+                    valori_riga += riga.children[t].outerText + "\t";
             }
             // aggiungo riga
             rowDaCopiareArray.push(valori_riga.trim('\t'));
@@ -751,7 +759,7 @@ function pasteFromClipboard(numeroCheck) {
                     // suddivido ancora per quanto riguarda la linea
                     var res2 = res[m].split('\t');
 
-                    if (res2.length < 2) {
+                    if (res2.length < 4) {
                         swal("Attention!", "Number of columns is different from the copied values!", "error");
                         return;
                     }
@@ -761,6 +769,32 @@ function pasteFromClipboard(numeroCheck) {
                     var phaseName = res2[2].trim('\r').trim('\n');
                     var varLc = res2[3].trim('\r').trim('\n');
                     var unit = res2[4].trim('\r').trim('\n');
+
+                    // controllo
+                    if (name.length < variableNameMin || name.length > variableNameMax) {
+                        swal("Attention!", name + ": check length!", "error");
+                        return;
+                    }
+
+                    if (isNaN(phaseCode)) {
+                        swal("Attention!", phaseCode + ": isn't a number!", "error");
+                        return;
+                    }
+
+                    if (phaseName.length < phaseNameMin || phaseName.length > phaseNameMax) {
+                        swal("Attention!", phaseName + ": check length!", "error");
+                        return;
+                    }
+
+                    if (!(varLc == "true" || varLc == "false" )) {
+                        swal("Attention!", varLc + ": check value!", "error");
+                        return;
+                    }
+
+                    if (unit.length < unitNameMin || unit.length > unitNameMax) {
+                        swal("Attention!", unit + ": check length!", "error");
+                        return;
+                    }
 
                     // cambio valori riga
                     riga.children[1].children[0].value = name;

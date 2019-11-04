@@ -108,6 +108,8 @@ namespace TobaccoNicotineApplication.Controllers
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
+                db.Configuration.LazyLoadingEnabled = false;
+
                 Variable model = db.Variables.Where(x => x.Number == number).FirstOrDefault();
 
                 if (model != null)
@@ -179,6 +181,8 @@ namespace TobaccoNicotineApplication.Controllers
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
+                db.Configuration.LazyLoadingEnabled = false;
+
                 Variable variable = db.Variables.Where(a => a.Number == number).FirstOrDefault();
                 if (variable != null)
                 {

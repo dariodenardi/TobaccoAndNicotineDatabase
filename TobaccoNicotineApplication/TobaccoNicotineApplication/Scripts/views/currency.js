@@ -560,6 +560,8 @@ function FilterCurrency(selectSortable) {
             $("#SetCurrencyList").empty();
             $("#myPager").empty();
             DataBind(result);
+            // resetto stato select all/deselect all
+            selectAll = true;
             // resetto l'immagine dei filtri
             if (selectSortable == 0) {
                 document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";

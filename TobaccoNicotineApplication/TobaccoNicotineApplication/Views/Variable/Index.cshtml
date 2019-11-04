@@ -130,7 +130,10 @@
                 <!--Table-->
                 <button type="button" class="btn btn-default" onclick="toggle2()">Select/Deselect All</button>
                 <button type="button" class="btn btn-default" onclick="Copy()">Copy to Clipboard</button>
-                <button type="button" class="btn btn-default" onclick="Paste()">Paste from Clipboard</button>
+                @if (User.IsInRole("Admin") || User.IsInRole("Writer"))
+                {
+                    <button type="button" class="btn btn-default" onclick="Paste()">Paste from Clipboard</button>
+                }
                 <br />
                 <div class="col-lg-12">
                     <div class="table-responsive">
@@ -327,9 +330,9 @@
     @Scripts.Render("~/Scripts/sweetalert")
 
     <script>
-        var boolAdmin = '@User.IsInRole("Admin")';
-        var boolWriter = '@User.IsInRole("Writer")';
-        var boolReader = '@User.IsInRole("Reader")';
+        var boolAdmin = '@User.IsInRole("Admin")' == "True";
+        var boolWriter = '@User.IsInRole("Writer")' == "True";
+        var boolReader = '@User.IsInRole("Reader")' == "True";
 
         var variableNameMin = '@variableNameLenAttr.MinimumLength';
         var variableNameMax = '@variableNameLenAttr.MaximumLength';
