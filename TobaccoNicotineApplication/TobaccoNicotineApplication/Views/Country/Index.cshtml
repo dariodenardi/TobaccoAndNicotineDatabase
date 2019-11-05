@@ -149,7 +149,10 @@
                 <!--Table-->
                 <button type="button" class="btn btn-default" onclick="toggle2()">Select/Deselect All</button>
                 <button type="button" class="btn btn-default" onclick="Copy()">Copy to Clipboard</button>
-                <button type="button" class="btn btn-default" onclick="Paste()">Paste from Clipboard</button>
+                @if (User.IsInRole("Admin") || User.IsInRole("Writer"))
+                {
+                    <button type="button" class="btn btn-default" onclick="Paste()">Paste from Clipboard</button>
+                }
                 <br />
                 <div class="col-lg-12">
                     <div class="table-responsive">
@@ -271,7 +274,7 @@
                                         </dt>
 
                                         <dd>
-                                            @Html.EditorFor(model => model.PmiCoding, new { htmlAttributes = new { @id = "PmiCode", @class = "form-control", @maxlength = pmiCodingLenAttr.MaximumLength, @placeholder = "Insert " + pmiCoding + "*" } })
+                                            @Html.EditorFor(model => model.PmiCoding, new { htmlAttributes = new { @id = "PmiCoding", @class = "form-control", @maxlength = pmiCodingLenAttr.MaximumLength, @placeholder = "Insert " + pmiCoding + "*" } })
                                             @Html.ValidationMessageFor(model => model.PmiCoding, "", new { @class = "text-danger" })
                                         </dd>
 

@@ -26,7 +26,7 @@ $('document').ready(function () {
         placement: 'top-left'
     });
 
-    $('input#PmiCode').maxlength({
+    $('input#PmiCoding').maxlength({
         alwaysShow: true,
         placement: 'top-left'
     });
@@ -48,7 +48,7 @@ function DataBind(CountryList) {
                 + "<td>" + "<input id=\"CountryNameTable" + i + "\"" + "class=\"form-control\" minlength=" + countryNameMin + " maxlength=" + countryNameMax + " type=\"textbox\" value=\"" + CountryList[i].CountryName + "\" placeholder=\"Insert " + countryName + "*\" onkeypress=\"saveRow(event, 0, '" + CountryList[i].CountryCode + "', CountryNameTable" + i + ")\" >" + "</td>"
                 + "<td>" + "<input id=\"RegionNameTable" + i + "\"" + "class=\"form-control\" minlength=" + regionNameMin + " maxlength=" + regionNameMax + " type=\"textbox\" value=\"" + CountryList[i].RegionName + "\" placeholder=\"Insert " + regionName + "*\" onkeypress=\"saveRow(event, 1, '" + CountryList[i].CountryCode + "', RegionNameTable" + i + ")\" >" + "</td>"
                 + "<td>" + "<input id=\"ContinentNameTable" + i + "\"" + "class=\"form-control\" minlength=" + continentNameMin + " maxlength=" + continentNameMax + " type=\"textbox\" value=\"" + CountryList[i].ContinentName + "\" placeholder=\"Insert " + continentName + "*\" onkeypress=\"saveRow(event, 2, '" + CountryList[i].CountryCode + "', ContinentNameTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"PmiCodeTable" + i + "\"" + "class=\"form-control\" minlength=" + pmiCodingMin + " maxlength=" + pmiCodingMax + " type=\"textbox\" value=\"" + CountryList[i].PmiCoding + "\" placeholder=\"Insert " + pmiCoding + "*\" onkeypress=\"saveRow(event, 3, '" + CountryList[i].CountryCode + "', PmiCodeTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"PmiCodingTable" + i + "\"" + "class=\"form-control\" minlength=" + pmiCodingMin + " maxlength=" + pmiCodingMax + " type=\"textbox\" value=\"" + CountryList[i].PmiCoding + "\" placeholder=\"Insert " + pmiCoding + "*\" onkeypress=\"saveRow(event, 3, '" + CountryList[i].CountryCode + "', PmiCodingTable" + i + ")\" >" + "</td>"
                 + "<td>" + "<select id=\"AreaCodeTable" + i + "\"" + "class=\"form-control\" onchange=\"saveRowCombo('" + CountryList[i].CountryCode + "', AreaCodeTable" + i + ")\" ><option";
 
             if (CountryList[i].AreaCode == true) {
@@ -57,7 +57,11 @@ function DataBind(CountryList) {
                 Data += " selected>false</option><option>true</option></select></td>";
 
         } else {
-            Data = Data + "<td>" + CountryList[i].CountryName + "</td>" +
+            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
+                "<td>" + CountryList[i].CountryName + "</td>" +
+                "<td>" + CountryList[i].RegionName + "</td>" +
+                "<td>" + CountryList[i].ContinentName + "</td>" +
+                "<td>" + CountryList[i].PmiCoding + "</td>" +
                 "<td>" + CountryList[i].AreaCode + "</td>";
         }
 
@@ -84,7 +88,7 @@ function DataBind(CountryList) {
             placement: 'top-left'
         });
 
-        $('input#PmiCodeTable' + i).maxlength({
+        $('input#PmiCodingTable' + i).maxlength({
             alwaysShow: true,
             placement: 'top-left'
         });
@@ -110,6 +114,9 @@ function AddNewCountry() {
     $("#ContinentCode").prop('readonly', '');
     $("#RegionCode").prop('readonly', '');
     $("#CountryCode").prop('readonly', '');
+    $("#PmiCoding").prop('readonly', '');
+    $("#RegionName").prop('readonly', '');
+    $("#ContinentName").prop('readonly', '');
     $("#CountryName").prop('readonly', '');
     $("#AreaCode").prop('disabled', '');
     $("#MyModal").modal();
@@ -127,6 +134,9 @@ function DetailsCountry(countryCode) {
     $("#ContinentCode").prop('readonly', 'readonly');
     $("#RegionCode").prop('readonly', 'readonly');
     $("#CountryCode").prop('readonly', 'readonly');
+    $("#PmiCoding").prop('readonly', 'readonly');
+    $("#RegionName").prop('readonly', 'readonly');
+    $("#ContinentName").prop('readonly', 'readonly');
     $("#CountryName").prop('readonly', 'readonly');
     $("#AreaCode").prop('disabled', 'true');
     $("#MyModal").modal();
@@ -144,7 +154,7 @@ function DetailsCountry(countryCode) {
             $("#CountryName").val(data.CountryName);
             $("#ContinentName").val(data.ContinentName);
             $("#RegionName").val(data.RegionName);
-            $("#PmiCode").val(data.PmiCoding);
+            $("#PmiCoding").val(data.PmiCoding);
             $("#AreaCode").attr('checked', data.AreaCode);
         }
     })
@@ -373,8 +383,8 @@ function loadFilter() {
 
             $.each(response, function (index, row) {
                 if ($("#pmiCodingString").val() == null)
-                    if (pmiCodingArray.includes(row.pmiCodingArray) == false)
-                        pmiCodingArray.push(row.pmiCodingArray);
+                    if (pmiCodingArray.includes(row.PmiCoding) == false)
+                        pmiCodingArray.push(row.PmiCoding);
 
                 if ($("#continentNameString").val() == null)
                     if (continentNameArray.includes(row.ContinentName) == false)
@@ -537,19 +547,21 @@ function FilterCountry(selectSortable) {
         traditional: true,
         url: "/Country/GetCountryList",
         headers: { "__RequestVerificationToken": token },
-        data: (($("#pmiCodingString").val() != null) ? 'pmiCoding=' : '') + (($("#pmiCodingString").val() != null) ? encodeURIComponent($("#pmiCodingString").val()) + '&' : '') +
-            (($("#continentNameString").val() != null) ? 'continentName=' : '') + (($("#continentNameString").val() != null) ? encodeURIComponent($("#continentNameString").val()) + '&' : '') +
-            (($("#regionNameString").val() != null) ? 'regionName=' : '') + (($("#regionNameString").val() != null) ? encodeURIComponent($("#regionNameString").val()) + '&' : '') +
-            (($("#countryNameString").val() != null) ? 'countryName=' : '') + (($("#countryNameString").val() != null) ? encodeURIComponent($("#countryNameString").val()) + '&' : '') +
-            (($("#continentCodeString").val() != null) ? 'continentCode=' : '') + (($("#continentCodeString").val() != null) ? encodeURIComponent($("#continentCodeString").val()) + '&' : '') +
-            (($("#regionCodeString").val() != null) ? 'regionCode=' : '') + (($("#regionCodeString").val() != null) ? encodeURIComponent($("#regionCodeString").val()) : '') +
-            (($("#countryCodeString").val() != null) ? 'countryCode=' : '') + (($("#countryCodeString").val() != null) ? encodeURIComponent($("#countryCodeString").val()) : '') +
-            (($("#areaCodeString").val() != null) ? 'areaCode=' : '') + (($("#areaCodeString").val() != null) ? encodeURIComponent($("#areaCodeString").val()) : '') +
-            ((sortable1 != null && selectSortable == 1) ? 'orderCountryName=' : '') + ((sortable1 != null && selectSortable == 1) ? sortable1 + '&' : '') +
-            ((sortable2 != null && selectSortable == 1) ? 'orderContinentName=' : '') + ((sortable2 != null && selectSortable == 1) ? sortable2 + '&' : '') +
-            ((sortable3 != null && selectSortable == 1) ? 'orderRegionName=' : '') + ((sortable3 != null && selectSortable == 1) ? sortable3 + '&' : '') +
-            ((sortable4 != null && selectSortable == 1) ? 'orderPmi=' : '') + ((sortable4 != null && selectSortable == 1) ? sortable4 + '&' : '') +
-            ((sortable5 != null && selectSortable == 2) ? 'orderAreaCode=' : '') + ((sortable5 != null && selectSortable == 2) ? sortable5 : ''),
+        data: {
+            pmiCoding: ($("#pmiCodingString").val() != null) ? $("#pmiCodingString").chosen().val() : undefined,
+            continentName: ($("#continentNameString").val() != null) ? $("#continentNameString").val() : undefined,
+            regionName: ($("#regionNameString").val() != null) ? $("#regionNameString").val() : undefined,
+            countryName: ($("#countryNameString").val() != null) ? $("#countryNameString").val() : undefined,
+            continentCode: ($("#continentCodeString").val() != null) ? $("#continentCodeString").val() : undefined,
+            regionCode: ($("#regionCodeString").val() != null) ? $("#regionCodeString").val() : undefined,
+            countryCode: ($("#countryCodeString").val() != null) ? $("#countryCodeString").val() : undefined,
+            areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
+            orderCountryName: (sortable1 != null && selectSortable == 1) ? sortable1 : '',
+            orderRegionName: (sortable2 != null && selectSortable == 2) ? sortable2 : '',
+            orderContinentName: (sortable3 != null && selectSortable == 3) ? sortable3 : '',
+            orderPmi: (sortable4 != null && selectSortable == 4) ? sortable4 : '',
+            orderAreaCode: (sortable5 != null && selectSortable == 5) ? sortable5 : '',
+        },
         success: function (result) {
             $("#SetCountryList").empty();
             $("#myPager").empty();
@@ -670,7 +682,7 @@ function SortableAreaCode() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable5").src = "/Images/Sortable/asc.png";
 
-    FilterCountry(2);
+    FilterCountry(5);
 
 }
 

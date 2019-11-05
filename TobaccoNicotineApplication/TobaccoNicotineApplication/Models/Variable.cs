@@ -26,6 +26,7 @@ namespace TobaccoNicotineApplication.Models
 
         [Required(ErrorMessage = "Variable Name is required.")]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Variable Name must be at least 5 characters.")]
+        [RegularExpression("^[^0-9]+$", ErrorMessage = "Numbers aren't valid")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Phase Code is required.")]
@@ -33,11 +34,12 @@ namespace TobaccoNicotineApplication.Models
 
         [Required(ErrorMessage = "Phase Name is required.")]
         [StringLength(30, MinimumLength = 4, ErrorMessage = "Phase Name must be at least 4 characters.")]
-        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only characters are valid.")]
+        [RegularExpression("^[^0-9]+$", ErrorMessage = "Numbers aren't valid")]
         public string PhaseName { get; set; }
 
         [Required(ErrorMessage = "Measurement Unit Name is required.")]
         [StringLength(30, MinimumLength = 1, ErrorMessage = "Measurement Unit Name must be at least 1 characters.")]
+        [RegularExpression("^[^0-9]+$", ErrorMessage = "Numbers aren't valid")]
         public string MeasurementUnitName { get; set; }
 
         [Required(ErrorMessage = "Var Lc is required.")]

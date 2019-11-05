@@ -33,22 +33,22 @@ namespace TobaccoNicotineApplication.Models
 
         [Required(ErrorMessage = "Country Name is required.")]
         [StringLength(70, MinimumLength = 4, ErrorMessage = "Country Name must be at least 4 characters.")]
-        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only characters are valid.")]
+        [RegularExpression("^[^0-9]+$", ErrorMessage = "Numbers aren't valid")]
         public string CountryName { get; set; }
 
         [Required(ErrorMessage = "Continent Name is required")]
         [StringLength(30, MinimumLength = 2, ErrorMessage = "Continent Name must be at least 2 characters.")]
-        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only characters are valid.")]
+        [RegularExpression("^[^0-9]+$", ErrorMessage = "Numbers aren't valid")]
         public string ContinentName { get; set; }
 
         [Required(ErrorMessage = "Region Name is required")]
         [StringLength(30, MinimumLength = 2, ErrorMessage = "Region Name must be at least 2 characters.")]
-        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only characters are valid.")]
+        [RegularExpression("^[^0-9]+$", ErrorMessage = "Numbers aren't valid")]
         public string RegionName { get; set; }
 
         [Required(ErrorMessage = "Pmi Coding is required.")]
         [StringLength(30, MinimumLength = 2, ErrorMessage = "Pmi Coding must be at least 2 characters.")]
-        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only characters are valid.")]
+        [RegularExpression("^[^0-9]+$", ErrorMessage = "Numbers aren't valid")]
         public string PmiCoding { get; set; }
 
         [Required(ErrorMessage = "Area Code is required.")]
