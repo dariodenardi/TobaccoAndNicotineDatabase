@@ -84,7 +84,7 @@ namespace TobaccoNicotineApplication.Controllers
                 else if (orderNotes == "asc")
                     currencies = currencies.OrderBy(x => x.Notes);
 
-                return Json(currencies.Select(x => new { x.Countries.CountryName, x.Year, x.Value, x.Notes }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(currencies.Select(x => new { x.CountryCode, x.Countries.CountryName, x.Year, x.Value, x.Notes }).ToList(), JsonRequestBehavior.AllowGet);
             }
         }
 

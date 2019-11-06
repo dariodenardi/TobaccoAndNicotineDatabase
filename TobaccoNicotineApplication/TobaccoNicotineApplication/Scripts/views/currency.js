@@ -37,14 +37,15 @@ function DataBind(CurrencyList) {
                 + "<td>" + "<input id=\"NotesTable" + i + "\"" + "class=\"form-control\" maxlength=" + notesNameMax + " type=\"textbox\" value=\"" + CurrencyList[i].Notes + "\" placeholder=\"Insert " + '@notes' + "\" onkeypress=\"saveRow(event, 2, '" + CurrencyList[i].CountryCode + "', " + CurrencyList[i].Year + ", NotesTable" + i + ")\" >" + "</td>";
 
         } else {
-            Data = Data + "<td>" + CurrencyList[i].CountryName + "</td>" +
+            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
+                "<td>" + CurrencyList[i].CountryName + "</td>" +
                 "<td>" + CurrencyList[i].Year + "</td>" +
                 "<td>" + CurrencyList[i].Value + "</td>" +
                 "<td>" + CurrencyList[i].Notes + "</td>";
         }
 
         Data = Data + "<td>" +
-            "<a href='#' class='btn btn-info btn-sm waves-effect' onclick='DetailsCurrency(\"" + CurrencyList[i].CountryCode + "\", " + CurrencyList[i].Year + ")' ><span class='glyphicon glyphicon-eye-open'></span></a>";
+            "<a href='#' class='btn btn-info btn-sm waves-effect' onclick='DetailsCurrency(" + CurrencyList[i].CountryCode + ", " + CurrencyList[i].Year + ")' ><span class='glyphicon glyphicon-eye-open'></span></a>";
 
         Data = Data + "</td>" + "</tr>";
 
@@ -74,6 +75,8 @@ function AddNewCurrency() {
     $("#ViewCountry").hide();
     $("#ViewValues").hide();
     $("#ViewSources").hide();
+    $("#countryList").show();
+    $("#countryNameLabel").show();
     $("#Value").prop('readonly', '');
     $("#Year").prop('readonly', '');
     $("#Notes").prop('readonly', '');
@@ -91,6 +94,8 @@ function DetailsCurrency(CountryCode, year) {
     $("#ViewCountry").show();
     $("#ViewValues").show();
     $("#ViewSources").show();
+    $("#countryList").hide();
+    $("#countryNameLabel").hide();
     $("#Value").prop('readonly', 'readonly');
     $("#Year").prop('readonly', 'readonly');
     $("#Notes").prop('readonly', 'readonly');
@@ -102,14 +107,12 @@ function DetailsCurrency(CountryCode, year) {
         traditional: true,
         url: "/Currency/GetCurrencyById?countryCode=" + CountryCode + "&year=" + year,
         success: function (data) {
-            $("#PanelTitleAddEditDetails").html(CountryName);
+            var countryName = $("#countryList option[value='" + data.CountryCode + "']").text();
+            $("#PanelTitleAddEditDetails").html(countryName);
             $("#CountryCode").val(data.CountryCode);
             $("#Value").val(data.Value);
             $("#Year").val(data.Year);
-            if (data.Notes == '')
-                $("#Notes").val(" ");
-            else
-                $("#Notes").val(data.Notes);
+            $("#Notes").val(data.Notes);
         }
     })
 }
@@ -475,15 +478,17 @@ function loadFilterYear() {
         cache: false,
         traditional: true,
         headers: { "__RequestVerificationToken": token },
-        data: (($("#pmiCodingString").val() != null) ? 'pmiCoding=' : '') + (($("#pmiCodingString").val() != null) ? encodeURIComponent($("#pmiCodingString").val()) + '&' : '') +
-            (($("#continentNameString").val() != null) ? 'continentName=' : '') + (($("#continentNameString").val() != null) ? encodeURIComponent($("#continentNameString").val()) + '&' : '') +
-            (($("#regionNameString").val() != null) ? 'regionName=' : '') + (($("#regionNameString").val() != null) ? encodeURIComponent($("#regionNameString").val()) + '&' : '') +
-            (($("#countryNameString").val() != null) ? 'countryName=' : '') + (($("#countryNameString").val() != null) ? encodeURIComponent($("#countryNameString").val()) + '&' : '') +
-            (($("#continentCodeString").val() != null) ? 'continentCode=' : '') + (($("#continentCodeString").val() != null) ? encodeURIComponent($("#continentCodeString").val()) + '&' : '') +
-            (($("#regionCodeString").val() != null) ? 'regionCode=' : '') + (($("#regionCodeString").val() != null) ? encodeURIComponent($("#regionCodeString").val()) + '&' : '') +
-            (($("#countryCodeString").val() != null) ? 'countryCode=' : '') + (($("#countryCodeString").val() != null) ? encodeURIComponent($("#countryCodeString").val()) + '&' : '') +
-            (($("#areaCodeString").val() != null) ? 'areaCode=' : '') + (($("#areaCodeString").val() != null) ? encodeURIComponent($("#areaCodeString").val()) + '&' : '') +
-            (($("#yearString").val() != null) ? 'year=' : '') + (($("#yearString").val() != null) ? encodeURIComponent($("#yearString").val()) : ''),
+        data: {
+            pmiCoding: ($("#pmiCodingString").val() != null) ? $("#pmiCodingString").chosen().val() : undefined,
+            continentName: ($("#continentNameString").val() != null) ? $("#continentNameString").val() : undefined,
+            regionName: ($("#regionNameString").val() != null) ? $("#regionNameString").val() : undefined,
+            countryName: ($("#countryNameString").val() != null) ? $("#countryNameString").val() : undefined,
+            continentCode: ($("#continentCodeString").val() != null) ? $("#continentCodeString").val() : undefined,
+            regionCode: ($("#regionCodeString").val() != null) ? $("#regionCodeString").val() : undefined,
+            countryCode: ($("#countryCodeString").val() != null) ? $("#countryCodeString").val() : undefined,
+            areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
+            year: ($("#yearString").val() != null) ? $("#yearString").val() : undefined,
+        },
         success: function (response) {
 
             $.each(response, function (index, row) {
@@ -543,19 +548,21 @@ function FilterCurrency(selectSortable) {
         traditional: true,
         url: "/Currency/GetCurrencyList",
         headers: { "__RequestVerificationToken": token },
-        data: (($("#pmiCodingString").val() != null) ? 'pmiCoding=' : '') + (($("#pmiCodingString").val() != null) ? encodeURIComponent($("#pmiCodingString").val()) + '&' : '') +
-            (($("#continentNameString").val() != null) ? 'continentName=' : '') + (($("#continentNameString").val() != null) ? encodeURIComponent($("#continentNameString").val()) + '&' : '') +
-            (($("#regionNameString").val() != null) ? 'regionName=' : '') + (($("#regionNameString").val() != null) ? encodeURIComponent($("#regionNameString").val()) + '&' : '') +
-            (($("#countryNameString").val() != null) ? 'countryName=' : '') + (($("#countryNameString").val() != null) ? encodeURIComponent($("#countryNameString").val()) + '&' : '') +
-            (($("#continentCodeString").val() != null) ? 'continentCode=' : '') + (($("#continentCodeString").val() != null) ? encodeURIComponent($("#continentCodeString").val()) + '&' : '') +
-            (($("#regionCodeString").val() != null) ? 'regionCode=' : '') + (($("#regionCodeString").val() != null) ? encodeURIComponent($("#regionCodeString").val()) + '&' : '') +
-            (($("#countryCodeString").val() != null) ? 'countryCode=' : '') + (($("#countryCodeString").val() != null) ? encodeURIComponent($("#countryCodeString").val()) + '&' : '') +
-            (($("#areaCodeString").val() != null) ? 'areaCode=' : '') + (($("#areaCodeString").val() != null) ? encodeURIComponent($("#areaCodeString").val()) + '&' : '') +
-            (($("#yearString").val() != null) ? 'year=' : '') + (($("#yearString").val() != null) ? encodeURIComponent($("#yearString").val()) + '&' : '') +
-            ((sortable1 != null && selectSortable == 1) ? 'orderCountryName=' : '') + ((sortable1 != null && selectSortable == 1) ? sortable1 + '&' : '') +
-            ((sortable2 != null && selectSortable == 2) ? 'orderYear=' : '') + ((sortable2 != null && selectSortable == 2) ? sortable2 + '&' : '') +
-            ((sortable3 != null && selectSortable == 3) ? 'orderValue=' : '') + ((sortable3 != null && selectSortable == 3) ? sortable3 + '&' : '') +
-            ((sortable4 != null && selectSortable == 4) ? 'orderNotes=' : '') + ((sortable4 != null && selectSortable == 4) ? sortable4 : ''),
+        data: {
+            pmiCoding: ($("#pmiCodingString").val() != null) ? $("#pmiCodingString").chosen().val() : undefined,
+            continentName: ($("#continentNameString").val() != null) ? $("#continentNameString").val() : undefined,
+            regionName: ($("#regionNameString").val() != null) ? $("#regionNameString").val() : undefined,
+            countryName: ($("#countryNameString").val() != null) ? $("#countryNameString").val() : undefined,
+            continentCode: ($("#continentCodeString").val() != null) ? $("#continentCodeString").val() : undefined,
+            regionCode: ($("#regionCodeString").val() != null) ? $("#regionCodeString").val() : undefined,
+            countryCode: ($("#countryCodeString").val() != null) ? $("#countryCodeString").val() : undefined,
+            areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
+            year: ($("#yearString").val() != null) ? $("#yearString").val() : undefined,
+            orderCountryName: (sortable1 != null && selectSortable == 1) ? sortable1 : '',
+            orderYear: (sortable2 != null && selectSortable == 2) ? sortable2 : '',
+            orderValue: (sortable3 != null && selectSortable == 3) ? sortable3 : '',
+            orderNotes: (sortable4 != null && selectSortable == 4) ? sortable4 : '',
+        },
         success: function (result) {
             $("#SetCurrencyList").empty();
             $("#myPager").empty();
