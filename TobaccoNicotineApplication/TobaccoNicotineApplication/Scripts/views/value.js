@@ -59,11 +59,20 @@ function DataBind(ValueList) {
         }
 
         Data = Data + "<td>" +
-            "<a href='#' class='btn btn-info btn-sm waves-effect' onclick=\"DetailsValue('" + ValueList[i].CountryName + "', " + ValueList[i].Year + ", '" + ValueList[i].VariableName + "')\" ><span class='glyphicon glyphicon-eye-open'></span></a>";
+            "<div class=\"dropdown\">" +
+            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
+            "Search" +
+            "<span class=\"caret\"></span></button>" +
+            "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
+            "<li><a href=\"#\">Sources</a></li>" +
+            "</ul>" +
+            "</div>";
 
-        if (ValueList[i].IsSource == false && (boolAdmin || boolWriter)) {
-            Data = Data +
-                " <input type='file' id='filestyle-0' tabindex='-1' style='position: absolute; clip: rect(0px, 0px, 0px, 0px);'><span class='group-span-filestyle ' tabindex='0'><label for='filestyle-0' class='btn btn-sm btn-default '><span class='icon-span-filestyle glyphicon glyphicon-folder-open'></span> </label></span>" + "</td>"
+        if ((boolAdmin || boolWriter)) {
+            if (ValueList[i].IsSource == false) {
+                Data = Data +
+                    " <input type='file' id='filestyle-0' tabindex='-1' style='position: absolute; clip: rect(0px, 0px, 0px, 0px);'><span class='group-span-filestyle ' tabindex='0'><label for='filestyle-0' class='btn btn-sm btn-default '><span class='icon-span-filestyle glyphicon glyphicon-folder-open'></span> </label></span>" + "</td>"
+            }
         }
 
         if (ValueList[i].IsSource == true) {
@@ -98,34 +107,7 @@ function AddNewValue() {
     $("#ModalTitle").html("Add New Value");
     $('span[data-valmsg-for').html('');
     $("#PanelTitleAddEditDetails").html("New Value");
-    $("#PanelValue").prop('class', 'panel panel-default panel-success');
-    $("#CreateValue").prop('class', 'btn btn-success');
-    $("#CreateValue").show();
-    $("#ViewSources").hide();
-    $("#CountryCode").prop('readonly', '');
-    $("#CountryName").prop('readonly', '');
     $("#MyModal").modal();
-}
-
-// Show The Popup Modal For Details
-function DetailsValue(countryName, year, variableName) {
-    $("#ModalTitle").html("Details Value");
-    $('span[data-valmsg-for').html('');
-    $("#PanelValue").prop('class', 'panel panel-default panel-primary');
-    $("#CreateValue").hide();
-    $("#ViewSources").show();
-    $("#CountryCode").prop('readonly', 'readonly');
-    $("#CountryName").prop('readonly', 'readonly');
-    $("#MyModal").modal();
-    $.ajax({
-        type: "GET",
-        url: "/Value/GetValueById?countryName=" + countryName + "&year=" + year + "&variableName=" + variableName,
-        success: function (data) {
-            $("#PanelTitleAddEditDetails").html(countryName);
-            $("#CountryCode").val(data.CountryCode);
-            $("#CountryName").val(data.Name);
-        }
-    })
 }
 
 function sleep(ms) {

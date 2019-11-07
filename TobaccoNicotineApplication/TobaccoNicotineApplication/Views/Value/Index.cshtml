@@ -227,7 +227,7 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th width="6%"></th>
+                                    <th width="5%"></th>
                                     <th width="11%">@countryName <img id="idSortable1" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableName()" style="width:auto;"></th>
                                     <th width="11%">@variableName <img id="idSortable2" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableVariableName()" style="width:auto;"></th>
                                     <th width="11%">@data <img id="idSortable3" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableData()" style="width:auto;"></th>
@@ -236,7 +236,7 @@
                                     <th width="11%">@exchangeRateUs</th>
                                     <th width="11%">@publicNotes <img id="idSortable5" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortablePublicNotes()" style="width:auto;"></th>
                                     <th width="11%">@internalNotes <img id="idSortable6" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableInternalNotes()" style="width:auto;"></th>
-                                    <th width="6%">Action</th>
+                                    <th width="7%"></th>
                                 </tr>
                             </thead>
                             <tbody id="SetValueList"></tbody>
@@ -285,7 +285,7 @@
             <div class="modal-body">
                 <!-- Start panel -->
                 <div class="col-lg">
-                    <div class="panel panel-default panel-default" id="PanelValue">
+                    <div class="panel panel-default panel-success">
                         <div class="panel-heading">
                             <h4 class="panel-title" id="PanelTitleAddEditDetails"></h4>
                         </div>
@@ -343,8 +343,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="r">Cancel</button>
-                <button type="button" class="btn btn-default" id="CreateValue">Save</button>
-                <button type="button" class="btn btn-default" id="ViewSources" onclick="cambiaView(this)">Sources</button>
+                <button type="button" class="btn btn-success" id="CreateValue">Save</button>
             </div>
 
         </div>

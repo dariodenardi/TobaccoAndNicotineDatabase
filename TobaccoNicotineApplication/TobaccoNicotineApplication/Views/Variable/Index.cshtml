@@ -141,12 +141,12 @@
                             <thead>
                                 <tr>
                                     <th width="5%"></th>
-                                    <th width="18%">@variableName <img id="idSortable1" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableName()" style="width:auto;"></th>
-                                    <th width="18%">@phaseCode <img id="idSortable2" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortablePhaseCode()" style="width:auto;"></th>
-                                    <th width="18%">@phaseName <img id="idSortable3" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortablePhaseName()" style="width:auto;"></th>
-                                    <th width="18%">@varLc <img id="idSortable4" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableVarLc()" style="width:auto;"></th>
-                                    <th width="18%">@unitName <img id="idSortable5" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableUnitName()" style="width:auto;"></th>
-                                    <th width="5%">Action</th>
+                                    <th width="17%">@variableName <img id="idSortable1" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableName()" style="width:auto;"></th>
+                                    <th width="17%">@phaseCode <img id="idSortable2" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortablePhaseCode()" style="width:auto;"></th>
+                                    <th width="17%">@phaseName <img id="idSortable3" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortablePhaseName()" style="width:auto;"></th>
+                                    <th width="17%">@varLc <img id="idSortable4" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableVarLc()" style="width:auto;"></th>
+                                    <th width="17%">@unitName <img id="idSortable5" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableUnitName()" style="width:auto;"></th>
+                                    <th width="10%"></th>
                                 </tr>
                             </thead>
                             <tbody id="SetVariableList"></tbody>
@@ -195,7 +195,7 @@
             <div class="modal-body">
                 <!-- Start panel -->
                 <div class="col-lg">
-                    <div class="panel panel-default panel-default" id="PanelVariable">
+                    <div class="panel panel-default panel-success">
                         <div class="panel-heading">
                             <h4 class="panel-title" id="PanelTitleAddEditDetails"></h4>
                         </div>
@@ -271,9 +271,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="r">Cancel</button>
-                <button type="button" class="btn btn-default" id="CreateVariable">Save</button>
-                <button type="button" class="btn btn-default" id="ViewValues" onclick="cambiaView(this)">Values</button>
-                <button type="button" class="btn btn-default" id="ViewSources" onclick="cambiaView(this)">Sources</button>
+                <button type="button" class="btn btn-success" id="CreateVariable">Save</button>
             </div>
 
         </div>

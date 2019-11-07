@@ -168,11 +168,11 @@
                             <thead>
                                 <tr>
                                     <th width="5%"></th>
-                                    <th width="22,5%">@countryName <img id="idSortable1" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableName()" style="width:auto;"></th>
-                                    <th width="22,5%">@year <img id="idSortable2" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableYear()" style="width:auto;"></th>
-                                    <th width="22,5%">@value <img id="idSortable3" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableValue()" style="width:auto;"></th>
-                                    <th width="22,5%">@notes <img id="idSortable4" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableNotes()" style="width:auto;"></th>
-                                    <th width="5%">Action</th>
+                                    <th width="21,5%">@countryName <img id="idSortable1" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableName()" style="width:auto;"></th>
+                                    <th width="21,5%">@year <img id="idSortable2" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableYear()" style="width:auto;"></th>
+                                    <th width="21,5%">@value <img id="idSortable3" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableValue()" style="width:auto;"></th>
+                                    <th width="21,5%">@notes <img id="idSortable4" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableNotes()" style="width:auto;"></th>
+                                    <th width="11%"></th>
                                 </tr>
                             </thead>
                             <tbody id="SetCurrencyList"></tbody>
@@ -221,7 +221,7 @@
             <div class="modal-body">
                 <!-- Start panel -->
                 <div class="col-lg">
-                    <div class="panel panel-default panel-default" id="PanelCurrency">
+                    <div class="panel panel-default panel-success">
                         <div class="panel-heading">
                             <h4 class="panel-title" id="PanelTitleAddEditDetails"></h4>
                         </div>
@@ -232,7 +232,7 @@
 
                                     <dl class="dl-horizontal">
                                         <dt>
-                                            @Html.Label(countryName, new { @id= "countryNameLabel", @class = "control-label col-md-2" })
+                                            @Html.Label(countryName, new { @class = "control-label col-md-2" })
                                         </dt>
 
                                         <dd>
@@ -287,10 +287,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="r">Cancel</button>
-                <button type="button" class="btn btn-default" id="CreateCurrency">Save</button>
-                <button type="button" class="btn btn-default" id="ViewCountry" onclick="cambiaView(this)">Country</button>
-                <button type="button" class="btn btn-default" id="ViewValues" onclick="cambiaView(this)">Values</button>
-                <button type="button" class="btn btn-default" id="ViewSources" onclick="cambiaView(this)">Sources</button>
+                <button type="button" class="btn btn-success" id="CreateCurrency">Save</button>
             </div>
 
         </div>

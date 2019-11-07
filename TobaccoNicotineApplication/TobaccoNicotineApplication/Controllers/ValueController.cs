@@ -118,20 +118,6 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
-        // GET: /Value/GetValueById
-        public JsonResult GetValueById(string countryName, short year, string variableName)
-        {
-            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
-            {
-                db.Configuration.LazyLoadingEnabled = false;
-
-                Value model = db.Values.Where(x => x.Countries.CountryName == countryName && x.Year == year && x.Variables.Name == variableName).FirstOrDefault();
-
-                return Json(model, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        //
         // POST: /Value/Edit
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]

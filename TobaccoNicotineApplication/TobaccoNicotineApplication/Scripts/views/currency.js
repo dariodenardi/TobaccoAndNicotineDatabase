@@ -45,7 +45,16 @@ function DataBind(CurrencyList) {
         }
 
         Data = Data + "<td>" +
-            "<a href='#' class='btn btn-info btn-sm waves-effect' onclick='DetailsCurrency(" + CurrencyList[i].CountryCode + ", " + CurrencyList[i].Year + ")' ><span class='glyphicon glyphicon-eye-open'></span></a>";
+            "<div class=\"dropdown\">" +
+            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
+            "Search" +
+            "<span class=\"caret\"></span></button>" +
+            "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
+            "<li><a href=\"#\">Country</a></li>" +
+            "<li><a href=\"#\">Values</a></li>" +
+            "<li><a href=\"#\">Sources</a></li>" +
+            "</ul>" +
+            "</div>";
 
         Data = Data + "</td>" + "</tr>";
 
@@ -68,53 +77,7 @@ function AddNewCurrency() {
     $("#ModalTitle").html("Add New Currency");
     $('span[data-valmsg-for').html('');
     $("#PanelTitleAddEditDetails").html("New Currency");
-    $("#PanelCurrency").prop('class', 'panel panel-default panel-success');
-    $("#CreateCurrency").prop('class', 'btn btn-success');
-    $("#CreateCurrency").show();
-    $("#ViewRegion").hide();
-    $("#ViewCountry").hide();
-    $("#ViewValues").hide();
-    $("#ViewSources").hide();
-    $("#countryList").show();
-    $("#countryNameLabel").show();
-    $("#Value").prop('readonly', '');
-    $("#Year").prop('readonly', '');
-    $("#Notes").prop('readonly', '');
     $("#MyModal").modal();
-}
-
-//Show The Popup Modal For Details
-
-function DetailsCurrency(CountryCode, year) {
-    $("#ModalTitle").html("Details Currency");
-    $('span[data-valmsg-for').html('');
-    $("#PanelCurrency").prop('class', 'panel panel-default panel-primary');
-    $("#CreateCurrency").hide();
-    $("#ViewRegion").show();
-    $("#ViewCountry").show();
-    $("#ViewValues").show();
-    $("#ViewSources").show();
-    $("#countryList").hide();
-    $("#countryNameLabel").hide();
-    $("#Value").prop('readonly', 'readonly');
-    $("#Year").prop('readonly', 'readonly');
-    $("#Notes").prop('readonly', 'readonly');
-    $("#MyModal").modal();
-    $.ajax({
-        type: "GET",
-        dataType: 'json',
-        cache: false,
-        traditional: true,
-        url: "/Currency/GetCurrencyById?countryCode=" + CountryCode + "&year=" + year,
-        success: function (data) {
-            var countryName = $("#countryList option[value='" + data.CountryCode + "']").text();
-            $("#PanelTitleAddEditDetails").html(countryName);
-            $("#CountryCode").val(data.CountryCode);
-            $("#Value").val(data.Value);
-            $("#Year").val(data.Year);
-            $("#Notes").val(data.Notes);
-        }
-    })
 }
 
 function sleep(ms) {

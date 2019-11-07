@@ -85,20 +85,6 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
-        // GET: /Variable/GetVariableById
-        public JsonResult GetVariableById(short number)
-        {
-            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
-            {
-                db.Configuration.LazyLoadingEnabled = false;
-
-                Variable model = db.Variables.Where(x => x.Number == number).FirstOrDefault();
-
-                return Json(model, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        //
         // POST: /Variable/Edit
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]

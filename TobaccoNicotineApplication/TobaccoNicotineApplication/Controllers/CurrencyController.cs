@@ -89,20 +89,6 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
-        // GET: /Currency/GetCurrencyById
-        public JsonResult GetCurrencyById(short countryCode, short year)
-        {
-            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
-            {
-                db.Configuration.LazyLoadingEnabled = false;
-
-                Currency model = db.Currencies.Where(x => x.CountryCode == countryCode && x.Year == year).FirstOrDefault();
-
-                return Json(model, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        //
         // POST: /Currency/Edit
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]

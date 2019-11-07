@@ -52,7 +52,15 @@ function DataBind(VariableList) {
         }
 
         Data = Data + "<td>" +
-            "<a href='#' class='btn btn-info btn-sm waves-effect' onclick='DetailsVariable(\"" + VariableList[i].Number + "\")' ><span class='glyphicon glyphicon-eye-open'></span></a>";
+            "<div class=\"dropdown\">" +
+            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
+            "Search" +
+            "<span class=\"caret\"></span></button>" +
+            "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
+            "<li><a href=\"#\">Values</a></li>" +
+            "<li><a href=\"#\">Sources</a></li>" +
+            "</ul>" +
+            "</div>";
 
         Data = Data + "</td>" + "</tr>";
 
@@ -85,51 +93,7 @@ function AddNewVariable() {
     $("#ModalTitle").html("Add New Variable");
     $('span[data-valmsg-for').html('');
     $("#PanelTitleAddEditDetails").html("New Variable");
-    $("#PanelVariable").prop('class', 'panel panel-default panel-success');
-    $("#CreateVariable").prop('class', 'btn btn-success');
-    $("#CreateVariable").show();
-    $("#ViewValues").hide();
-    $("#ViewSources").hide();
-    $("#Number").prop('readonly', '');
-    $("#VarName").prop('readonly', '');
-    $("#PhaseCode").prop('readonly', '');
-    $("#PhaseName").prop('readonly', '');
-    $("#UnitName").prop('readonly', '');
-    $("#VarLc").prop('disabled', '');
     $("#MyModal").modal();
-}
-
-// Show The Popup Modal For Details
-function DetailsVariable(Number) {
-    $("#ModalTitle").html("Details Variable");
-    $('span[data-valmsg-for').html('');
-    $("#PanelVariable").prop('class', 'panel panel-default panel-primary');
-    $("#CreateVariable").hide();
-    $("#ViewValues").show();
-    $("#ViewSources").show();
-    $("#Number").prop('readonly', 'readonly');
-    $("#VarName").prop('readonly', 'readonly');
-    $("#PhaseCode").prop('readonly', 'readonly');
-    $("#PhaseName").prop('readonly', 'readonly');
-    $("#UnitName").prop('readonly', 'readonly');
-    $("#VarLc").prop('disabled', 'true');
-    $("#MyModal").modal();
-    $.ajax({
-        type: "GET",
-        dataType: 'json',
-        cache: false,
-        traditional: true,
-        url: "/Variable/GetVariableById?number=" + Number,
-        success: function (data) {
-            $("#PanelTitleAddEditDetails").html(data.Name);
-            $("#Number").val(data.Number);
-            $("#VarName").val(data.Name);
-            $("#PhaseCode").val(data.PhaseCode);
-            $("#PhaseName").val(data.PhaseName);
-            $("#VarLc").val(data.VarLc);
-            $("#UnitName").val(data.MeasurementUnitName);
-        }
-    })
 }
 
 function sleep(ms) {
