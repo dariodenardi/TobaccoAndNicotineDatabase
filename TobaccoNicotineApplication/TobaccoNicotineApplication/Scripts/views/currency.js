@@ -558,10 +558,10 @@ function FilterCurrency(selectSortable) {
             countryCode: ($("#countryCodeString").val() != null) ? $("#countryCodeString").val() : undefined,
             areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
             year: ($("#yearString").val() != null) ? $("#yearString").val() : undefined,
-            orderCountryName: (sortable1 != null && selectSortable == 1) ? sortable1 : '',
-            orderYear: (sortable2 != null && selectSortable == 2) ? sortable2 : '',
-            orderValue: (sortable3 != null && selectSortable == 3) ? sortable3 : '',
-            orderNotes: (sortable4 != null && selectSortable == 4) ? sortable4 : '',
+            orderCountryName: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
+            orderYear: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
+            orderValue: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
+            orderNotes: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined,
         },
         success: function (result) {
             $("#SetCurrencyList").empty();

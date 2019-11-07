@@ -66,7 +66,16 @@ function DataBind(CountryList) {
         }
 
         Data = Data + "<td>" +
-            "<a href='#' class='btn btn-info btn-sm waves-effect' onclick='DetailsCountry(\"" + CountryList[i].CountryCode + "\")' ><span class='glyphicon glyphicon-eye-open'></span></a>";
+            "<div class=\"dropdown\">" +
+            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
+            "Search" +
+            "<span class=\"caret\"></span></button>" +
+            "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
+            "<li><a href=\"#\">Values</a></li>" +
+            "<li><a href=\"#\">Currencies</a></li>" +
+            "<li><a href=\"#\">Sources</a></li>" +
+            "</ul>" +
+            "</div>";
 
         Data = Data + "</td>" + "</tr>";
 
@@ -105,59 +114,7 @@ function AddNewCountry() {
     $("#ModalTitle").html("Add New Country");
     $('span[data-valmsg-for').html('');
     $("#PanelTitleAddEditDetails").html("New Country");
-    $("#PanelCountry").prop('class', 'panel panel-default panel-success');
-    $("#CreateCountry").prop('class', 'btn btn-success');
-    $("#CreateCountry").show();
-    $("#ViewValues").hide();
-    $("#ViewCurrencies").hide();
-    $("#ViewSources").hide();
-    $("#ContinentCode").prop('readonly', '');
-    $("#RegionCode").prop('readonly', '');
-    $("#CountryCode").prop('readonly', '');
-    $("#PmiCoding").prop('readonly', '');
-    $("#RegionName").prop('readonly', '');
-    $("#ContinentName").prop('readonly', '');
-    $("#CountryName").prop('readonly', '');
-    $("#AreaCode").prop('disabled', '');
     $("#MyModal").modal();
-}
-
-// Show The Popup Modal For Details
-function DetailsCountry(countryCode) {
-    $("#ModalTitle").html("Details Country");
-    $('span[data-valmsg-for').html('');
-    $("#PanelCountry").prop('class', 'panel panel-default panel-primary');
-    $("#CreateCountry").hide();
-    $("#ViewValues").show();
-    $("#ViewCurrencies").show();
-    $("#ViewSources").show();
-    $("#ContinentCode").prop('readonly', 'readonly');
-    $("#RegionCode").prop('readonly', 'readonly');
-    $("#CountryCode").prop('readonly', 'readonly');
-    $("#PmiCoding").prop('readonly', 'readonly');
-    $("#RegionName").prop('readonly', 'readonly');
-    $("#ContinentName").prop('readonly', 'readonly');
-    $("#CountryName").prop('readonly', 'readonly');
-    $("#AreaCode").prop('disabled', 'true');
-    $("#MyModal").modal();
-    $.ajax({
-        type: "GET",
-        dataType: 'json',
-        cache: false,
-        traditional: true,
-        url: "/Country/GetCountryById?countryCode=" + countryCode,
-        success: function (data) {
-            $("#PanelTitleAddEditDetails").html(data.CountryName);
-            $("#ContinentCode").val(data.ContinentCode);
-            $("#RegionCode").val(data.RegionCode);
-            $("#CountryCode").val(data.CountryCode);
-            $("#CountryName").val(data.CountryName);
-            $("#ContinentName").val(data.ContinentName);
-            $("#RegionName").val(data.RegionName);
-            $("#PmiCoding").val(data.PmiCoding);
-            $("#AreaCode").attr('checked', data.AreaCode);
-        }
-    })
 }
 
 function sleep(ms) {
@@ -556,11 +513,11 @@ function FilterCountry(selectSortable) {
             regionCode: ($("#regionCodeString").val() != null) ? $("#regionCodeString").val() : undefined,
             countryCode: ($("#countryCodeString").val() != null) ? $("#countryCodeString").val() : undefined,
             areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
-            orderCountryName: (sortable1 != null && selectSortable == 1) ? sortable1 : '',
-            orderRegionName: (sortable2 != null && selectSortable == 2) ? sortable2 : '',
-            orderContinentName: (sortable3 != null && selectSortable == 3) ? sortable3 : '',
-            orderPmi: (sortable4 != null && selectSortable == 4) ? sortable4 : '',
-            orderAreaCode: (sortable5 != null && selectSortable == 5) ? sortable5 : '',
+            orderCountryName: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
+            orderRegionName: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
+            orderContinentName: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
+            orderPmi: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined,
+            orderAreaCode: (sortable5 != null && selectSortable == 5) ? sortable5 : undefined,
         },
         success: function (result) {
             $("#SetCountryList").empty();

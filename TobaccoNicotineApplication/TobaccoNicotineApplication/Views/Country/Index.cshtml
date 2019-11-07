@@ -160,12 +160,12 @@
                             <thead>
                                 <tr>
                                     <th width="5%"></th>
-                                    <th width="18%">@countryName <img id="idSortable1" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableName()" style="width:auto;"></th>
-                                    <th width="18%">@regionName <img id="idSortable2" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableRegionName()" style="width:auto;"></th>
-                                    <th width="18%">@continentName <img id="idSortable3" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableContinentName()" style="width:auto;"></th>
-                                    <th width="18%">@pmiCoding <img id="idSortable4" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortablePmi()" style="width:auto;"></th>
-                                    <th width="18%">@areaCode <img id="idSortable5" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableAreaCode()" style="width:auto;"></th>
-                                    <th width="5%">Action</th>
+                                    <th width="17%">@countryName <img id="idSortable1" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableName()" style="width:auto;"></th>
+                                    <th width="17%">@regionName <img id="idSortable2" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableRegionName()" style="width:auto;"></th>
+                                    <th width="17%">@continentName <img id="idSortable3" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableContinentName()" style="width:auto;"></th>
+                                    <th width="17%">@pmiCoding <img id="idSortable4" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortablePmi()" style="width:auto;"></th>
+                                    <th width="17%">@areaCode <img id="idSortable5" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableAreaCode()" style="width:auto;"></th>
+                                    <th width="10%"></th>
                                 </tr>
                             </thead>
                             <tbody id="SetCountryList"></tbody>
@@ -200,7 +200,7 @@
     </div>
 </div>
 
-@*Create A Popup Modal For Add and Details*@
+@*Create A Popup Modal For Add*@
 
 <div class="modal fade" id="MyModal">
     <div class="modal-dialog">
@@ -214,7 +214,7 @@
             <div class="modal-body">
                 <!-- Start panel -->
                 <div class="col-lg">
-                    <div class="panel panel-default panel-default" id="PanelCountry">
+                    <div class="panel panel-default panel-success">
                         <div class="panel-heading">
                             <h4 class="panel-title" id="PanelTitleAddEditDetails"></h4>
                         </div>
@@ -308,10 +308,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="r">Cancel</button>
-                <button type="button" class="btn btn-default" id="CreateCountry">Save</button>
-                <button type="button" class="btn btn-default" id="ViewValues" onclick="cambiaView(this)">Values</button>
-                <button type="button" class="btn btn-default" id="ViewCurrencies" onclick="cambiaView(this)">Currencies</button>
-                <button type="button" class="btn btn-default" id="ViewSources" onclick="cambiaView(this)">Sources</button>
+                <button type="button" class="btn btn-success" id="CreateCountry">Save</button>
             </div>
 
         </div>

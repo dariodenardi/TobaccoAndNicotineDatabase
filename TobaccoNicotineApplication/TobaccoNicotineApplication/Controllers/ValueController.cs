@@ -88,25 +88,30 @@ namespace TobaccoNicotineApplication.Controllers
                 else if (orderCountryName == "asc")
                     values = values.OrderBy(x => x.Countries.CountryName);
 
-                if (orderYear == "desc")
-                    values = values.OrderByDescending(x => x.Year);
-                else if (orderYear == "asc")
-                    values = values.OrderBy(x => x.Year);
+                if (orderVariableName == "desc")
+                    values = values.OrderByDescending(x => x.Variables.Name);
+                else if (orderVariableName == "asc")
+                    values = values.OrderBy(x => x.Variables.Name);
 
                 if (orderData == "desc")
                     values = values.OrderByDescending(x => x.Data);
                 else if (orderData == "asc")
                     values = values.OrderBy(x => x.Data);
 
-                if (orderInternalNotes == "desc")
-                    values = values.OrderByDescending(x => x.InternalNotes);
-                else if (orderInternalNotes == "asc")
-                    values = values.OrderBy(x => x.InternalNotes);
+                if (orderYear == "desc")
+                    values = values.OrderByDescending(x => x.Year);
+                else if (orderYear == "asc")
+                    values = values.OrderBy(x => x.Year);
 
                 if (orderPublicNotes == "desc")
                     values = values.OrderByDescending(x => x.PublicNotes);
                 else if (orderPublicNotes == "asc")
                     values = values.OrderBy(x => x.PublicNotes);
+
+                if (orderInternalNotes == "desc")
+                    values = values.OrderByDescending(x => x.InternalNotes);
+                else if (orderInternalNotes == "asc")
+                    values = values.OrderBy(x => x.InternalNotes);
 
                 return Json(values.Select(x => new { x.Countries.CountryName, VariableName = x.Variables.Name, x.Data, x.Year, x.Variables.VarLc, CurrencyValue = (x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault() != null)? x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault().Value : 0, x.PublicNotes, x.InternalNotes, IsSource = (x.Sources.FirstOrDefault().Repository != null) ? true : false }).ToList(), JsonRequestBehavior.AllowGet);
             }

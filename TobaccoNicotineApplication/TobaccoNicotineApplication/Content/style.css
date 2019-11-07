@@ -4518,3 +4518,8 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
     margin-left: auto;
     margin-right: auto;
 }
+
+/* dropdown menu inserito all'interno della tabella */
+.dropdown-menu {
+    position: static;
+}

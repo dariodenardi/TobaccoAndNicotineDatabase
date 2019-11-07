@@ -47,8 +47,9 @@ function DataBind(ValueList) {
                 + "<td>" + "<input id=\"InternalNotesTable" + i + "\"" + "class=\"form-control\"  maxlength=" + internalNotesMax + " type=\"textbox\" value=\"" + ValueList[i].InternalNotes + "\" placeholder=\"Insert " + '@internalNotes' + "*\" onkeypress=\"saveRow(event, 3, '" + ValueList[i].CountryName + "', '" + ValueList[i].VariableName + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", InternalNotesTable" + i + ")\" >" + "</td>";
 
         } else {
-            Data = Data + "<td>" + ValueList[i].CountryName + "</td>" +
-                + "<td>" + ValueList[i].VariableName + "</td>" +
+            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
+                "<td>" + ValueList[i].CountryName + "</td>" +
+                "<td>" + ValueList[i].VariableName + "</td>" +
                 "<td>" + ValueList[i].Data + "</td>" +
                 "<td>" + ValueList[i].DataUs + "</td>" +
                 "<td>" + ValueList[i].Year + "</td>" +
@@ -60,10 +61,12 @@ function DataBind(ValueList) {
         Data = Data + "<td>" +
             "<a href='#' class='btn btn-info btn-sm waves-effect' onclick=\"DetailsValue('" + ValueList[i].CountryName + "', " + ValueList[i].Year + ", '" + ValueList[i].VariableName + "')\" ><span class='glyphicon glyphicon-eye-open'></span></a>";
 
-        if (ValueList[i].IsSource == false) {
+        if (ValueList[i].IsSource == false && (boolAdmin || boolWriter)) {
             Data = Data +
                 " <input type='file' id='filestyle-0' tabindex='-1' style='position: absolute; clip: rect(0px, 0px, 0px, 0px);'><span class='group-span-filestyle ' tabindex='0'><label for='filestyle-0' class='btn btn-sm btn-default '><span class='icon-span-filestyle glyphicon glyphicon-folder-open'></span> </label></span>" + "</td>"
-        } else {
+        }
+
+        if (ValueList[i].IsSource == true) {
             Data = Data +
                 " <a href='#' class='btn btn-dark btn-sm waves-effect' onclick='DownloadFile(\"" + ValueList[i].CountryName + "\")' ><span class='glyphicon glyphicon-save-file'></span></a>" + "</td>"
         }
@@ -99,7 +102,7 @@ function AddNewValue() {
     $("#CreateValue").prop('class', 'btn btn-success');
     $("#CreateValue").show();
     $("#ViewSources").hide();
-    $("#IdCountry").prop('readonly', '');
+    $("#CountryCode").prop('readonly', '');
     $("#CountryName").prop('readonly', '');
     $("#MyModal").modal();
 }
@@ -111,7 +114,7 @@ function DetailsValue(countryName, year, variableName) {
     $("#PanelValue").prop('class', 'panel panel-default panel-primary');
     $("#CreateValue").hide();
     $("#ViewSources").show();
-    $("#IdCountry").prop('readonly', 'readonly');
+    $("#CountryCode").prop('readonly', 'readonly');
     $("#CountryName").prop('readonly', 'readonly');
     $("#MyModal").modal();
     $.ajax({
@@ -119,7 +122,7 @@ function DetailsValue(countryName, year, variableName) {
         url: "/Value/GetValueById?countryName=" + countryName + "&year=" + year + "&variableName=" + variableName,
         success: function (data) {
             $("#PanelTitleAddEditDetails").html(countryName);
-            $("#IdCountry").val(data.Id);
+            $("#CountryCode").val(data.CountryCode);
             $("#CountryName").val(data.Name);
         }
     })
@@ -313,7 +316,7 @@ function loadFilterCountry() {
             var countryNameArray;
             var continentCodeArray;
             var regionCodeArray;
-            var idCountryArray;
+            var countryCodeArray;
             var areaCodeArray;
 
             if ($("#pmiCodingString").val() == null) {
@@ -340,17 +343,13 @@ function loadFilterCountry() {
                 $("#regionCodeString").empty();
                 regionCodeArray = new Array();
             }
-            if ($("#IdCountryString").val() == null) {
-                $("#IdCountryString").empty();
-                idCountryArray = new Array();
+            if ($("#countryCodeString").val() == null) {
+                $("#countryCodeString").empty();
+                countryCodeArray = new Array();
             }
             if ($("#areaCodeString").val() == null) {
                 $('#areaCodeString').empty();
                 areaCodeArray = new Array();
-            }
-            if ($("#yearString").val() == null) {
-                $('#yearString').empty();
-                setTimeout(loadFilterYear(), 0);
             }
 
             $.each(response, function (index, row) {
@@ -378,9 +377,9 @@ function loadFilterCountry() {
                     if (regionCodeArray.includes(row.RegionCode) == false)
                         regionCodeArray.push(row.RegionCode);
 
-                if ($("#IdCountryString").val() == null)
-                    if (idCountryArray.includes(row.IdCountry) == false)
-                        idCountryArray.push(row.IdCountry);
+                if ($("#countryCodeString").val() == null)
+                    if (countryCodeArray.includes(row.CountryCode) == false)
+                        countryCodeArray.push(row.CountryCode);
 
                 if ($("#areaCodeString").val() == null)
                     if (areaCodeArray.includes(row.AreaCode) == false)
@@ -434,12 +433,12 @@ function loadFilterCountry() {
                 }
             }
 
-            if ($("#IdCountryString").val() == null) {
-                idCountryArray.sort(function (a, b) {
+            if ($("#countryCodeString").val() == null) {
+                countryCodeArray.sort(function (a, b) {
                     return parseInt(a) - parseInt(b);
                 });
-                for (var i = 0, n = idCountryArray.length; i < n; i++) {
-                    $("#IdCountryString").append("<option value='" + idCountryArray[i] + "'>" + idCountryArray[i] + "</option>");
+                for (var i = 0, n = countryCodeArray.length; i < n; i++) {
+                    $("#countryCodeString").append("<option value='" + countryCodeArray[i] + "'>" + countryCodeArray[i] + "</option>");
                 }
             }
 
@@ -456,7 +455,7 @@ function loadFilterCountry() {
             $('#countryNameString').trigger("chosen:updated");
             $('#continentCodeString').trigger("chosen:updated");
             $('#regionCodeString').trigger("chosen:updated");
-            $('#IdCountryString').trigger("chosen:updated");
+            $('#countryCodeString').trigger("chosen:updated");
             $('#areaCodeString').trigger("chosen:updated");
 
         }
@@ -472,21 +471,23 @@ function loadFilterYear() {
         cache: false,
         traditional: true,
         headers: { "__RequestVerificationToken": token },
-        data: (($("#pmiCodingString").val() != null) ? 'pmiCoding=' : '') + (($("#pmiCodingString").val() != null) ? encodeURIComponent($("#pmiCodingString").val()) + '&' : '') +
-            (($("#continentNameString").val() != null) ? 'continentName=' : '') + (($("#continentNameString").val() != null) ? encodeURIComponent($("#continentNameString").val()) + '&' : '') +
-            (($("#regionNameString").val() != null) ? 'regionName=' : '') + (($("#regionNameString").val() != null) ? encodeURIComponent($("#regionNameString").val()) + '&' : '') +
-            (($("#countryNameString").val() != null) ? 'countryName=' : '') + (($("#countryNameString").val() != null) ? encodeURIComponent($("#countryNameString").val()) + '&' : '') +
-            (($("#continentCodeString").val() != null) ? 'continentCode=' : '') + (($("#continentCodeString").val() != null) ? encodeURIComponent($("#continentCodeString").val()) + '&' : '') +
-            (($("#regionCodeString").val() != null) ? 'regionCode=' : '') + (($("#regionCodeString").val() != null) ? encodeURIComponent($("#regionCodeString").val()) + '&' : '') +
-            (($("#IdCountryString").val() != null) ? 'idCountry=' : '') + (($("#IdCountryString").val() != null) ? encodeURIComponent($("#IdCountryString").val()) + '&' : '') +
-            (($("#areaCodeString").val() != null) ? 'areaCode=' : '') + (($("#areaCodeString").val() != null) ? encodeURIComponent($("#areaCodeString").val()) + '&' : '') +
-            (($("#yearString").val() != null) ? 'year=' : '') + (($("#yearString").val() != null) ? encodeURIComponent($("#yearString").val()) + '&' : '') +
-            (($("#numberString").val() != null) ? 'number=' : '') + (($("#numberString").val() != null) ? encodeURIComponent($("#numberString").val()) + '&' : '') +
-            (($("#variableNameString").val() != null) ? 'variableName=' : '') + (($("#variableNameString").val() != null) ? encodeURIComponent($("#variableNameString").val()) + '&' : '') +
-            (($("#phaseCodeString").val() != null) ? 'phaseCode=' : '') + (($("#phaseCodeString").val() != null) ? encodeURIComponent($("#phaseCodeString").val()) + '&' : '') +
-            (($("#phaseNameString").val() != null) ? 'phaseName=' : '') + (($("#phaseNameString").val() != null) ? encodeURIComponent($("#phaseNameString").val()) + '&' : '') +
-            (($("#varLcString").val() != null) ? 'varLc=' : '') + (($("#varLcString").val() != null) ? encodeURIComponent($("#varLcString").val()) + '&' : '') +
-            (($("#measurementUnitString").val() != null) ? 'measurementUnit=' : '') + (($("#measurementUnitString").val() != null) ? encodeURIComponent($("#measurementUnitString").val()) : ''),
+        data: {
+            pmiCoding: ($("#pmiCodingString").val() != null) ? $("#pmiCodingString").chosen().val() : undefined,
+            continentName: ($("#continentNameString").val() != null) ? $("#continentNameString").val() : undefined,
+            regionName: ($("#regionNameString").val() != null) ? $("#regionNameString").val() : undefined,
+            countryName: ($("#countryNameString").val() != null) ? $("#countryNameString").val() : undefined,
+            continentCode: ($("#continentCodeString").val() != null) ? $("#continentCodeString").val() : undefined,
+            regionCode: ($("#regionCodeString").val() != null) ? $("#regionCodeString").val() : undefined,
+            countryCode: ($("#countryCodeString").val() != null) ? $("#countryCodeString").val() : undefined,
+            areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
+            year: ($("#yearString").val() != null) ? $("#yearString").val() : undefined,
+            number: ($("#numberString").val() != null) ? $("#numberString").val() : undefined,
+            variableName: ($("#variableNameString").val() != null) ? $("#variableNameString").val() : undefined,
+            phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
+            phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
+            varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
+            measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined,
+        },
         success: function (response) {
 
             $.each(response, function (index, row) {
@@ -509,12 +510,14 @@ function loadFilterVariable() {
         cache: false,
         traditional: true,
         headers: { "__RequestVerificationToken": token },
-        data: (($("#numberString").val() != null) ? 'number=' : '') + (($("#numberString").val() != null) ? encodeURIComponent($("#numberString").val()) + '&' : '') +
-            (($("#variableNameString").val() != null) ? 'variableName=' : '') + (($("#variableNameString").val() != null) ? encodeURIComponent($("#variableNameString").val()) + '&' : '') +
-            (($("#phaseCodeString").val() != null) ? 'phaseCode=' : '') + (($("#phaseCodeString").val() != null) ? encodeURIComponent($("#phaseCodeString").val()) + '&' : '') +
-            (($("#phaseNameString").val() != null) ? 'phaseName=' : '') + (($("#phaseNameString").val() != null) ? encodeURIComponent($("#phaseNameString").val()) + '&' : '') +
-            (($("#varLcString").val() != null) ? 'varLc=' : '') + (($("#varLcString").val() != null) ? encodeURIComponent($("#varLcString").val()) + '&' : '') +
-            (($("#measurementUnitString").val() != null) ? 'measurementUnit=' : '') + (($("#measurementUnitString").val() != null) ? encodeURIComponent($("#measurementUnitString").val()) : ''),
+        data: {
+            number: ($("#numberString").val() != null) ? $("#numberString").val() : undefined,
+            variableName: ($("#variableNameString").val() != null) ? $("#variableNameString").val() : undefined,
+            phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
+            phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
+            varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
+            measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined,
+        },
         success: function (response) {
 
             var numberArray;
@@ -547,6 +550,10 @@ function loadFilterVariable() {
             if ($("#measurementUnitString").val() == null) {
                 $("#measurementUnitString").empty();
                 measurementUnitNameArray = new Array();
+            }
+            if ($("#yearString").val() == null) {
+                $('#yearString').empty();
+                setTimeout(loadFilterYear(), 0);
             }
 
             $.each(response, function (index, row) {
@@ -699,27 +706,29 @@ function FilterValue(selectSortable) {
         traditional: true,
         url: "/Value/GetValueList",
         headers: { "__RequestVerificationToken": token },
-        data: (($("#pmiCodingString").val() != null) ? 'pmiCoding=' : '') + (($("#pmiCodingString").val() != null) ? encodeURIComponent($("#pmiCodingString").val()) + '&' : '') +
-            (($("#continentNameString").val() != null) ? 'continentName=' : '') + (($("#continentNameString").val() != null) ? encodeURIComponent($("#continentNameString").val()) + '&' : '') +
-            (($("#regionNameString").val() != null) ? 'regionName=' : '') + (($("#regionNameString").val() != null) ? encodeURIComponent($("#regionNameString").val()) + '&' : '') +
-            (($("#countryNameString").val() != null) ? 'countryName=' : '') + (($("#countryNameString").val() != null) ? encodeURIComponent($("#countryNameString").val()) + '&' : '') +
-            (($("#continentCodeString").val() != null) ? 'continentCode=' : '') + (($("#continentCodeString").val() != null) ? encodeURIComponent($("#continentCodeString").val()) + '&' : '') +
-            (($("#regionCodeString").val() != null) ? 'regionCode=' : '') + (($("#regionCodeString").val() != null) ? encodeURIComponent($("#regionCodeString").val()) + '&' : '') +
-            (($("#IdCountryString").val() != null) ? 'idCountry=' : '') + (($("#IdCountryString").val() != null) ? encodeURIComponent($("#IdCountryString").val()) + '&' : '') +
-            (($("#areaCodeString").val() != null) ? 'areaCode=' : '') + (($("#areaCodeString").val() != null) ? encodeURIComponent($("#areaCodeString").val()) + '&' : '') +
-            (($("#yearString").val() != null) ? 'year=' : '') + (($("#yearString").val() != null) ? encodeURIComponent($("#yearString").val()) + '&' : '') +
-            (($("#numberString").val() != null) ? 'number=' : '') + (($("#numberString").val() != null) ? encodeURIComponent($("#numberString").val()) + '&' : '') +
-            (($("#variableNameString").val() != null) ? 'variableName=' : '') + (($("#variableNameString").val() != null) ? encodeURIComponent($("#variableNameString").val()) + '&' : '') +
-            (($("#phaseCodeString").val() != null) ? 'phaseCode=' : '') + (($("#phaseCodeString").val() != null) ? encodeURIComponent($("#phaseCodeString").val()) + '&' : '') +
-            (($("#phaseNameString").val() != null) ? 'phaseName=' : '') + (($("#phaseNameString").val() != null) ? encodeURIComponent($("#phaseNameString").val()) + '&' : '') +
-            (($("#varLcString").val() != null) ? 'varLc=' : '') + (($("#varLcString").val() != null) ? encodeURIComponent($("#varLcString").val()) + '&' : '') +
-            (($("#measurementUnitString").val() != null) ? 'measurementUnit=' : '') + (($("#measurementUnitString").val() != null) ? encodeURIComponent($("#measurementUnitString").val()) + '&' : '') +
-            ((sortable1 != null && selectSortable == 1) ? 'orderCountryName=' : '') + ((sortable1 != null && selectSortable == 1) ? sortable1 + '&' : '') +
-            ((sortable2 != null && selectSortable == 2) ? 'orderVariableName=' : '') + ((sortable2 != null && selectSortable == 2) ? sortable2 + '&' : '') +
-            ((sortable3 != null && selectSortable == 3) ? 'orderData=' : '') + ((sortable3 != null && selectSortable == 3) ? sortable3 + '&' : '') +
-            ((sortable4 != null && selectSortable == 4) ? 'orderYear=' : '') + ((sortable4 != null && selectSortable == 4) ? sortable4 + '&' : '') +
-            ((sortable5 != null && selectSortable == 5) ? 'orderPublicNotes=' : '') + ((sortable5 != null && selectSortable == 5) ? sortable5 + '&' : '') +
-            ((sortable6 != null && selectSortable == 6) ? 'orderInternalNotes=' : '') + ((sortable6 != null && selectSortable == 6) ? sortable6 : ''),
+        data: {
+            pmiCoding: ($("#pmiCodingString").val() != null) ? $("#pmiCodingString").chosen().val() : undefined,
+            continentName: ($("#continentNameString").val() != null) ? $("#continentNameString").val() : undefined,
+            regionName: ($("#regionNameString").val() != null) ? $("#regionNameString").val() : undefined,
+            countryName: ($("#countryNameString").val() != null) ? $("#countryNameString").val() : undefined,
+            continentCode: ($("#continentCodeString").val() != null) ? $("#continentCodeString").val() : undefined,
+            regionCode: ($("#regionCodeString").val() != null) ? $("#regionCodeString").val() : undefined,
+            countryCode: ($("#countryCodeString").val() != null) ? $("#countryCodeString").val() : undefined,
+            areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
+            year: ($("#yearString").val() != null) ? $("#yearString").val() : undefined,
+            number: ($("#numberString").val() != null) ? $("#numberString").val() : undefined,
+            variableName: ($("#variableNameString").val() != null) ? $("#variableNameString").val() : undefined,
+            phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
+            phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
+            varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
+            measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined,
+            orderCountryName: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
+            orderVariableName: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
+            orderData: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
+            orderYear: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined,
+            orderPublicNotes: (sortable5 != null && selectSortable == 5) ? sortable5 : undefined,
+            orderInternalNotes: (sortable6 != null && selectSortable == 6) ? sortable6 : undefined,
+        },
         success: function (result) {
             $("#SetValueList").empty();
             $("#myPager").empty();

@@ -131,7 +131,7 @@
                     </dt>
 
                     <dd>
-                        <select id="IdCountryString" onchange="loadFilterCountry()" class="form-control chosen-select" multiple="multiple"></select>
+                        <select id="countryCodeString" onchange="loadFilterCountry()" class="form-control chosen-select" multiple="multiple"></select>
                     </dd>
 
                     <dt>
@@ -167,19 +167,19 @@
                     </dd>
 
                     <dt>
-                        @Html.Label(phaseCode, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="phaseCodeString" onchange="loadFilterVariable()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
                         @Html.Label(phaseName, new { @class = "control-label col-md-2" })
                     </dt>
 
                     <dd>
                         <select id="phaseNameString" onchange="loadFilterVariable()" class="form-control chosen-select" multiple="multiple"></select>
+                    </dd>
+
+                    <dt>
+                        @Html.Label(phaseCode, new { @class = "control-label col-md-2" })
+                    </dt>
+
+                    <dd>
+                        <select id="phaseCodeString" onchange="loadFilterVariable()" class="form-control chosen-select" multiple="multiple"></select>
                     </dd>
 
                     <dt>
@@ -217,7 +217,10 @@
                 <!--Table-->
                 <button type="button" class="btn btn-default" onclick="toggle2()">Select/Deselect All</button>
                 <button type="button" class="btn btn-default" onclick="Copy()">Copy to Clipboard</button>
-                <button type="button" class="btn btn-default" onclick="Paste()">Paste from Clipboard</button>
+                @if (User.IsInRole("Admin") || User.IsInRole("Writer"))
+                {
+                    <button type="button" class="btn btn-default" onclick="Paste()">Paste from Clipboard</button>
+                }
                 <br />
                 <div class="col-lg-12">
                     <div class="table-responsive">
@@ -268,7 +271,7 @@
     </div>
 </div>
 
-@*Create A Popup Modal For Add and Details*@
+@*Create A Popup Modal For Add*@
 
 <div class="modal fade" id="MyModal">
     <div class="modal-dialog">
@@ -297,7 +300,7 @@
                                         </dt>
 
                                         <dd>
-                                            @Html.EditorFor(model => model.CountryCode, new { htmlAttributes = new { @id = "IdCountry", @class = "form-control", @placeholder = "Insert " + countryCode + "*" } })
+                                            @Html.EditorFor(model => model.CountryCode, new { htmlAttributes = new { @id = "CountryCode", @class = "form-control", @placeholder = "Insert " + countryCode + "*" } })
                                             @Html.ValidationMessageFor(model => model.CountryCode, "", new { @class = "text-danger" })
                                         </dd>
 

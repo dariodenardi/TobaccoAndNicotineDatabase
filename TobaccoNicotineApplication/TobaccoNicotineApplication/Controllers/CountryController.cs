@@ -91,20 +91,6 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
-        // GET: /Country/GetCountryById
-        public JsonResult GetCountryById(short countryCode)
-        {
-            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
-            {
-                db.Configuration.LazyLoadingEnabled = false;
-
-                Country model = db.Countries.Where(x => x.CountryCode == countryCode).FirstOrDefault();
-
-                return Json(model, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        //
         // GET: /Country/GetListCountryName
         public JsonResult GetListCountryName()
         {
