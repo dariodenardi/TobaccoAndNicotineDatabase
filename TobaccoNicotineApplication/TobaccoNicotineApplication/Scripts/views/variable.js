@@ -760,6 +760,8 @@ function pasteFromClipboard(numeroCheck) {
                         return;
                     }
 
+                    // vedo se ci sono valori nulli e li converto
+
                     // cambio valori riga
                     riga.children[1].children[0].value = name;
                     riga.children[2].children[0].value = phaseCode;
