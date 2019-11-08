@@ -21,7 +21,7 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
-        // GET: /Log/GetUserList
+        // GET: /Log/GetLogList
         public JsonResult GetLogList()
         {
             using (LogContext context = new LogContext())

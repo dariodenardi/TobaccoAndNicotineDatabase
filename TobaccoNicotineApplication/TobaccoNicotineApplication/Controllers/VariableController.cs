@@ -251,7 +251,8 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
-        // GET: /Variable/GetFieldList
+        // POST: /Variable/GetFieldList
+        [HttpPost]
         public JsonResult GetFieldList(short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc, string[] measurementUnit)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())

@@ -64,7 +64,7 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th width="50%">Username <img id="idSortable" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableUser()" style="width:auto;"></th>
+                    <th width="50%">Username <img id="idSortable1" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableUser()" style="width:auto;"></th>
                     <th width="50%">Grant</th>
                 </tr>
             </thead>
@@ -75,7 +75,7 @@
 
     <div style="display: inline-grid">
         @Html.Label("Show entries", new { @class = "control-label" })
-        @Html.DropDownList("showEntry", listItems, new { @class = "form-control", @onchange = "FilterUser()" })
+        @Html.DropDownList("showEntry", listItems, new { @class = "form-control", @onchange = "FilterUser(0)" })
     </div>
     <br />
     <br />

@@ -106,20 +106,6 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
-        // GET: /Source/GetSourceById
-        public JsonResult GetSourceById(string SourceName, DateTime date, TimeSpan time)
-        {
-            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
-            {
-                db.Configuration.LazyLoadingEnabled = false;
-
-                Source model = db.Sources.Where(x => x.Name == SourceName && x.Date == date && x.Time == time).FirstOrDefault();
-
-                return Json(model, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        //
         // POST: /Source/Edit
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
@@ -229,35 +215,33 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
-        // GET: /Source/GetFieldList
-        public JsonResult GetFieldList(string[] pmiCode, string[] regionName, string[] countryName, string[] topic, string[] number, string[] variableName)
+        // POST: /Source/GetFieldList
+        [HttpPost]
+        public JsonResult GetFieldList(string[] name, string[] link, string[] repository, DateTime[] dateSource, string[] username)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
                 db.Configuration.ProxyCreationEnabled = false;
 
-                IQueryable<Value> values = from s in db.Values
-                                           select s;
+                IQueryable<Source> sources = from s in db.Sources
+                                             select s;
 
-                /*if (!String.IsNullOrEmpty(pmiCode[0]))
-                    values = values.Where(t => pmiCode.Contains(t.Countries.Regions.PmiCode));
+                if (ArrayUtils.IsNullOrEmpty(name) == false)
+                    sources = sources.Where(t => name.Contains(t.Name));
 
-                if (!String.IsNullOrEmpty(regionName[0]))
-                    values = values.Where(t => regionName.Contains(t.Countries.Regions.RegionName));
+                if (ArrayUtils.IsNullOrEmpty(link) == false)
+                    sources = sources.Where(t => link.Contains(t.Link));
 
-                if (!String.IsNullOrEmpty(countryName[0]))
-                    values = values.Where(t => countryName.Contains(t.Countries.Name));
+                if (ArrayUtils.IsNullOrEmpty(repository) == false)
+                    sources = sources.Where(t => repository.Contains(t.Repository));
 
-                //if (!String.IsNullOrEmpty(topic[0]))
-                //    values = values.Where(t => topic.Select(short.Parse).Contains(t.Variables.Topic));
+                if (ArrayUtils.IsNullOrEmpty(dateSource) == false)
+                    sources = sources.Where(t => dateSource.Contains(t.DateDownload.Value));
 
-                if (!String.IsNullOrEmpty(number[0]))
-                    values = values.Where(t => number.Select(short.Parse).Contains(t.Number));
+                if (ArrayUtils.IsNullOrEmpty(username) == false)
+                    sources = sources.Where(t => username.Contains(t.Username));
 
-                if (!String.IsNullOrEmpty(variableName[0]))
-                    values = values.Where(t => variableName.Contains(t.Variables.Name));*/
-
-                return Json(values.Select(x => new { x.Countries.ContinentCode, x.Countries.RegionCode, x.CountryCode, CountryName = x.Countries.CountryName, x.Countries.RegionName, x.Countries.PmiCoding, VariableName = x.Variables.Name, x.Variables.PhaseCode, x.Variables.VarLc, x.Variables.MeasurementUnitName }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(sources.Select(x => new { x.Name, x.Link, x.Repository, x.DateDownload, x.Username }).GroupBy(li => li.Name).Select(x => x.FirstOrDefault()).ToList(), JsonRequestBehavior.AllowGet);
             }
         }
 

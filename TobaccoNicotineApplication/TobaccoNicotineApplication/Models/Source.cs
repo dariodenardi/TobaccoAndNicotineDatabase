@@ -11,7 +11,8 @@ namespace TobaccoNicotineApplication.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Source
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,13 +20,25 @@ namespace TobaccoNicotineApplication.Models
         {
             this.Values = new HashSet<Value>();
         }
-    
+
+        [Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; }
+
+        [Required(ErrorMessage = "Date is required.")]
         public System.DateTime Date { get; set; }
+
+        [Required(ErrorMessage = "Time is required.")]
         public System.TimeSpan Time { get; set; }
+
+        [StringLength(2048, MinimumLength = 0)]
         public string Link { get; set; }
+
+        [StringLength(2048, MinimumLength = 0)]
         public string Repository { get; set; }
+
         public Nullable<System.DateTime> DateDownload { get; set; }
+
+        [Required(ErrorMessage = "Username is required.")]
         public string Username { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

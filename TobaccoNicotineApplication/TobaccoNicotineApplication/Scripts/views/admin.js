@@ -5,7 +5,7 @@ var token = $('[name=__RequestVerificationToken]').val();
 $('document').ready(function () {
 
     $("#LoadingStatus").html("Loading....");
-    $.get("/Admin/GetUsersList", null, DataBind);
+    $.get("/Admin/GetUserList", null, DataBind);
 
 });
 
@@ -58,7 +58,7 @@ var SaveUser = function (UserName) {
     var grant = $("#select_" + UserName).val();
 
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: "/Admin/Edit",
         data: {
             userName: UserName,
@@ -76,28 +76,32 @@ var SaveUser = function (UserName) {
 }
 
 // Filter User
-function FilterUser() {
+function FilterUser(selectSortable) {
 
-    var sortable;
-    var pathImg = document.getElementById("idSortable").src;
+    var sortable1;
+    var pathImg = document.getElementById("idSortable1").src;
     if (pathImg.includes("asc"))
-        sortable = "asc";
+        sortable1 = "asc";
     else if (pathImg.includes("desc"))
-        sortable = "desc";
+        sortable1 = "desc";
     else //caso in cui non è stato cliccato nessun filtro
-        sortable = null;
+        sortable1 = null;
 
     $.ajax({
         type: "POST",
-        url: "/Admin/GetUsersList",
+        url: "/Admin/GetUserList",
         data: {
-            order: (sortable != null) ? sortable : ""
+            order: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
         },
         headers: { "__RequestVerificationToken": token },
         success: function (result) {
             $("#SetUserList").empty();
             $("#myPager").empty();
             DataBind(result);
+            // resetto l'immagine dei filtri
+            if (selectSortable == 0) {
+                document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+            }
         }
     })
 }
@@ -106,14 +110,14 @@ function FilterUser() {
 function SortableUser() {
 
     // cambio immagine
-    var pathImg = document.getElementById("idSortable").src;
+    var pathImg = document.getElementById("idSortable1").src;
     if (pathImg.includes("asc"))
-        document.getElementById("idSortable").src = "/Images/Sortable/desc.png";
+        document.getElementById("idSortable1").src = "/Images/Sortable/desc.png";
     else if (pathImg.includes("desc"))
-        document.getElementById("idSortable").src = "/Images/Sortable/asc.png";
+        document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
     else // se è ancora l'immagine predefinita
-        document.getElementById("idSortable").src = "/Images/Sortable/asc.png";
+        document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
 
-    FilterUser();
+    FilterUser(1);
 
 }

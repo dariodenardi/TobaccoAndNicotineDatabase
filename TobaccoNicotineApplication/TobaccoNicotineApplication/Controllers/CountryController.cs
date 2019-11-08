@@ -262,7 +262,8 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
-        // GET: /Country/GetFieldList
+        // POST: /Country/GetFieldList
+        [HttpPost]
         public JsonResult GetFieldList(string[] pmiCoding, string[] continentName, string[] regionName, string[] countryName, short[] continentCode, short[] regionCode, short[] countryCode, bool[] areaCode)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())

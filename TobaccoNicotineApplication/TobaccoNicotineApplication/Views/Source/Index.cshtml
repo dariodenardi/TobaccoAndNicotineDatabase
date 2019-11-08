@@ -7,31 +7,26 @@
     ViewBag.Title = "Index";
     ViewBag.PageTitle = "Source";
     ViewBag.TitlePrincipal = "List of Sources";
+
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem
+    {
+        Text = "20",
+        Value = "20"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "30",
+        Value = "30",
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "40",
+        Value = "40"
+    });
 }
 
 @{
-    string phaseCode = StaticName.PhaseCode();
-    string phaseName = StaticName.PhaseName();
-    string number = StaticName.Number();
-    string variableName = StaticName.VariableName();
-    string unitName = StaticName.MeasurementUnitName();
-    string varLc = StaticName.VarLc();
-    string pmiCoding = StaticName.PmiCoding();
-    string continentCode = StaticName.ContinentCode();
-    string regionCode = StaticName.RegionCode();
-    string continentName = StaticName.ContinentName();
-    string regionName = StaticName.RegionName();
-    string countryCode = StaticName.CountryCode();
-    string countryName = StaticName.CountryName();
-    string areaCode = StaticName.AreaCode();
-    string year = StaticName.Year();
-    string value = StaticName.Value();
-    string notes = StaticName.CurrencyNote();
-    string data = StaticName.Data();
-    string dataUs = StaticName.DataUs();
-    string exchangeRateUs = StaticName.ExchangeRateUS();
-    string internalNotes = StaticName.InternalNotes();
-    string publicNotes = StaticName.PublicNotes();
     string sourceName = StaticName.SourceName();
     string sourceDate = StaticName.UploadDate();
     string sourceTime = StaticName.UploadTime();
@@ -69,139 +64,11 @@
                 <!--Filter-->
                 <dl class="dl-horizontal">
                     <dt>
-                        @Html.Label(pmiCoding, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="pmiCodeString" onchange="loadFilterCountry()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(continentName, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="continentNameString" onchange="loadFilterCountry()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(regionName, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="regionNameString" onchange="loadFilterCountry()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(countryName, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="countryNameString" onchange="loadFilterCountry()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(continentCode, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="IdContinentString" onchange="loadFilterCountry()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(regionCode, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="IdRegionString" onchange="loadFilterCountry()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(countryCode, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="IdCountryString" onchange="loadFilterCountry()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(areaCode, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="areaCodeString" onchange="loadFilterCountry()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(year, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="yearString" onchange="loadFilterCountry()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(number, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="numberString" onchange="loadFilterVariable()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(variableName, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="variableNameString" onchange="loadFilterVariable()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(phaseCode, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="phaseCodeString" onchange="loadFilterVariable()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(phaseName, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="phaseNameString" onchange="loadFilterVariable()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(varLc, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="varLcString" onchange="loadFilterVariable()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
                         @Html.Label(sourceName, new { @class = "control-label col-md-2" })
                     </dt>
 
                     <dd>
                         <select id="sourceNameString" onchange="" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(sourceDate, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="sourceDateString" onchange="" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(sourceTime, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="sourceTimeString" onchange="" class="form-control chosen-select" multiple="multiple"></select>
                     </dd>
 
                     <dt>
@@ -237,7 +104,7 @@
                     </dd>
                 </dl>
 
-                <button type="submit" class="btn btn-primary waves-effect" onclick='FilterValue()'>Filter</button>
+                <button type="submit" class="btn btn-primary waves-effect" onclick='FilterSource()'>Filter</button>
                 <!--Filter-->
             </div>
         </div>
@@ -252,7 +119,55 @@
         </div>
         <div id="collapseTwo" class="panel-collapse collapse">
             <div class="panel-body">
+                <!--Table-->
+                <button type="button" class="btn btn-default" onclick="toggle2()">Select/Deselect All</button>
+                <button type="button" class="btn btn-default" onclick="Copy()">Copy to Clipboard</button>
+                @if (User.IsInRole("Admin") || User.IsInRole("Writer"))
+                {
+                    <button type="button" class="btn btn-default" onclick="Paste()">Paste from Clipboard</button>
+                }
+                <br />
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="5%"></th>
+                                    <th width="17%">@sourceName <img id="idSortable1" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableName()" style="width:auto;"></th>
+                                    <th width="17%">@sourceLink <img id="idSortable2" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableLink()" style="width:auto;"></th>
+                                    <th width="17%">@sourceRepository <img id="idSortable3" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableRepository()" style="width:auto;"></th>
+                                    <th width="17%">@sourceDateDownload <img id="idSortable4" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableDateDownload()" style="width:auto;"></th>
+                                    <th width="17%">@sourceUsername <img id="idSortable5" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableUsername()" style="width:auto;"></th>
+                                    <th width="10%"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="SetSourceList"></tbody>
+                            <tr id="LoadingStatus"></tr>
+                        </table>
+                    </div>
 
+                    <div style="display: inline-grid">
+                        @Html.Label("Show entries", new { @class = "control-label" })
+                        @Html.DropDownList("showEntry", listItems, new { @class = "form-control", @onchange = "FilterSource(0)" })
+                    </div>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Writer"))
+                    {
+                        <br />
+                        <br />
+                        <button type="button" class="btn btn-success" onclick="AddNewSource()">Add New Source</button>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <button type="button" class="btn btn-danger" onclick="deleteRows()">Delete Source/s</button>
+                    }
+                    <br />
+                    <br />
+                    <div class="col-md-12 text-center">
+                        <!--<ul class="pagination pagination-lg pager" id="myPager"></ul>-->
+                        <ul class="pagination m-b-5" id="myPager"></ul>
+                    </div>
+                </div>
+                <!--Table-->
             </div>
         </div>
     </div>
@@ -269,8 +184,7 @@
             </div>
             <div id="collapseTree" class="panel-collapse collapse">
                 <div class="panel-body">
-
-
+                    <!-- form -->
                     <form action="/" enctype="multipart/form-data" method="POST">
                         <div class="dropzone" id="my-dropzone" name="mainFileUploader">
                             <div class="fallback">
@@ -278,7 +192,7 @@
                             </div>
                         </div>
                     </form>
-
+                    <!-- form -->
                 </div>
             </div>
         </div>

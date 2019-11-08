@@ -27,7 +27,7 @@ namespace TobaccoNicotineApplication.Controllers
 
         //
         // GET: /Admin/GetUserList
-        public JsonResult GetUsersList()
+        public JsonResult GetUserList(string order)
         {
             using (ApplicationDbContext db = new ApplicationDbContext())
             {
@@ -35,6 +35,11 @@ namespace TobaccoNicotineApplication.Controllers
 
                 // non posso modificarmi il privilegio
                 IQueryable<ApplicationUser> users = db.Users.Where(x => x.UserName != User.Identity.Name);
+
+                if (order == "desc")
+                    users = db.Users.OrderByDescending(x => x.UserName);
+                else if (order == "asc")
+                    users = db.Users.OrderBy(x => x.UserName);
 
                 // non metto nella lista il mio username
                 return Json(users.Where(x => x.UserName != "dariodenardi").Select(x => x.UserName).ToList(), JsonRequestBehavior.AllowGet);
@@ -50,27 +55,6 @@ namespace TobaccoNicotineApplication.Controllers
                 db.Configuration.LazyLoadingEnabled = false;
 
                 return Json(db.Roles.OrderBy(x => x.Id).Select(x => x.Name).ToList(), JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        //
-        // POST: /Admin/GetUserList
-        [HttpPost]
-        public JsonResult GetUserList(string order)
-        {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                db.Configuration.LazyLoadingEnabled = false;
-
-                // non posso modificarmi il privilegio
-                IQueryable<ApplicationUser> users = db.Users.Where(x => x.UserName != User.Identity.Name);
-
-                if (order == "desc")
-                    users = db.Users.OrderByDescending(x => x.UserName);
-                else if (order == "asc")
-                    users = db.Users.OrderBy(x => x.UserName);
-
-                return Json(users.Select(x => x.UserName).ToList(), JsonRequestBehavior.AllowGet);
             }
         }
 
