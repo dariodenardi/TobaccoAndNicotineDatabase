@@ -135,9 +135,15 @@ namespace TobaccoNicotineApplication.Controllers
                 {
                     bool ok = false;
                     if (!String.IsNullOrEmpty(publicNotes))
-                        model.PublicNotes = publicNotes;
+                        if (publicNotes == "null")
+                            model.PublicNotes = null;
+                        else
+                            model.PublicNotes = publicNotes;
                     if (!String.IsNullOrEmpty(internalNotes))
-                        model.InternalNotes = internalNotes;
+                        if (internalNotes == "null")
+                            model.InternalNotes = null;
+                        else
+                            model.InternalNotes = internalNotes;
                     if (varLc == true)
                     {
                         if (dataUs.HasValue && currencyValue != 0)

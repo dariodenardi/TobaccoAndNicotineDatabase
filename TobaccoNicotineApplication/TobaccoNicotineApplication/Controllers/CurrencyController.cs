@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -104,13 +105,15 @@ namespace TobaccoNicotineApplication.Controllers
 
                 if (model != null)
                 {
-                    if (!String.IsNullOrEmpty(model.Notes))
-                        model.Notes = note;
+                    if (!String.IsNullOrEmpty(note))
+                        if (note == "null")
+                            model.Notes = null;
+                        else
+                            model.Notes = note;
                     if (value.HasValue)
                         model.Value = value.Value;
 
-
-                    if (!String.IsNullOrEmpty(model.Notes) || value.HasValue)
+                    if (value.HasValue || !String.IsNullOrEmpty(note))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo
@@ -118,7 +121,19 @@ namespace TobaccoNicotineApplication.Controllers
                     {
                         db.Entry(model).State = EntityState.Modified;
 
-                        db.SaveChanges();
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        // catch dovuti alle annotazioni
+                        catch (DbEntityValidationException e)
+                        {
+                            foreach (var error in e.EntityValidationErrors.SelectMany(entity => entity.ValidationErrors))
+                            {
+                                //error.PropertyName
+                                return Json(new { success = false, error = error.ErrorMessage + "." }, JsonRequestBehavior.AllowGet);
+                            }
+                        }
                     } // if
                 }
                 else
@@ -196,8 +211,9 @@ namespace TobaccoNicotineApplication.Controllers
                         else if (innerException != null && innerException.Number == 2627)
                         {
                             // PK
-                            string[] error = { StaticName.CountryCode() + "-" + StaticName.Year() + " is already present." };
-                            string[] keys = { "IdCountry", "Year" };
+                            // IdCountry-Year
+                            string[] error = { StaticName.Year() + " is already present." };
+                            string[] keys = { "Year" };
                             return Json(new { success = false, errors = keys.Select(x => new { key = x, errors = error }) }, JsonRequestBehavior.AllowGet);
                         }
                         else

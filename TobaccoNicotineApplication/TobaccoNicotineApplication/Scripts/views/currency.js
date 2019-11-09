@@ -33,8 +33,8 @@ function DataBind(CurrencyList) {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
                 + "<td>" + CurrencyList[i].CountryName + "</td>"
                 + "<td>" + CurrencyList[i].Year + "</td>"
-                + "<td>" + "<input id=\"ValueTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + CurrencyList[i].Value + "\" placeholder=\"Insert " + '@value' + "*\" onkeypress=\"saveRow(event, 1, '" + CurrencyList[i].CountryCode + "', " + CurrencyList[i].Year + ", ValueTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"NotesTable" + i + "\"" + "class=\"form-control\" maxlength=" + notesNameMax + " type=\"textbox\" value=\"" + CurrencyList[i].Notes + "\" placeholder=\"Insert " + '@notes' + "\" onkeypress=\"saveRow(event, 2, '" + CurrencyList[i].CountryCode + "', " + CurrencyList[i].Year + ", NotesTable" + i + ")\" >" + "</td>";
+                + "<td>" + "<input id=\"ValueTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + CurrencyList[i].Value + "\" placeholder=\"Insert " + value + "*\" onkeypress=\"saveRow(event, 1, '" + CurrencyList[i].CountryCode + "', " + CurrencyList[i].Year + ", ValueTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"NotesTable" + i + "\"" + "class=\"form-control\" maxlength=" + notesNameMax + " type=\"textbox\" value=\"" + CurrencyList[i].Notes + "\" placeholder=\"Insert " + notes + "\" onkeypress=\"saveRow(event, 2, '" + CurrencyList[i].CountryCode + "', " + CurrencyList[i].Year + ", NotesTable" + i + ")\" >" + "</td>";
 
         } else {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +

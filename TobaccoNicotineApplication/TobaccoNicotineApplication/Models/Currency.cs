@@ -22,6 +22,7 @@ namespace TobaccoNicotineApplication.Models
         public short Year { get; set; }
 
         [Required(ErrorMessage = "Value is required.")]
+        [RegularExpression(@"[\d]{1,8}([.,][\d]{1,10})?", ErrorMessage = "Number must have a maximum of 10 decimals")]
         public decimal Value { get; set; }
 
         [StringLength(1000, ErrorMessage = "Notes must be maximum 1000 characters.")]

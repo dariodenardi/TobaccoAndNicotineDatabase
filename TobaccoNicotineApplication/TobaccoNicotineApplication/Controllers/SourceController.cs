@@ -144,7 +144,7 @@ namespace TobaccoNicotineApplication.Controllers
                     status = true;
                 }
 
-                return Json(new { success = status });
+                return Json(new { success = status }, JsonRequestBehavior.AllowGet);
             }
         }
 
