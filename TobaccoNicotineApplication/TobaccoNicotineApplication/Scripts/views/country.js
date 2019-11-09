@@ -255,7 +255,7 @@ var ConfirmDelete = function () {
             cache: false,
             traditional: true,
             url: "/Country/Delete",
-            data: { CountryName: rowDaCancellareArray[i] },
+            data: { countryCode: rowDaCancellareArray[i] },
             headers: { "__RequestVerificationToken": token },
             success: function (result) {
                 if (result == true) {

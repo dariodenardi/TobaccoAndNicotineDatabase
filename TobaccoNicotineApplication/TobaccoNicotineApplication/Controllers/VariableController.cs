@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -200,6 +201,7 @@ namespace TobaccoNicotineApplication.Controllers
                     {
                         db.SaveChanges();
                     }
+                    // catch dovuti ai vincoli del db
                     catch (DbUpdateException e)
                     {
                         SqlException innerException = null;
@@ -230,6 +232,15 @@ namespace TobaccoNicotineApplication.Controllers
                         else
                         {
                             throw;
+                        }
+                    }
+                    // catch dovuti alle annotazioni
+                    catch (DbEntityValidationException e)
+                    {
+                        foreach (var error in e.EntityValidationErrors.SelectMany(entity => entity.ValidationErrors))
+                        {
+                            //error.PropertyName
+                            return Json(new { success = false, error = error.ErrorMessage + "." }, JsonRequestBehavior.AllowGet);
                         }
                     }
 

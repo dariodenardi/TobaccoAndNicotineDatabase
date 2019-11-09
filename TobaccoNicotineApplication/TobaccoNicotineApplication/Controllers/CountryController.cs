@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -141,6 +142,7 @@ namespace TobaccoNicotineApplication.Controllers
                         {
                             db.SaveChanges();
                         }
+                        // catch dovuti ai vincoli del db
                         catch (DbUpdateException e)
                         {
                             SqlException innerException = null;
@@ -162,6 +164,15 @@ namespace TobaccoNicotineApplication.Controllers
                             else
                             {
                                 throw;
+                            }
+                        }
+                        // catch dovuti alle annotazioni
+                        catch (DbEntityValidationException e)
+                        {
+                            foreach (var error in e.EntityValidationErrors.SelectMany(entity => entity.ValidationErrors))
+                            {
+                                //error.PropertyName
+                                return Json(new { success = false, error = error.ErrorMessage + "." }, JsonRequestBehavior.AllowGet);
                             }
                         }
                     } // if
@@ -231,11 +242,18 @@ namespace TobaccoNicotineApplication.Controllers
                             }
 
                         }
-                        if (innerException != null && innerException.Number == 2601)
+                        if (innerException != null && innerException.Number == 2627)
+                        {
+                            // PK
+                            string[] error = { StaticName.CountryCode() + " is already present." };
+                            string[] keys = { "CountryCode" };
+                            return Json(new { success = false, errors = keys.Select(x => new { key = x, errors = error }) }, JsonRequestBehavior.AllowGet);
+                        }
+                        else if (innerException != null && innerException.Number == 2601)
                         {
                             // UNIQUE
                             string[] error = { StaticName.CountryName() + " is already present." };
-                            string[] keys = { "Name" };
+                            string[] keys = { "CountryName" };
                             return Json(new { success = false, errors = keys.Select(x => new { key = x, errors = error }) }, JsonRequestBehavior.AllowGet);
                         }
                         else
