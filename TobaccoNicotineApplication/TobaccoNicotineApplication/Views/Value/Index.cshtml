@@ -311,7 +311,6 @@
 
                                         <dd>
                                             @Html.EditorFor(model => model.CountryCode, new { htmlAttributes = new { @id = "CountryCode", @class = "form-control", @placeholder = "Insert " + countryCode + "*", @readonly = "readonly" } })
-                                            @Html.ValidationMessageFor(model => model.CountryCode, "", new { @class = "text-danger" })
                                         </dd>
 
                                         <dt>
@@ -319,7 +318,7 @@
                                         </dt>
 
                                         <dd>
-                                            <select class="form-control" id="variableList" onchange="findVariableNumber()"></select>
+                                            <select class="form-control" id="variableList" onchange="findVariableNumber()" required></select>
                                         </dd>
 
                                         <dt>
@@ -328,7 +327,6 @@
 
                                         <dd>
                                             @Html.EditorFor(model => model.Number, new { htmlAttributes = new { @id = "Number", @class = "form-control", @placeholder = "Insert " + number + "*", @readonly = "readonly" } })
-                                            @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
                                         </dd>
 
                                         <dt>
@@ -454,6 +452,11 @@
 
         var publicNotesMax = '@publicNotesLenAttr.MaximumLength';
         var internalNotesMax = '@internalNotesLenAttr.MaximumLength';
+
+        var data = '@data';
+        var dataUs = '@dataUs';
+        var publicNotes = '@publicNotes';
+        var internalNotes = '@internalNotes';
     </script>
 
     @Scripts.Render("~/Scripts/value")

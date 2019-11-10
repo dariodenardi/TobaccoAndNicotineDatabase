@@ -70,7 +70,7 @@ namespace TobaccoNicotineApplication.Utilities
 
         public static string Number()
         {
-            return "Number";
+            return "Variable Number";
         }
 
         public static string VariableName()

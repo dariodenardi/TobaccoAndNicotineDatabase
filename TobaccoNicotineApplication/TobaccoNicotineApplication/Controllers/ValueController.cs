@@ -122,14 +122,14 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
         [Log]
-        public JsonResult Edit(string countryName, short year, string variableName, decimal currencyValue, decimal? data, decimal? dataUs, bool varLc, string publicNotes, string internalNotes)
+        public JsonResult Edit(short countryCode, short year, short number, decimal currencyValue, decimal? data, decimal? dataUs, bool varLc, string publicNotes, string internalNotes)
         {
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
                 //db.Configuration.LazyLoadingEnabled = false;
 
-                Value model = db.Values.Where(x => x.Countries.CountryName == countryName && x.Year == year && x.Variables.Name == variableName).FirstOrDefault();
+                Value model = db.Values.Where(x => x.CountryCode == countryCode && x.Year == year && x.Number == number).FirstOrDefault();
 
                 if (model != null)
                 {
@@ -250,15 +250,15 @@ namespace TobaccoNicotineApplication.Controllers
                         if (innerException != null && innerException.Number == 547)
                         {
                             // FK
-                            string[] error = { StaticName.CountryCode() + "-" + StaticName.Number() + " aren't present." };
-                            string[] keys = { "IdCountry", "Number" };
+                            string[] error = { StaticName.Number() + " isn't present." };
+                            string[] keys = { "Number" };
                             return Json(new { success = false, errors = keys.Select(x => new { key = x, errors = error }) }, JsonRequestBehavior.AllowGet);
                         }
                         else if (innerException != null && innerException.Number == 2627)
                         {
                             // PK
-                            string[] error = { StaticName.CountryCode() + "-" + StaticName.Number() + "-" + StaticName.Year() + " are already present" };
-                            string[] keys = { "IdCountry", "Year", "Number" };
+                            string[] error = { StaticName.Year() + " is already present" };
+                            string[] keys = { "Year" };
                             return Json(new { success = false, errors = keys.Select(x => new { key = x, errors = error }) }, JsonRequestBehavior.AllowGet);
                         }
                         else if (innerException != null && innerException.Number == 2601)

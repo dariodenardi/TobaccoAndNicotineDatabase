@@ -91,7 +91,7 @@ function loadCountrySelect() {
         traditional: true,
         url: "/Country/GetListCountryName",
         success: function (data) {
-            $("#countryList").append("<option value='select'>Select Country</option>");
+            $("#countryList").append("<option value='' disabled selected>Select Country</option>");
             for (var i = 0, n = data.length; i < n; i++) {
                 $("#countryList").append("<option value='" + data[i].CountryCode + "'>" + data[i].CountryName + "</option>");
             }
