@@ -133,7 +133,6 @@ namespace TobaccoNicotineApplication.Controllers
 
                 if (model != null)
                 {
-                    bool ok = false;
                     if (!String.IsNullOrEmpty(publicNotes))
                         if (publicNotes == "null")
                             model.PublicNotes = null;
@@ -146,32 +145,19 @@ namespace TobaccoNicotineApplication.Controllers
                             model.InternalNotes = internalNotes;
                     if (varLc == true)
                     {
+                        //model.Data = valore in data
                         if (dataUs.HasValue && currencyValue != 0)
-                        {
-                            model.Data = dataUs.Value * currencyValue;
-                            ok = true;
-                        }
-                        else if (data.HasValue && currencyValue != 0)
-                        {
-                            model.Data = data.Value / currencyValue;
-                            ok = true;
-                        }
+                            model.Data = Math.Round(dataUs.Value / currencyValue, 3);
+                        else if (data.HasValue)
+                            model.Data = data.Value;
                     }
                     else
                     {
                         if (data.HasValue)
-                        {
                             model.Data = data.Value;
-                            ok = true;
-                        }
-                        else if (dataUs.HasValue && currencyValue != 0)
-                        {
-                            model.Data = dataUs.Value * currencyValue;
-                            ok = true;
-                        }
                     }
 
-                    if (ok || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes))
+                    if (data.HasValue || dataUs.HasValue && currencyValue != 0 || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo

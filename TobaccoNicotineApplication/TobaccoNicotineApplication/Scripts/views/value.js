@@ -30,10 +30,10 @@ function DataBind(ValueList) {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
                 + "<td>" + ValueList[i].CountryName + "</td>"
                 + "<td>" + ValueList[i].VariableName + "</td>"
-                + "<td>" + "<input id=\"DataTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + ValueList[i].Data + "\" placeholder=\"Insert " + data + "*\" onkeypress=\"saveRow(event, 0, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", DataTable" + i + ")\" >" + "</td>";
+                + "<td>" + "<input id=\"DataTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + ValueList[i].Data + "\" placeholder=\"Insert " + data + "\" onkeypress=\"saveRow(event, 0, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", DataTable" + i + ")\" >" + "</td>";
 
             if (ValueList[i].VarLc == true)
-                Data = Data + "<td>" + "<input id=\"DataUsTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + eval(ValueList[i].Data / ValueList[i].CurrencyValue) + "\" placeholder=\"Insert " + dataUs + "*\" onkeypress=\"saveRow(event, 1, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", DataUsTable" + i + ")\" >" + "</td>";
+                Data = Data + "<td>" + "<input id=\"DataUsTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + eval((ValueList[i].Data * ValueList[i].CurrencyValue).toFixed(3)) + "\" placeholder=\"Insert " + dataUs + "\" onkeypress=\"saveRow(event, 1, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", DataUsTable" + i + ")\" >" + "</td>";
             else
                 Data = Data + "<td id=\"DataUsTable>\"" + "</td>";
 
@@ -45,8 +45,8 @@ function DataBind(ValueList) {
                 Data = Data + "<td>" + "</td>";
 
             Data = Data
-                + "<td>" + "<input id=\"PublicNotesTable" + i + "\"" + "class=\"form-control\" maxlength=" + publicNotesMax + " type=\"textbox\" value=\"" + ValueList[i].PublicNotes + "\" placeholder=\"Insert " + publicNotes + "*\" onkeypress=\"saveRow(event, 2, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", PublicNotesTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"InternalNotesTable" + i + "\"" + "class=\"form-control\"  maxlength=" + internalNotesMax + " type=\"textbox\" value=\"" + ValueList[i].InternalNotes + "\" placeholder=\"Insert " + internalNotes + "*\" onkeypress=\"saveRow(event, 3, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", InternalNotesTable" + i + ")\" >" + "</td>";
+                + "<td>" + "<input id=\"PublicNotesTable" + i + "\"" + "class=\"form-control\" maxlength=" + publicNotesMax + " type=\"textbox\" value=\"" + ValueList[i].PublicNotes + "\" placeholder=\"Insert " + publicNotes + "\" onkeypress=\"saveRow(event, 2, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", PublicNotesTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"InternalNotesTable" + i + "\"" + "class=\"form-control\"  maxlength=" + internalNotesMax + " type=\"textbox\" value=\"" + ValueList[i].InternalNotes + "\" placeholder=\"Insert " + internalNotes + "\" onkeypress=\"saveRow(event, 3, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", InternalNotesTable" + i + ")\" >" + "</td>";
 
         } else {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
@@ -225,6 +225,19 @@ function saveRow(e, params, countryCode, number, year, currencyValue, varLc, id)
 
     if (e.keyCode == 13) {
 
+        // aggiorno conversione dato
+        if (params == '0') {
+            // cliccato invio con data -> aggiorno dataUs
+            var numero_riga = id.id.replace("DataTable", "");
+            var exhange = document.getElementById("SetValueList").children[numero_riga].children[6].outerText;
+            $('#DataUsTable' + numero_riga).val((id.value * exhange).toFixed(3));
+        } else if (params == '1') {
+            // cliccato invio con dataUs -> aggiorno data
+            var numero_riga = id.id.replace("DataUsTable", "");
+            var exhange = document.getElementById("SetValueList").children[numero_riga].children[6].outerText;
+            $('#DataTable' + numero_riga).val((id.value / exhange).toFixed(3));
+        }
+
         var data;
         var dataUs;
         var public = undefined;
@@ -244,17 +257,6 @@ function saveRow(e, params, countryCode, number, year, currencyValue, varLc, id)
     }
     else {
         return true;
-    }
-}
-
-function updateValue(params, id) {
-
-    var exhange = document.getElementById("SetValueList").children[numero_riga].children[6].outerText;
-    // aggiorno conversione dato
-    if (params == '0') {
-        var numero_riga = id.id.replace("DataTable", "");
-    } else if (params == '1') {
-        var numero_riga = id.id.replace("DataTable", "");
     }
 }
 

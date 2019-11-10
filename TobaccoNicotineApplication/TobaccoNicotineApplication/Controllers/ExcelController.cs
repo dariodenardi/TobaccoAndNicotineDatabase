@@ -517,7 +517,7 @@ namespace TobaccoNicotineApplication.Controllers
                                     if (columnSelected.Contains("Data_US$"))
                                     {
                                         if (export.CurrencyValue.Value != 0)
-                                            ws.Cells[rowStart, column].Value = export.Data / export.CurrencyValue.Value;
+                                            ws.Cells[rowStart, column].Value = export.Data * export.CurrencyValue.Value;
                                         else
                                             ws.Cells[rowStart, column].Value = "";
                                         column++;

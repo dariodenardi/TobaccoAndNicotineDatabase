@@ -33,10 +33,10 @@ namespace TobaccoNicotineApplication.Models
         [Required(ErrorMessage = "Nomisma Code is required.")]
         public int NomismaCode { get; set; }
 
-        [RegularExpression(@"[\d]{1,15}([.,][\d]{1,3})?", ErrorMessage = "Number must have a maximum of 10 decimals")]
+        [RegularExpression(@"[\d]{1,15}([.,][\d]{1,3})?", ErrorMessage = "Number must have a maximum of 3 decimals")]
         public Nullable<decimal> Data { get; set; }
 
-        [RegularExpression(@"[\d]{1,15}([.,][\d]{1,3})?", ErrorMessage = "Number must have a maximum of 10 decimals")]
+        [RegularExpression(@"[\d]{1,15}([.,][\d]{1,3})?", ErrorMessage = "Number must have a maximum of 3 decimals")]
         public Nullable<decimal> DataPmi { get; set; }
 
         [StringLength(1000, MinimumLength = 0)]
