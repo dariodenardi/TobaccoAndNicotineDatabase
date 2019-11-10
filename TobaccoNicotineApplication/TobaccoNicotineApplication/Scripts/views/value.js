@@ -11,6 +11,8 @@ $('document').ready(function () {
     // si avviano in modo asincrono
     setTimeout(loadFilterCountry(), 0);
     setTimeout(loadFilterVariable(), 0);
+    loadCountrySelect();
+    loadVariableSelect();
 
 });
 
@@ -22,7 +24,7 @@ function DataBind(ValueList) {
     var SetData = $("#SetValueList");
     for (var i = 0; i < ValueList.length; i++) {
 
-        var Data = "<tr class='row_" + ValueList[i].CountryName + "_" + ValueList[i].Year + "_" + ValueList[i].VariableName + "'>";
+        var Data = "<tr class='row_" + ValueList[i].CountryCode + "_" + ValueList[i].Year + "_" + ValueList[i].Number + "'>";
 
         if (boolAdmin || boolWriter) {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
@@ -116,6 +118,56 @@ function AddNewValue() {
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function loadCountrySelect() {
+    $.ajax({
+        type: "GET",
+        dataType: 'json',
+        cache: false,
+        traditional: true,
+        url: "/Country/GetListCountryName",
+        success: function (data) {
+            $("#countryList").append("<option value='select'>Select Country</option>");
+            for (var i = 0, n = data.length; i < n; i++) {
+                $("#countryList").append("<option value='" + data[i].CountryCode + "'>" + data[i].CountryName + "</option>");
+            }
+        }
+    })
+}
+
+function loadVariableSelect() {
+    $.ajax({
+        type: "GET",
+        dataType: 'json',
+        cache: false,
+        traditional: true,
+        url: "/Variable/GetListVariableName",
+        success: function (data) {
+            $("#variableList").append("<option value='select'>Select Variable</option>");
+            for (var i = 0, n = data.length; i < n; i++) {
+                $("#variableList").append("<option value='" + data[i].Number + "'>" + data[i].Name + "</option>");
+            }
+        }
+    })
+}
+
+function findCountryCode() {
+    var e = document.getElementById("countryList");
+    var select = e.options[e.selectedIndex].value;
+
+    // cambio testo
+    var textbox = document.getElementById('CountryCode');
+    textbox.value = select;
+}
+
+function findVariableNumber() {
+    var e = document.getElementById("variableList");
+    var select = e.options[e.selectedIndex].value;
+
+    // cambio testo
+    var textbox = document.getElementById('Number');
+    textbox.value = select;
 }
 
 // invia richiesta Ajax per salvare un rows cambiato
@@ -251,9 +303,9 @@ var ConfirmDelete = function () {
             traditional: true,
             url: "/Value/Delete",
             data: {
-                countryName: rowDaCancellareArray[i].split("_")[0],
+                countryCode: rowDaCancellareArray[i].split("_")[0],
                 year: rowDaCancellareArray[i].split("_")[1],
-                variableName: rowDaCancellareArray[i].split("_")[2],
+                number: rowDaCancellareArray[i].split("_")[2],
             },
             headers: { "__RequestVerificationToken": token },
             success: function (result) {

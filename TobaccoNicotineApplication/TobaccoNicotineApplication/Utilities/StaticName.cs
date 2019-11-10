@@ -78,6 +78,11 @@ namespace TobaccoNicotineApplication.Utilities
             return "Variable Name";
         }
 
+        public static string NomismaCode()
+        {
+            return "Nomisma Code";
+        }
+
         public static string Data()
         {
             return "Data";

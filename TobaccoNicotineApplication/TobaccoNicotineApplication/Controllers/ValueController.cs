@@ -113,7 +113,7 @@ namespace TobaccoNicotineApplication.Controllers
                 else if (orderInternalNotes == "asc")
                     values = values.OrderBy(x => x.InternalNotes);
 
-                return Json(values.Select(x => new { x.Countries.CountryName, VariableName = x.Variables.Name, x.Data, x.Year, x.Variables.VarLc, CurrencyValue = (x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault() != null)? x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault().Value : 0, x.PublicNotes, x.InternalNotes, IsSource = (x.Sources.FirstOrDefault().Repository != null) ? true : false }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(values.Select(x => new { x.CountryCode, x.Number, x.Countries.CountryName, VariableName = x.Variables.Name, x.Data, x.Year, x.Variables.VarLc, CurrencyValue = (x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault() != null)? x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault().Value : 0, x.PublicNotes, x.InternalNotes, IsSource = (x.Sources.FirstOrDefault().Repository != null) ? true : false }).ToList(), JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -196,14 +196,14 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [Log]
-        public JsonResult Delete(string CountryName, short year, string variableName)
+        public JsonResult Delete(short countryCode, short year, short number)
         {
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
                 db.Configuration.LazyLoadingEnabled = false;
 
-                Value value = db.Values.Where(a => a.Countries.CountryName == CountryName && a.Year == year && a.Variables.Name == variableName).FirstOrDefault();
+                Value value = db.Values.Where(a => a.CountryCode == countryCode && a.Year == year && a.Number == number).FirstOrDefault();
                 if (value != null)
                 {
                     db.Values.Remove(value);
@@ -257,8 +257,15 @@ namespace TobaccoNicotineApplication.Controllers
                         else if (innerException != null && innerException.Number == 2627)
                         {
                             // PK
-                            string[] error = { StaticName.CountryCode() + "-" + StaticName.Number() + "-" + StaticName.Year() + " already present" };
+                            string[] error = { StaticName.CountryCode() + "-" + StaticName.Number() + "-" + StaticName.Year() + " are already present" };
                             string[] keys = { "IdCountry", "Year", "Number" };
+                            return Json(new { success = false, errors = keys.Select(x => new { key = x, errors = error }) }, JsonRequestBehavior.AllowGet);
+                        }
+                        else if (innerException != null && innerException.Number == 2601)
+                        {
+                            // UNIQUE
+                            string[] error = { StaticName.NomismaCode() + " is already present." };
+                            string[] keys = { "NomismaCode" };
                             return Json(new { success = false, errors = keys.Select(x => new { key = x, errors = error }) }, JsonRequestBehavior.AllowGet);
                         }
                         else

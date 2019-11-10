@@ -86,6 +86,18 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
+        // GET: /Variable/GetListVariableName
+        public JsonResult GetListVariableName()
+        {
+            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                return Json(db.Variables.Select(x => new { x.Name, x.Number }).OrderBy(x => x.Number).ToList(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //
         // POST: /Variable/Edit
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]

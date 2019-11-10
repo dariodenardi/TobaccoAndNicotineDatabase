@@ -49,6 +49,7 @@
     string exchangeRateUs = StaticName.ExchangeRateUS();
     string internalNotes = StaticName.InternalNotes();
     string publicNotes = StaticName.PublicNotes();
+    string nomismaCode = StaticName.NomismaCode();
 
     StringLengthAttribute publicNotesLenAttr = typeof(TobaccoNicotineApplication.Models.Value).GetProperty("PublicNotes").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
     StringLengthAttribute internalNotesLenAttr = typeof(TobaccoNicotineApplication.Models.Value).GetProperty("InternalNotes").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
@@ -275,7 +276,7 @@
 @*Create A Popup Modal For Add*@
 
 <div class="modal fade" id="MyModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width:55%">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -297,12 +298,28 @@
 
                                     <dl class="dl-horizontal">
                                         <dt>
+                                            @Html.Label(countryName, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            <select class="form-control" id="countryList" onchange="findCountryCode()"></select>
+                                        </dd>
+
+                                        <dt>
                                             @Html.Label(countryCode, new { @class = "control-label col-md-2" })
                                         </dt>
 
                                         <dd>
-                                            @Html.EditorFor(model => model.CountryCode, new { htmlAttributes = new { @id = "CountryCode", @class = "form-control", @placeholder = "Insert " + countryCode + "*" } })
+                                            @Html.EditorFor(model => model.CountryCode, new { htmlAttributes = new { @id = "CountryCode", @class = "form-control", @placeholder = "Insert " + countryCode + "*", @readonly = "readonly" } })
                                             @Html.ValidationMessageFor(model => model.CountryCode, "", new { @class = "text-danger" })
+                                        </dd>
+
+                                        <dt>
+                                            @Html.Label(variableName, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            <select class="form-control" id="variableList" onchange="findVariableNumber()"></select>
                                         </dd>
 
                                         <dt>
@@ -310,8 +327,8 @@
                                         </dt>
 
                                         <dd>
-                                            @Html.EditorFor(model => model.Number, new { htmlAttributes = new { @id = "Number", @class = "form-control", @placeholder = "Insert " + number + "*" } })
-                                            @Html.ValidationMessageFor(model => model.Year, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.Number, new { htmlAttributes = new { @id = "Number", @class = "form-control", @placeholder = "Insert " + number + "*", @readonly = "readonly" } })
+                                            @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
                                         </dd>
 
                                         <dt>
@@ -324,12 +341,39 @@
                                         </dd>
 
                                         <dt>
+                                            @Html.Label(nomismaCode, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            @Html.EditorFor(model => model.NomismaCode, new { htmlAttributes = new { @id = "NomismaCode", @class = "form-control", @placeholder = "Insert " + nomismaCode + "*" } })
+                                            @Html.ValidationMessageFor(model => model.NomismaCode, "", new { @class = "text-danger" })
+                                        </dd>
+
+                                        <dt>
                                             @Html.Label(data, new { @class = "control-label col-md-2" })
                                         </dt>
 
                                         <dd>
-                                            @Html.EditorFor(model => model.Data, new { htmlAttributes = new { @id = "Notes", @class = "form-control", @placeholder = "Insert " + notes } })
+                                            @Html.EditorFor(model => model.Data, new { htmlAttributes = new { @id = "Data", @class = "form-control", @placeholder = "Insert " + data } })
                                             @Html.ValidationMessageFor(model => model.Data, "", new { @class = "text-danger" })
+                                        </dd>
+
+                                        <dt>
+                                            @Html.Label(publicNotes, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            @Html.EditorFor(model => model.PublicNotes, new { htmlAttributes = new { @id = "publicNotes", @class = "form-control", @placeholder = "Insert " + publicNotes } })
+                                            @Html.ValidationMessageFor(model => model.PublicNotes, "", new { @class = "text-danger" })
+                                        </dd>
+
+                                        <dt>
+                                            @Html.Label(internalNotes, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            @Html.EditorFor(model => model.InternalNotes, new { htmlAttributes = new { @id = "InternalNotes", @class = "form-control", @placeholder = "Insert " + internalNotes } })
+                                            @Html.ValidationMessageFor(model => model.InternalNotes, "", new { @class = "text-danger" })
                                         </dd>
                                     </dl>
 

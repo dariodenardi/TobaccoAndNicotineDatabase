@@ -99,7 +99,7 @@ namespace TobaccoNicotineApplication.Controllers
             {
                 db.Configuration.LazyLoadingEnabled = false;
 
-                return Json(db.Countries.Select(x => new { x.CountryName, x.CountryCode }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(db.Countries.Select(x => new { x.CountryName, x.CountryCode }).OrderBy(x => x.CountryName).ToList(), JsonRequestBehavior.AllowGet);
             }
         }
 
