@@ -15,14 +15,15 @@ namespace TobaccoNicotineApplication.Filters
             // Generate an audit
             Log log = new Log()
             {
-                // Creates our Timestamp/Identifier
-                TimeAccessed = DateTime.Now,
+                // non metto ID perchè viene auto-incrementato automaticamente a livello database
                 // Our Username (if available)
                 UserName = (request.IsAuthenticated) ? filterContext.HttpContext.User.Identity.Name : "Anonymous",
                 // The IP Address of the Request
                 IPAddress = request.ServerVariables["HTTP_X_FORWARDED_FOR"] ?? request.UserHostAddress,
                 // The URL that was accessed
                 AreaAccessed = request.RawUrl,
+                // Creates our Timestamp/Identifier
+                TimeAccessed = DateTime.Now,
             };
 
             // Stores Log in the Database

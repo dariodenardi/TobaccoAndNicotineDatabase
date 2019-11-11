@@ -11,10 +11,11 @@ namespace TobaccoNicotineApplication.Models
     {
         // Log Properties
         [Key]
-        public DateTime TimeAccessed { get; set; }
+        public long id { get; set; }
         public string UserName { get; set; }
         public string IPAddress { get; set; }
         public string AreaAccessed { get; set; }
+        public DateTime TimeAccessed { get; set; }
 
         // Default Constructor
         public Log() { }

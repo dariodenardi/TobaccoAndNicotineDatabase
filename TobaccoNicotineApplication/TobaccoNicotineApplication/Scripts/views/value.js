@@ -60,22 +60,6 @@ function DataBind(ValueList) {
                 "<td>" + ValueList[i].InternalNotes + "</td>";
         }
 
-        Data = Data + "<td>";
-
-        if ((boolAdmin || boolWriter)) {
-            if (ValueList[i].IsSource == false) {
-                Data = Data +
-                    "<input type='file' id='filestyle-0' tabindex='-1' style='position: absolute; clip: rect(0px, 0px, 0px, 0px);'><span class='group-span-filestyle ' tabindex='0'><label for='filestyle-0' class='btn btn-sm btn-default '><span class='icon-span-filestyle glyphicon glyphicon-folder-open'></span> </label></span>";
-            }
-        }
-
-        if (ValueList[i].IsSource == true) {
-            Data = Data +
-                " <a href='#' class='btn btn-dark btn-sm waves-effect' onclick='DownloadFile(\"" + ValueList[i].CountryName + "\")' ><span class='glyphicon glyphicon-save-file'></span></a>";
-        }
-
-        Data = Data + "</td>"
-
         Data = Data + "<td>" +
             "<div class=\"dropdown\">" +
             "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
@@ -85,6 +69,22 @@ function DataBind(ValueList) {
             "<li><a href=\"#\">Sources</a></li>" +
             "</ul>" +
             "</div>" + "</td>";
+
+        //Data = Data + "<td>";
+
+        //if ((boolAdmin || boolWriter)) {
+        //    if (ValueList[i].IsSource == false) {
+        //        Data = Data +
+        //            "<input type='file' id='filestyle-0' tabindex='-1' style='position: absolute; clip: rect(0px, 0px, 0px, 0px);'><span class='group-span-filestyle ' tabindex='0'><label for='filestyle-0' class='btn btn-sm btn-default '><span class='icon-span-filestyle glyphicon glyphicon-folder-open'></span> </label></span>";
+        //    }
+        //}
+
+        //if (ValueList[i].IsSource == true) {
+        //    Data = Data +
+        //        " <a href='#' class='btn btn-dark btn-sm waves-effect' onclick='DownloadFile(\"" + ValueList[i].CountryName + "\")' ><span class='glyphicon glyphicon-save-file'></span></a>";
+        //}
+
+        //Data = Data + "</td>"
 
         Data = Data + "</tr>";
 

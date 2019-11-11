@@ -791,6 +791,10 @@ function pasteFromClipboard(numeroCheck) {
                     var pmiCoding = res2[3].trim('\r').trim('\n');
                     var areaCode = res2[4].trim('\r').trim('\n');
 
+                    // controllo
+                    if (Validation(countryName, regionName, continentName, pmiCoding, areaCode) == false)
+                        return;
+
                     // cambio valori riga
                     riga.children[1].children[0].value = countryName;
                     riga.children[2].children[0].value = regionName;
@@ -815,6 +819,57 @@ function pasteFromClipboard(numeroCheck) {
             swal("Something went wrong!", err, "error");
             //console.log('Something went wrong', err);
         });
+}
+
+function Validation(countryName, regionName, continentName, pmiCoding, areaCode) {
+
+    // valori nulli?
+    if (countryName == "null" || countryName == "") {
+        swal("Attention!", "Country Name: cannot be null!", "error");
+        return false;
+    }
+
+    if (regionName.length == "null" || regionName.length == "") {
+        swal("Attention!", "Region Name: cannot be null!", "error");
+        return false;
+    }
+
+    if (continentName.length == "null" || continentName.length == "") {
+        swal("Attention!", "Continent Name: cannot be null!", "error");
+        return false;
+    }
+
+    if (pmiCoding.length == "null" || pmiCoding.length == "") {
+        swal("Attention!", "Pmi Coding: cannot be null!", "error");
+        return false;
+    }
+
+    // lunghezza della stringa
+    if (countryName.length < countryNameMin || countryName.length > countryNameMax) {
+        swal("Attention!", countryName + ": check length!", "error");
+        return false;
+    }
+
+    if (regionName.length < regionNameMin || regionName.length > regionNameMax) {
+        swal("Attention!", regionName + ": check length!", "error");
+        return false;
+    }
+
+    if (continentName.length < continentNameMin || continentName.length > continentNameMax) {
+        swal("Attention!", continentName + ": check length!", "error");
+        return false;
+    }
+
+    if (pmiCoding.length < pmiCodingMin || pmiCoding.length > pmiCodingMax) {
+        swal("Attention!", pmiCoding + ": check length!", "error");
+        return false;
+    }
+
+    // boolean
+    if (!(areaCode == "true" || areaCode == "false")) {
+        swal("Attention!", areaCode + ": check value!", "error");
+        return false;
+    }
 }
 
 function Paste() {

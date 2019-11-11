@@ -735,32 +735,8 @@ function pasteFromClipboard(numeroCheck) {
                     var unit = res2[4].trim('\r').trim('\n');
 
                     // controllo
-                    if (name.length < variableNameMin || name.length > variableNameMax) {
-                        swal("Attention!", name + ": check length!", "error");
+                    if (Validation(name, phaseCode, phaseName, unit, varLc) == false)
                         return;
-                    }
-
-                    if (isNaN(phaseCode)) {
-                        swal("Attention!", phaseCode + ": isn't a number!", "error");
-                        return;
-                    }
-
-                    if (phaseName.length < phaseNameMin || phaseName.length > phaseNameMax) {
-                        swal("Attention!", phaseName + ": check length!", "error");
-                        return;
-                    }
-
-                    if (!(varLc == "true" || varLc == "false" )) {
-                        swal("Attention!", varLc + ": check value!", "error");
-                        return;
-                    }
-
-                    if (unit.length < unitNameMin || unit.length > unitNameMax) {
-                        swal("Attention!", unit + ": check length!", "error");
-                        return;
-                    }
-
-                    // vedo se ci sono valori nulli e li converto
 
                     // cambio valori riga
                     riga.children[1].children[0].value = name;
@@ -782,6 +758,63 @@ function pasteFromClipboard(numeroCheck) {
             swal("Something went wrong!", err, "error");
             //console.log('Something went wrong', err);
         });
+}
+
+function Validation(variableName, phaseCode, phaseName, unit, varLc) {
+
+    // valori nulli?
+    if (variableName == "null" || variableName == "") {
+        swal("Attention!", "variable Name: cannot be null!", "error");
+        return false;
+    }
+
+    if (phaseCode == "null" || phaseCode == "") {
+        swal("Attention!", "Phase Code: cannot be null!", "error");
+        return false;
+    }
+
+    if (phaseName.length == "null" || phaseName.length == "") {
+        swal("Attention!", "Phase Name: cannot be null!", "error");
+        return false;
+    }
+
+    if (unit.length == "null" || unit.length == "") {
+        swal("Attention!", "Measurement Unit: cannot be null!", "error");
+        return false;
+    }
+
+    if (varLc.length == "null" || varLc.length == "") {
+        swal("Attention!", "Var Lc: cannot be null!", "error");
+        return false;
+    }
+
+    // se è un numero
+    if (isNaN(phaseCode)) {
+        swal("Attention!", phaseCode + ": isn't a number!", "error");
+        return false;
+    }
+
+    // lunghezza della stringa
+    if (variableName.length < variableNameMin || variableName.length > variableNameMax) {
+        swal("Attention!", variableName + ": check length!", "error");
+        return false;
+    }
+
+    if (phaseName.length < phaseNameMin || phaseName.length > phaseNameMax) {
+        swal("Attention!", phaseName + ": check length!", "error");
+        return false;
+    }
+
+    if (unit.length < unitNameMin || unit.length > unitNameMax) {
+        swal("Attention!", unit + ": check length!", "error");
+        return false;
+    }
+
+    // boolean
+    if (!(varLc == "true" || varLc == "false")) {
+        swal("Attention!", varLc + ": check value!", "error");
+        return false;
+    }
 }
 
 function Paste() {
