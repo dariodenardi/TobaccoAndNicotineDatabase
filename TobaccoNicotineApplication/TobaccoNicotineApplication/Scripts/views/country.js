@@ -785,11 +785,11 @@ function pasteFromClipboard(numeroCheck) {
                         return;
                     }
 
-                    var countryName = res2[0].trim('\r').trim('\n');
-                    var regionName = res2[1].trim('\r').trim('\n');
-                    var continentName = res2[2].trim('\r').trim('\n');
-                    var pmiCoding = res2[3].trim('\r').trim('\n');
-                    var areaCode = res2[4].trim('\r').trim('\n');
+                    var countryName = res2[0];
+                    var regionName = res2[1];
+                    var continentName = res2[2];
+                    var pmiCoding = res2[3];
+                    var areaCode = res2[4];
 
                     // controllo
                     if (Validation(countryName, regionName, continentName, pmiCoding, areaCode) == false)

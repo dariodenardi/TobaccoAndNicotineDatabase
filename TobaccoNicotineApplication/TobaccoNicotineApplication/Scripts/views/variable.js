@@ -728,11 +728,11 @@ function pasteFromClipboard(numeroCheck) {
                         return;
                     }
 
-                    var name = res2[0].trim('\r').trim('\n');
-                    var phaseCode = res2[1].trim('\r').trim('\n');
-                    var phaseName = res2[2].trim('\r').trim('\n');
-                    var varLc = res2[3].trim('\r').trim('\n');
-                    var unit = res2[4].trim('\r').trim('\n');
+                    var name = res2[0];
+                    var phaseCode = res2[1];
+                    var phaseName = res2[2];
+                    var varLc = res2[3];
+                    var unit = res2[4];
 
                     // controllo
                     if (Validation(name, phaseCode, phaseName, unit, varLc) == false)

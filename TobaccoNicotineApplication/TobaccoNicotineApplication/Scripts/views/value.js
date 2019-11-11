@@ -66,6 +66,7 @@ function DataBind(ValueList) {
             "Search" +
             "<span class=\"caret\"></span></button>" +
             "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
+            "<li><a href=\"#\">Currency</a></li>" +
             "<li><a href=\"#\">Sources</a></li>" +
             "</ul>" +
             "</div>" + "</td>";
@@ -1066,22 +1067,16 @@ function pasteFromClipboard(numeroCheck) {
                     // suddivido ancora per quanto riguarda la linea
                     var res2 = res[m].split('\t');
 
-                    if (res2.length < 7) {
+                    // metto in preventivo che l'ultimo campo possa essere ""
+                    if (res2.length < 5) {
                         swal("Attention!", "Number of columns is different from the copied values!", "error");
                         return;
                     }
 
-                    var countryName;
-                    if (riga.children[1].children.length > 0)
-                        countryName = riga.children[1].children[0].value;
-                    else
-                        countryName = riga.children[1].outerText;
-
-                    var variableName;
-                    if (riga.children[2].children.length > 0)
-                        variableName = riga.children[2].children[0].value;
-                    else
-                        variableName = riga.children[2].outerText;
+                    var className = riga.className.replace("row_", "");
+                    var countryCode = className.split("_")[0];
+                    var year = className.split("_")[1];
+                    var number = className.split("_")[2];
 
                     var currencyValue;
                     if (riga.children[6].outerText != "")
@@ -1095,35 +1090,37 @@ function pasteFromClipboard(numeroCheck) {
                     else
                         varLc = false;
 
-                    var year;
-                    if (riga.children[5].children.length > 0)
-                        year = riga.children[5].children[0].value;
-                    else
-                        year = riga.children[5].outerText;
+                    var data = res2[2];
+                    var dataUs = res2[3];
+                    var public = res2[6];
+                    var internal = res2[7];
 
-                    var country = res2[0];
-                    var variable = res2[1];
-                    var y = res2[4];
+                    // i valori ammessi sono anche nulli
+                    if (data == null)
+                        data = "null";
 
-                    if (country != countryName || year != y || variable != variableName) {
-                        swal("Attention!", "You want to paste different countries. Also check the years and variable name", "error");
+                    if (dataUs == null)
+                        dataUs = "null";
+
+                    if (public == null)
+                        public = "null";
+
+                    if (internal == null)
+                        internal = "null";
+
+                    // controllo
+                    if (Validation(data, dataUs, public, internal) == false)
                         return;
-                    }
-
-                    var data = res2[2].trim('\r').trim('\n');
-                    var dataUs = res2[3].trim('\r').trim('\n');
-                    var public = res2[6].trim('\r').trim('\n');
-                    var internal = res2[7].trim('\r').trim('\n');
 
                     // cambio valori riga
                     riga.children[3].children[0].value = data;
-                    if (riga.children[4].children.length > 0)
+                    if (varLc == true)
                         riga.children[4].children[0].value = dataUs;
                     riga.children[7].children[0].value = public;
                     riga.children[8].children[0].value = internal;
 
                     // invio richiesta ajax per salvare
-                    saveAjaxRequest(countryName, variableName, year, currencyValue, varLc, data, dataUs, public, internal, riga);
+                    saveAjaxRequest(countryCode, number, year, currencyValue, varLc, data, dataUs, public, internal, riga);
 
                     m++;
                 }
@@ -1135,6 +1132,32 @@ function pasteFromClipboard(numeroCheck) {
             swal("Something went wrong!", err, "error");
             //console.log('Something went wrong', err);
         });
+}
+
+function Validation(data, dataUs, public, internal) {
+
+    // se è un numero
+    if (isNaN(data) && !(data != "null" || data != "")) {
+        swal("Attention!", data + ": isn't a number!", "error");
+        return false;
+    }
+
+    if (isNaN(dataUs) && !(dataUs != "null" || dataUs != "")) {
+        swal("Attention!", dataUs + ": isn't a number!", "error");
+        return false;
+    }
+
+    // lunghezza della stringa
+    if (public.length > publicNotesMax) {
+        swal("Attention!", public + ": check length!", "error");
+        return false;
+    }
+
+    if (internal.length > internalNotesMax) {
+        swal("Attention!", internal + ": check length!", "error");
+        return false;
+    }
+
 }
 
 function Paste() {
@@ -1159,7 +1182,7 @@ function Paste() {
 }
 
 // quando seleziono un file
-$('#filestyle-0').click(function (event) {
-    alert('ok');
+//$('#filestyle-0').click(function (event) {
+//    alert('ok');
     // your code
-});
+//});

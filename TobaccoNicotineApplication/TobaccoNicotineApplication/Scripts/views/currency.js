@@ -761,16 +761,11 @@ function pasteFromClipboard(numeroCheck) {
                     // suddivido ancora per quanto riguarda la linea
                     var res2 = res[m].split('\t');
 
-                    if (res2.length < 4) {
+                    // metto in preventivo che l'ultimo campo possa essere ""
+                    if (res2.length < 3) {
                         swal("Attention!", "Number of columns is different from the copied values!", "error");
                         return;
                     }
-
-                    var countryName;
-                    if (riga.children[1].children.length > 0)
-                        countryName = riga.children[1].children[0].value;
-                    else
-                        countryName = riga.children[1].outerText;
 
                     var year;
                     if (riga.children[2].children.length > 0)
@@ -778,16 +773,15 @@ function pasteFromClipboard(numeroCheck) {
                     else
                         year = riga.children[2].outerText;
 
-                    var country = res2[0].trim('\r').trim('\n');
-                    var y = res2[1].trim('\r').trim('\n');
-
-                    if (country != countryName || year != y) {
-                        swal("Attention!", "You want to paste different countries. Also check the years", "error");
-                        return;
-                    }
-
                     var value = res2[2];
                     var note = res2[3];
+
+                    if (note == null)
+                        note = "null";
+
+                    // controllo
+                    if (Validation(value, note) == false)
+                        return;
 
                     // cambio valori riga
                     riga.children[3].children[0].value = value;
@@ -806,6 +800,28 @@ function pasteFromClipboard(numeroCheck) {
             swal("Something went wrong!", err, "error");
             //console.log('Something went wrong', err);
         });
+}
+
+function Validation(value, note) {
+
+    // valori nulli?
+    if (value == "null" || value == "") {
+        swal("Attention!", "Value: cannot be null!", "error");
+        return false;
+    }
+
+    // se è un numero
+    if (isNaN(value)) {
+        swal("Attention!", value + ": isn't a number!", "error");
+        return false;
+    }
+
+    // lunghezza della stringa
+    if (note.length > notesNameMax) {
+        swal("Attention!", note + ": check length!", "error");
+        return false;
+    }
+
 }
 
 function Paste() {

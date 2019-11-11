@@ -122,7 +122,7 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
         [Log]
-        public JsonResult Edit(short countryCode, short year, short number, decimal currencyValue, decimal? data, decimal? dataUs, bool varLc, string publicNotes, string internalNotes)
+        public JsonResult Edit(short countryCode, short year, short number, decimal currencyValue, string data, string dataUs, bool varLc, string publicNotes, string internalNotes)
         {
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
@@ -146,18 +146,32 @@ namespace TobaccoNicotineApplication.Controllers
                     if (varLc == true)
                     {
                         //model.Data = valore in data
-                        if (dataUs.HasValue && currencyValue != 0)
-                            model.Data = Math.Round(dataUs.Value / currencyValue, 3);
-                        else if (data.HasValue)
-                            model.Data = data.Value;
+                        if (!String.IsNullOrEmpty(dataUs))
+                            if (dataUs == "null")
+                                model.Data = null;
+                            else
+                            {
+                                if (currencyValue != 0)
+                                    model.Data = Math.Round(decimal.Parse(dataUs) / currencyValue, 3);
+                                else
+                                    model.Data = null;
+                            }
+                        else if (!String.IsNullOrEmpty(data))
+                                if (dataUs == "null")
+                                    model.Data = null;
+                                else
+                                    model.Data = decimal.Parse(data);
                     }
                     else
                     {
-                        if (data.HasValue)
-                            model.Data = data.Value;
+                        if (!String.IsNullOrEmpty(data))
+                            if (dataUs == "null")
+                                model.Data = null;
+                            else
+                                model.Data = decimal.Parse(data);
                     }
 
-                    if (data.HasValue || dataUs.HasValue && currencyValue != 0 || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes))
+                    if (!String.IsNullOrEmpty(data) || !String.IsNullOrEmpty(dataUs) || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo
