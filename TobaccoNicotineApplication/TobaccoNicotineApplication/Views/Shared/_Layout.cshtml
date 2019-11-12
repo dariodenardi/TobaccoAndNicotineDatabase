@@ -229,12 +229,13 @@
     @Scripts.Render("~/Scripts/wow")
     @Scripts.Render("~/Scripts/jquerynice")
     @Scripts.Render("~/Scripts/jqueryscroll")
-    @Scripts.Render("~/Scripts/app")
     <!-- cookies message -->
     @Scripts.Render("~/Scripts/cookies")
 
     <!--RenderSection: in questo punto vengono posizionati gli script che si trovano nelle altre pagine.-->
     @RenderSection("scripts", required: false)
+
+    @Scripts.Render("~/Scripts/app")
 
 </body>
 </html>

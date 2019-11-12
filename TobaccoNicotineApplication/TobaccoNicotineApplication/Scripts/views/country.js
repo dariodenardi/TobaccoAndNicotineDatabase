@@ -137,7 +137,7 @@ function saveAjaxRequest(countryCode, countryName, regionName, continentName, pm
             regionName: regionName,
             continentName: continentName,
             pmiCoding: pmiCoding,
-            areaCode: areaCode,
+            areaCode: areaCode
         },
         success: function (data) {
             var isSuccessful = (data['success']);
@@ -292,7 +292,7 @@ function loadFilter() {
             continentCode: ($("#continentCodeString").val() != null) ? $("#continentCodeString").val() : undefined,
             regionCode: ($("#regionCodeString").val() != null) ? $("#regionCodeString").val() : undefined,
             countryCode: ($("#countryCodeString").val() != null) ? $("#countryCodeString").val() : undefined,
-            areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
+            areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined
         },
         success: function (response) {
 
@@ -517,7 +517,7 @@ function FilterCountry(selectSortable) {
             orderRegionName: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
             orderContinentName: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
             orderPmi: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined,
-            orderAreaCode: (sortable5 != null && selectSortable == 5) ? sortable5 : undefined,
+            orderAreaCode: (sortable5 != null && selectSortable == 5) ? sortable5 : undefined
         },
         success: function (result) {
             $("#SetCountryList").empty();

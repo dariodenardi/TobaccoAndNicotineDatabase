@@ -122,7 +122,7 @@ function saveAjaxRequest(countryCode, year, value, note, id) {
             countryCode: countryCode,
             year: year,
             value: value,
-            note: note,
+            note: note
         },
         success: function (data) {
             var isSuccessful = (data['success']);
@@ -232,7 +232,7 @@ var ConfirmDelete = function () {
             url: "/Currency/Delete",
             data: {
                 countryCode: rowDaCancellareArray[i].split("_")[0],
-                year: rowDaCancellareArray[i].split("_")[1],
+                year: rowDaCancellareArray[i].split("_")[1]
             },
             headers: { "__RequestVerificationToken": token },
             success: function (result) {
@@ -271,7 +271,7 @@ function loadFilter() {
             continentCode: ($("#continentCodeString").val() != null) ? $("#continentCodeString").val() : undefined,
             regionCode: ($("#regionCodeString").val() != null) ? $("#regionCodeString").val() : undefined,
             countryCode: ($("#countryCodeString").val() != null) ? $("#countryCodeString").val() : undefined,
-            areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
+            areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined
         },
         success: function (response) {
 
@@ -449,7 +449,7 @@ function loadFilterYear() {
             regionCode: ($("#regionCodeString").val() != null) ? $("#regionCodeString").val() : undefined,
             countryCode: ($("#countryCodeString").val() != null) ? $("#countryCodeString").val() : undefined,
             areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
-            year: ($("#yearString").val() != null) ? $("#yearString").val() : undefined,
+            year: ($("#yearString").val() != null) ? $("#yearString").val() : undefined
         },
         success: function (response) {
 
@@ -523,7 +523,7 @@ function FilterCurrency(selectSortable) {
             orderCountryName: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
             orderYear: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
             orderValue: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
-            orderNotes: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined,
+            orderNotes: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined
         },
         success: function (result) {
             $("#SetCurrencyList").empty();

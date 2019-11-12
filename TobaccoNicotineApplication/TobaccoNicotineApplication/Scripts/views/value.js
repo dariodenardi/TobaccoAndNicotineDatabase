@@ -332,7 +332,7 @@ var ConfirmDelete = function () {
             data: {
                 countryCode: rowDaCancellareArray[i].split("_")[0],
                 year: rowDaCancellareArray[i].split("_")[1],
-                number: rowDaCancellareArray[i].split("_")[2],
+                number: rowDaCancellareArray[i].split("_")[2]
             },
             headers: { "__RequestVerificationToken": token },
             success: function (result) {
@@ -371,7 +371,7 @@ function loadFilterCountry() {
             continentCode: ($("#continentCodeString").val() != null) ? $("#continentCodeString").val() : undefined,
             regionCode: ($("#regionCodeString").val() != null) ? $("#regionCodeString").val() : undefined,
             countryCode: ($("#countryCodeString").val() != null) ? $("#countryCodeString").val() : undefined,
-            areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
+            areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined
         },
         success: function (response) {
 
@@ -551,7 +551,7 @@ function loadFilterYear() {
             phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
             phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
             varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
-            measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined,
+            measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined
         },
         success: function (response) {
 
@@ -581,7 +581,7 @@ function loadFilterVariable() {
             phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
             phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
             varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
-            measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined,
+            measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined
         },
         success: function (response) {
 
@@ -792,7 +792,7 @@ function FilterValue(selectSortable) {
             orderData: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
             orderYear: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined,
             orderPublicNotes: (sortable5 != null && selectSortable == 5) ? sortable5 : undefined,
-            orderInternalNotes: (sortable6 != null && selectSortable == 6) ? sortable6 : undefined,
+            orderInternalNotes: (sortable6 != null && selectSortable == 6) ? sortable6 : undefined
         },
         success: function (result) {
             $("#SetValueList").empty();

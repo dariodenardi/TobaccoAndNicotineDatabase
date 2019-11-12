@@ -20,9 +20,72 @@ $('document').ready(function () {
         alwaysShow: true,
         placement: 'top-left'
     });
+
+    $("#datepicker-inline").datepicker({
+        format: "mm/dd/yyyy",
+        altField: "#DateDownload"
+    });
 });
 
+// inserisco gli elementi nella table
+function DataBind(SourceList) {
 
+    $("#LoadingStatus").html("Loading....");
+
+    var SetData = $("#SetSourceList");
+    for (var i = 0; i < SourceList.length; i++) {
+
+        // json to dateTime format
+        var seconds = parseInt(SourceList[i].DateDownload.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+        var date = new Date(seconds);
+        var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+
+        var seconds2 = parseInt(SourceList[i].Date.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+        var date2 = new Date(seconds2);
+
+        var Data = "<tr class='row_" + SourceList[i].Name + "_" + date2.toLocaleDateString("en-US", options) + "_" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "'>";
+
+        if (boolAdmin || boolWriter) {
+            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
+                + "<td>" + SourceList[i].Name + "</td>"
+                + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + SourceList[i].Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 0, '" + SourceList[i].Name + "_" + SourceList[i].Date + "_" + SourceList[i].Time + "', SourceLinkTable" + i + ")\" >" + "</td>"
+                + "<td>" + SourceList[i].Repository + "</td>"
+                + "<td>" + date.toLocaleDateString("en-US", options) + "</td>"
+                + "<td>" + SourceList[i].Username + "</td>";
+        } else {
+            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
+                "<td>" + SourceList[i].Name + "</td>" +
+                "<td>" + SourceList[i].Link + "</td>" +
+                "<td>" + SourceList[i].Repository + "</td>" +
+                "<td>" + date.toLocaleDateString("en-US", options) + "</td>" +
+                "<td>" + SourceList[i].Username + "</td>";
+        }
+
+        Data = Data + "<td>" +
+            "<div class=\"dropdown\">" +
+            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
+            "Search" +
+            "<span class=\"caret\"></span></button>" +
+            "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
+            "<li><a href=\"#\">Values</a></li>" +
+            "</ul>" +
+            "</div>";
+
+        Data = Data + "</td>" + "</tr>";
+
+        SetData.append(Data);
+
+        // aggiungo caratteri campo
+        $('input#SourceLinkTable' + i).maxlength({
+            alwaysShow: true,
+            placement: 'top-left'
+        });
+    }
+
+    $("#LoadingStatus").html(" ");
+    var page = $("#showEntry").val();
+    $('#SetSourceList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+}
 
 function AddNewSource() {
     $("#form")[0].reset();
@@ -34,6 +97,119 @@ function AddNewSource() {
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// invia richiesta Ajax per salvare un rows cambiato
+function saveAjaxRequest(number, name, phaseCode, phaseName, varLc, unit, id) {
+
+    $.ajax({
+        type: "POST",
+        dataType: 'json',
+        cache: false,
+        traditional: true,
+        url: "/Source/Edit",
+        headers: { '__RequestVerificationToken': token },
+        data: {
+            number: number,
+            name: name,
+            phaseCode: phaseCode,
+            phaseName: phaseName,
+            varLc: varLc,
+            unit: unit
+        },
+        success: function (data) {
+            var isSuccessful = (data['success']);
+
+            if (isSuccessful == true) {
+
+                id.style.backgroundColor = "#5CB45B";
+                setTimeout(function () {
+                    id.style.backgroundColor = "";
+                }, 500);
+
+            }
+            else {
+                id.style.backgroundColor = "#F03154";
+                setTimeout(function () {
+                    id.style.backgroundColor = "";
+                }, 500);
+
+                var error = data['error'];
+
+                // solo se l'errore è rilevante viene inviato
+                if (error != "")
+                    swal("Error!", error, "error");
+
+            }
+        }
+    })
+
+}
+
+// Save Row
+function saveRow(e, params, number, id) {
+    if (e.keyCode == 13) {
+
+        var name = undefined;
+        var phaseCode;
+        var phaseName = undefined;
+        var unit = undefined;
+        if (params == '0')
+            name = id.value
+        if (params == '1')
+            phaseCode = id.value
+        if (params == '2')
+            phaseName = id.value
+        if (params == '3')
+            unit = id.value
+
+        saveAjaxRequest(number, name, phaseCode, phaseName, "", unit, id);
+
+        return false; // returning false will prevent the event from bubbling up.
+    }
+    else {
+        return true;
+    }
+}
+
+// Show The Popup Modal For Create
+$("#CreateSource").click(function () {
+    var data = $("#SubmitForm").serialize();
+
+    $.ajax({
+        type: "POST",
+        dataType: 'json',
+        cache: false,
+        traditional: true,
+        url: "/Source/Create",
+        headers: { '__RequestVerificationToken': token },
+        data: data,
+        success: function (data) {
+            var isSuccessful = (data['success']);
+
+            if (isSuccessful) {
+                $("#MyModal").modal("hide");
+                swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
+                    function () {
+                        FilterSource(0);
+                    }
+                );
+            }
+            else {
+                var errors = data['errors'];
+                displayValidationErrors(errors);
+            }
+        }
+    })
+
+})
+
+function displayValidationErrors(errors) {
+
+    for (var i = 0; i < errors.length; i++) {
+        $('span[data-valmsg-for="' + errors[i].key + '"]').text(errors[i].errors[0]);
+    }
+
 }
 
 //Show The Popup Modal For DeleteComfirmation
@@ -55,7 +231,7 @@ var ConfirmDelete = function () {
             data: {
                 sourceName: rowDaCancellareArray[i].split("_")[0],
                 date: rowDaCancellareArray[i].split("_")[1],
-                time: rowDaCancellareArray[i].split("_")[2],
+                time: rowDaCancellareArray[i].split("_")[2]
             },
             headers: { "__RequestVerificationToken": token },
             success: function (result) {
@@ -75,6 +251,7 @@ var ConfirmDelete = function () {
     }
 }
 
+//ComboBox element
 function loadFilter() {
 
     $.ajax({
@@ -89,7 +266,7 @@ function loadFilter() {
             link: ($("#sourceLinkString").val() != null) ? $("#sourceLinkString").val() : undefined,
             repository: ($("#sourceRepositoryString").val() != null) ? $("#sourceRepositoryString").val() : undefined,
             dateSource: ($("#sourceDateSourceString").val() != null) ? $("#sourceDateSourceString").val() : undefined,
-            username: ($("#sourceUsernameString").val() != null) ? $("#sourceUsernameString").val() : undefined,
+            username: ($("#sourceUsernameString").val() != null) ? $("#sourceUsernameString").val() : undefined
         },
         success: function (response) {
 
@@ -99,8 +276,8 @@ function loadFilter() {
             var dateSourceArray;
             var usernameArray;
 
-            if ($("#numberString").val() == null) {
-                $("#numberString").empty();
+            if ($("#sourceNameString").val() == null) {
+                $("#sourceNameString").empty();
                 nameArray = new Array();
             }
             if ($("#sourceLinkString").val() == null) {
@@ -176,7 +353,7 @@ function loadFilter() {
                     // json to dateTime format
                     var seconds = parseInt(dateSourceArray[i].replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
                     var date = new Date(seconds);
-                    var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+                    var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
 
                     $("#sourceDateSourceString").append("<option value='" + date.toLocaleDateString("en-US", options) + "'>" + date.toLocaleDateString("en-US", options) + "</option>");
                 }
@@ -265,7 +442,7 @@ function FilterSource(selectSortable) {
             orderLink: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
             orderRepository: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
             orderDateDownload: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined,
-            orderUsername: (sortable5 != null && selectSortable == 5) ? sortable5 : undefined,
+            orderUsername: (sortable5 != null && selectSortable == 5) ? sortable5 : undefined
         },
         success: function (result) {
             $("#SetSourceList").empty();

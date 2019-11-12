@@ -126,7 +126,7 @@ function saveAjaxRequest(number, name, phaseCode, phaseName, varLc, unit, id) {
             phaseCode: phaseCode,
             phaseName: phaseName,
             varLc: varLc,
-            unit: unit,
+            unit: unit
         },
         success: function (data) {
             var isSuccessful = (data['success']);
@@ -280,7 +280,7 @@ function loadFilter() {
             phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
             phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
             varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
-            measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined,
+            measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined
         },
         success: function (response) {
 
@@ -468,7 +468,7 @@ function FilterVariable(selectSortable) {
             orderPhaseCode: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
             orderPhaseName: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
             orderVarLc: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined,
-            orderUnitName: (sortable5 != null && selectSortable == 5) ? sortable5 : undefined,
+            orderUnitName: (sortable5 != null && selectSortable == 5) ? sortable5 : undefined
         },
         success: function (result) {
             $("#SetVariableList").empty();

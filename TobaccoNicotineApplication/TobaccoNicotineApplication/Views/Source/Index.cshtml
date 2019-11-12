@@ -49,6 +49,9 @@
     <!-- Chosen -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/chosen/1.1.0/chosen.css">
 
+    <!-- Date Picker -->
+    @Styles.Render("~/Content/datepicker")
+
     <!-- Dropzone css -->
     @Styles.Render("~/Content/dropzone")
 }
@@ -71,7 +74,7 @@
                     </dt>
 
                     <dd>
-                        <select id="sourceNameString" onchange="" class="form-control chosen-select" multiple="multiple"></select>
+                        <select id="sourceNameString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
                     </dd>
 
                     <dt>
@@ -79,7 +82,7 @@
                     </dt>
 
                     <dd>
-                        <select id="sourceLinkString" onchange="" class="form-control chosen-select" multiple="multiple"></select>
+                        <select id="sourceLinkString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
                     </dd>
 
                     <dt>
@@ -87,7 +90,7 @@
                     </dt>
 
                     <dd>
-                        <select id="sourceRepositoryString" onchange="" class="form-control chosen-select" multiple="multiple"></select>
+                        <select id="sourceRepositoryString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
                     </dd>
 
                     <dt>
@@ -95,7 +98,7 @@
                     </dt>
 
                     <dd>
-                        <select id="sourceDateSourceString" onchange="" class="form-control chosen-select" multiple="multiple"></select>
+                        <select id="sourceDateSourceString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
                     </dd>
 
                     <dt>
@@ -103,7 +106,7 @@
                     </dt>
 
                     <dd>
-                        <select id="sourceUsernameString" onchange="" class="form-control chosen-select" multiple="multiple"></select>
+                        <select id="sourceUsernameString" onchange="loadFilter()" class="form-control chosen-select" multiple="multiple"></select>
                     </dd>
                 </dl>
 
@@ -112,6 +115,31 @@
             </div>
         </div>
     </div>
+    @if (User.IsInRole("Admin") || @User.IsInRole("Writer"))
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a id="collapseTitleTree" data-toggle="collapse" data-parent="#accordion-source" href="#collapseTree" class="collapsed">
+                        Upload Files
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseTree" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <!-- form -->
+                    <form action="/" enctype="multipart/form-data" method="POST">
+                        <div class="dropzone" id="my-dropzone" name="mainFileUploader">
+                            <div class="fallback">
+                                <input name="file" type="file" multiple />
+                            </div>
+                        </div>
+                    </form>
+                    <!-- form -->
+                </div>
+            </div>
+        </div>
+    }
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -174,32 +202,6 @@
             </div>
         </div>
     </div>
-
-    @if (User.IsInRole("Admin") || @User.IsInRole("Writer"))
-    {
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a id="collapseTitleTree" data-toggle="collapse" data-parent="#accordion-source" href="#collapseTree" class="collapsed">
-                        Upload Files
-                    </a>
-                </h4>
-            </div>
-            <div id="collapseTree" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <!-- form -->
-                    <form action="/" enctype="multipart/form-data" method="POST">
-                        <div class="dropzone" id="my-dropzone" name="mainFileUploader">
-                            <div class="fallback">
-                                <input name="file" type="file" multiple />
-                            </div>
-                        </div>
-                    </form>
-                    <!-- form -->
-                </div>
-            </div>
-        </div>
-    }
 </div>
 
 @*Create A Popup Modal For Add*@
@@ -253,11 +255,10 @@
                                         </dt>
 
                                         <dd>
-                                            <div class="input-group">
-                                                @Html.Editor("DateDownload", new { htmlAttributes = new { @readonly = "readonly", @placeholder = "mm/dd/yyyy", @id = "datepicker", @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.DateDownload, "", new { @class = "text-danger" })
-                                                <span class="input-group-addon bg-custom b-0"><i class="mdi mdi-calendar"></i></span>
-                                            </div><!-- input-group -->
+                                            <div class="editor-field" id="datepicker-inline">
+                                                @Html.HiddenFor(model => model.DateDownload)
+                                                @Html.ValidationMessageFor(model => model.DateDownload)
+                                            </div>
                                         </dd>
                                     </dl>
 
@@ -328,6 +329,9 @@
     <!-- Sweet-Alert  -->
     @Scripts.Render("~/Scripts/sweetalert")
 
+    <!-- Date Picker  -->
+    @Scripts.Render("~/Scripts/datepicker")
+
     <!-- Dropzone js -->
     @Scripts.Render("~/Scripts/dropzone")
 
@@ -339,66 +343,6 @@
         var linkMax = '@linkLenAttr.MaximumLength';
 
         var sourceLink = '@sourceLink';
-
-        // inserisco gli elementi nella table
-        function DataBind(SourceList) {
-
-            $("#LoadingStatus").html("Loading....");
-
-            var SetData = $("#SetSourceList");
-            for (var i = 0; i < SourceList.length; i++) {
-
-                // json to dateTime format
-                var seconds = parseInt(SourceList[i].DateDownload.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
-                var date = new Date(seconds);
-                var options = { year: 'numeric', month: 'long', day: 'numeric' };
-
-                var seconds2 = parseInt(SourceList[i].Date.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
-                var date2 = new Date(seconds2);
-
-                var Data = "<tr class='row_" + SourceList[i].Name + "_" + date2.toLocaleDateString("en-US", options) + "_" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "'>";
-
-                if (boolAdmin || boolWriter) {
-                    Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
-                        + "<td>" + SourceList[i].Name + "</td>"
-                        + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + SourceList[i].Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 0, '" + SourceList[i].Name + "_" + SourceList[i].Date + "_" + SourceList[i].Time + "', SourceLinkTable" + i + ")\" >" + "</td>"
-                        + "<td>" + SourceList[i].Repository + "</td>"
-                        + "<td>" + date.toLocaleDateString("en-US", options) + "</td>"
-                        + "<td>" + SourceList[i].Username + "</td>";
-                } else {
-                    Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
-                        "<td>" + SourceList[i].Name + "</td>" +
-                        "<td>" + SourceList[i].Link + "</td>" +
-                        "<td>" + SourceList[i].Repository + "</td>" +
-                        "<td>" + date.toLocaleDateString("en-US", options) + "</td>" +
-                        "<td>" + SourceList[i].Username + "</td>";
-                }
-
-                Data = Data + "<td>" +
-                    "<div class=\"dropdown\">" +
-                    "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
-                    "Search" +
-                    "<span class=\"caret\"></span></button>" +
-                    "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
-                    "<li><a href=\"#\">Values</a></li>" +
-                    "</ul>" +
-                    "</div>";
-
-                Data = Data + "</td>" + "</tr>";
-
-                SetData.append(Data);
-
-                // aggiungo caratteri campo
-                $('input#SourceLinkTable' + i).maxlength({
-                    alwaysShow: true,
-                    placement: 'top-left'
-                });
-            }
-
-            $("#LoadingStatus").html(" ");
-            var page = $("#showEntry").val();
-            $('#SetSourceList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
-        }
     </script>
 
     @Scripts.Render("~/Scripts/source")

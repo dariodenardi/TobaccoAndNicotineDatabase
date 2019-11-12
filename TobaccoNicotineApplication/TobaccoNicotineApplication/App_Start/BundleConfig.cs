@@ -69,6 +69,9 @@ namespace TobaccoNicotineApplication
             bundles.Add(new ScriptBundle("~/Scripts/filestyle").Include(
                         "~/Scripts/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"));
 
+            bundles.Add(new ScriptBundle("~/Scripts/datepicker").Include(
+                        "~/Scripts/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"));
+
             bundles.Add(new ScriptBundle("~/Scripts/dropzone").Include(
                         "~/Scripts/plugins/dropzone/dist/dropzone.js"));
 
@@ -128,6 +131,9 @@ namespace TobaccoNicotineApplication
 
             bundles.Add(new StyleBundle("~/Content/dropzone").Include(
                       "~/Scripts/plugins/dropzone/dist/dropzone.css"));
+
+            bundles.Add(new StyleBundle("~/Content/datepicker").Include(
+                      "~/Scripts/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css"));
 
             bundles.Add(new StyleBundle("~/Content/jvectormap").Include(
                       "~/Scripts/plugins/jvectormap/jquery-jvectormap-2.0.2.css"));

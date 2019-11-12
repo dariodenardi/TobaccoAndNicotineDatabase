@@ -293,6 +293,8 @@
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\plugins\bootstrap-datepicker\css\bootstrap-datepicker.min.css" />
+    <Content Include="Scripts\plugins\bootstrap-datepicker\js\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\views\contact.js" />
     <Content Include="Scripts\views\excel.js" />
     <Content Include="Scripts\views\currency.js" />

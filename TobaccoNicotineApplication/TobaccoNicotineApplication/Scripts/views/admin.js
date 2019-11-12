@@ -91,7 +91,7 @@ function FilterUser(selectSortable) {
         type: "POST",
         url: "/Admin/GetUserList",
         data: {
-            order: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
+            order: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined
         },
         headers: { "__RequestVerificationToken": token },
         success: function (result) {
