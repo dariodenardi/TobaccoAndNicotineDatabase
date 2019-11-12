@@ -22,62 +22,7 @@ $('document').ready(function () {
     });
 });
 
-// inserisco gli elementi nella table
-function DataBind(SourceList) {
 
-    $("#LoadingStatus").html("Loading....");
-
-    var SetData = $("#SetSourceList");
-    for (var i = 0; i < SourceList.length; i++) {
-
-        // json to dateTime format
-        var seconds = parseInt(SourceList[i].DateDownload.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
-        var date = new Date(seconds);
-        var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-
-        var Data = "<tr class='row_" + SourceList[i].Name + "_" + SourceList[i].Date + "_" + SourceList[i].Time + "'>";
-
-        if (boolAdmin || boolWriter) {
-            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
-                + "<td>" + SourceList[i].Name + "</td>"
-                + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + SourceList[i].Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 0, '" + SourceList[i].Name + "_" + SourceList[i].Date + "_" + SourceList[i].Time + "', SourceLinkTable" + i + ")\" >" + "</td>"
-                + "<td>" + SourceList[i].Repository + "</td>"
-                + "<td>" + date.toLocaleDateString("en-US", options) + "</td>"
-                + "<td>" + SourceList[i].Username + "</td>";
-        } else {
-            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
-                "<td>" + SourceList[i].Name + "</td>" +
-                "<td>" + SourceList[i].Link + "</td>" +
-                "<td>" + SourceList[i].Repository + "</td>" +
-                "<td>" + date.toLocaleDateString("en-US", options) + "</td>" +
-                "<td>" + SourceList[i].Username + "</td>";
-        }
-
-        Data = Data + "<td>" +
-            "<div class=\"dropdown\">" +
-            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
-            "Search" +
-            "<span class=\"caret\"></span></button>" +
-            "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
-            "<li><a href=\"#\">Values</a></li>" +
-            "</ul>" +
-            "</div>";
-
-        Data = Data + "</td>" + "</tr>";
-
-        SetData.append(Data);
-
-        // aggiungo caratteri campo
-        $('input#SourceLinkTable' + i).maxlength({
-            alwaysShow: true,
-            placement: 'top-left'
-        });
-    }
-
-    $("#LoadingStatus").html(" ");
-    var page = $("#showEntry").val();
-    $('#SetSourceList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
-}
 
 function AddNewSource() {
     $("#form")[0].reset();
@@ -89,6 +34,45 @@ function AddNewSource() {
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+//Show The Popup Modal For DeleteComfirmation
+var rowDaCancellareArray = new Array();
+var DeleteSource = function () {
+    $("#PanelTitleDelete").html("Delete Source/s");
+    $("#DeleteConfirmation").modal("show");
+}
+
+var ConfirmDelete = function () {
+    // invio n richieste quanti sono i row da cancellare
+    for (var i = 0, n = rowDaCancellareArray.length; i < n; i++) {
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            cache: false,
+            traditional: true,
+            url: "/Source/Delete",
+            data: {
+                sourceName: rowDaCancellareArray[i].split("_")[0],
+                date: rowDaCancellareArray[i].split("_")[1],
+                time: rowDaCancellareArray[i].split("_")[2],
+            },
+            headers: { "__RequestVerificationToken": token },
+            success: function (result) {
+                if (result == true) {
+                    $("#DeleteConfirmation").modal("hide");
+                    swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
+                        function () {
+                            FilterSource(0);
+                        }
+                    );
+                } else {
+                    swal("An error has occurred!", "Please wait a few minutes and try again.", "error");
+                }
+
+            }
+        })
+    }
 }
 
 function loadFilter() {

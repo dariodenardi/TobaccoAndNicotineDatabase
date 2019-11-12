@@ -129,14 +129,14 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [Log]
-        public JsonResult Delete(string SourceName, DateTime date, TimeSpan time)
+        public JsonResult Delete(string sourceName, DateTime date, TimeSpan time)
         {
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
                 db.Configuration.LazyLoadingEnabled = false;
 
-                Source source = db.Sources.Where(x => x.Name == SourceName && x.Date == date && x.Time == time).FirstOrDefault();
+                Source source = db.Sources.Where(x => x.Name == sourceName && x.Date == date && x.Time == time).FirstOrDefault();
                 if (source != null)
                 {
                     db.Sources.Remove(source);

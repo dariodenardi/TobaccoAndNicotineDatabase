@@ -53,11 +53,11 @@
     @Styles.Render("~/Content/dropzone")
 }
 
-<div class="panel-group panel-group-joined" id="accordion-region">
+<div class="panel-group panel-group-joined" id="accordion-source">
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a id="collapseTitleOne" data-toggle="collapse" data-parent="#accordion-region" href="#collapseOne">
+                <a id="collapseTitleOne" data-toggle="collapse" data-parent="#accordion-source" href="#collapseOne">
                     Filter
                 </a>
             </h4>
@@ -115,7 +115,7 @@
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a id="collapseTitleTwo" data-toggle="collapse" data-parent="#accordion-region" href="#collapseTwo" class="collapsed">
+                <a id="collapseTitleTwo" data-toggle="collapse" data-parent="#accordion-source" href="#collapseTwo" class="collapsed">
                     Rows
                 </a>
             </h4>
@@ -180,8 +180,8 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a id="collapseTitleTree" data-toggle="collapse" data-parent="#accordion-region" href="#collapseTree" class="collapsed">
-                        Upload files
+                    <a id="collapseTitleTree" data-toggle="collapse" data-parent="#accordion-source" href="#collapseTree" class="collapsed">
+                        Upload Files
                     </a>
                 </h4>
             </div>
@@ -272,7 +272,42 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="r">Cancel</button>
-                <button type="button" class="btn btn-success" id="CreateVariable">Save</button>
+                <button type="button" class="btn btn-success" id="CreateSource">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*Create A PopUp Modal For DeleteConfirmation*@
+
+<div class="modal fade" id="DeleteConfirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>There is an operation to be performed...</h4>
+            </div>
+
+            <div class="modal-body">
+                <!-- Start panel -->
+                <div class="col-lg-12">
+                    <div class="panel panel-fill panel-danger">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" id="PanelTitleDelete"></h4>
+                        </div>
+                        <div class="panel-body">
+                            Are you sure you want to delete this Record/s?
+                        </div>
+                    </div>
+                </div>
+                <!-- End panel -->
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="r">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="ConfirmDelete()">Confirm</button>
             </div>
 
         </div>
@@ -304,6 +339,66 @@
         var linkMax = '@linkLenAttr.MaximumLength';
 
         var sourceLink = '@sourceLink';
+
+        // inserisco gli elementi nella table
+        function DataBind(SourceList) {
+
+            $("#LoadingStatus").html("Loading....");
+
+            var SetData = $("#SetSourceList");
+            for (var i = 0; i < SourceList.length; i++) {
+
+                // json to dateTime format
+                var seconds = parseInt(SourceList[i].DateDownload.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                var date = new Date(seconds);
+                var options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+                var seconds2 = parseInt(SourceList[i].Date.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                var date2 = new Date(seconds2);
+
+                var Data = "<tr class='row_" + SourceList[i].Name + "_" + date2.toLocaleDateString("en-US", options) + "_" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "'>";
+
+                if (boolAdmin || boolWriter) {
+                    Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
+                        + "<td>" + SourceList[i].Name + "</td>"
+                        + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + SourceList[i].Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 0, '" + SourceList[i].Name + "_" + SourceList[i].Date + "_" + SourceList[i].Time + "', SourceLinkTable" + i + ")\" >" + "</td>"
+                        + "<td>" + SourceList[i].Repository + "</td>"
+                        + "<td>" + date.toLocaleDateString("en-US", options) + "</td>"
+                        + "<td>" + SourceList[i].Username + "</td>";
+                } else {
+                    Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
+                        "<td>" + SourceList[i].Name + "</td>" +
+                        "<td>" + SourceList[i].Link + "</td>" +
+                        "<td>" + SourceList[i].Repository + "</td>" +
+                        "<td>" + date.toLocaleDateString("en-US", options) + "</td>" +
+                        "<td>" + SourceList[i].Username + "</td>";
+                }
+
+                Data = Data + "<td>" +
+                    "<div class=\"dropdown\">" +
+                    "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
+                    "Search" +
+                    "<span class=\"caret\"></span></button>" +
+                    "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
+                    "<li><a href=\"#\">Values</a></li>" +
+                    "</ul>" +
+                    "</div>";
+
+                Data = Data + "</td>" + "</tr>";
+
+                SetData.append(Data);
+
+                // aggiungo caratteri campo
+                $('input#SourceLinkTable' + i).maxlength({
+                    alwaysShow: true,
+                    placement: 'top-left'
+                });
+            }
+
+            $("#LoadingStatus").html(" ");
+            var page = $("#showEntry").val();
+            $('#SetSourceList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+        }
     </script>
 
     @Scripts.Render("~/Scripts/source")
