@@ -160,7 +160,7 @@ namespace TobaccoNicotineApplication.Utilities
 
         public static string UserName()
         {
-            return "Name";
+            return "Username";
         }
 
         public static string Value()

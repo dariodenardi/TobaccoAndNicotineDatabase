@@ -8,11 +8,90 @@ $('document').ready(function () {
     $('.chosen-select').chosen();
 
     // Riempo campi filtri
-    // si avviano in modo asincrono
-    loadFilterSource();
+    loadFilter();
+
+    // Bootstrap-MaxLength (Modal)
+    $('input#SourceLink').maxlength({
+        alwaysShow: true,
+        placement: 'top-left'
+    });
+
+    $('input#SourceName').maxlength({
+        alwaysShow: true,
+        placement: 'top-left'
+    });
 });
 
-function loadFilterSource() {
+// inserisco gli elementi nella table
+function DataBind(SourceList) {
+
+    $("#LoadingStatus").html("Loading....");
+
+    var SetData = $("#SetSourceList");
+    for (var i = 0; i < SourceList.length; i++) {
+
+        // json to dateTime format
+        var seconds = parseInt(SourceList[i].DateDownload.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+        var date = new Date(seconds);
+        var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+
+        var Data = "<tr class='row_" + SourceList[i].Name + "_" + SourceList[i].Date + "_" + SourceList[i].Time + "'>";
+
+        if (boolAdmin || boolWriter) {
+            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
+                + "<td>" + SourceList[i].Name + "</td>"
+                + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + SourceList[i].Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 0, '" + SourceList[i].Name + "_" + SourceList[i].Date + "_" + SourceList[i].Time + "', SourceLinkTable" + i + ")\" >" + "</td>"
+                + "<td>" + SourceList[i].Repository + "</td>"
+                + "<td>" + date.toLocaleDateString("en-US", options) + "</td>"
+                + "<td>" + SourceList[i].Username + "</td>";
+        } else {
+            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
+                "<td>" + SourceList[i].Name + "</td>" +
+                "<td>" + SourceList[i].Link + "</td>" +
+                "<td>" + SourceList[i].Repository + "</td>" +
+                "<td>" + date.toLocaleDateString("en-US", options) + "</td>" +
+                "<td>" + SourceList[i].Username + "</td>";
+        }
+
+        Data = Data + "<td>" +
+            "<div class=\"dropdown\">" +
+            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
+            "Search" +
+            "<span class=\"caret\"></span></button>" +
+            "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
+            "<li><a href=\"#\">Values</a></li>" +
+            "</ul>" +
+            "</div>";
+
+        Data = Data + "</td>" + "</tr>";
+
+        SetData.append(Data);
+
+        // aggiungo caratteri campo
+        $('input#SourceLinkTable' + i).maxlength({
+            alwaysShow: true,
+            placement: 'top-left'
+        });
+    }
+
+    $("#LoadingStatus").html(" ");
+    var page = $("#showEntry").val();
+    $('#SetSourceList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+}
+
+function AddNewSource() {
+    $("#form")[0].reset();
+    $("#ModalTitle").html("Add New Source");
+    $('span[data-valmsg-for').html('');
+    $("#PanelTitleAddEditDetails").html("New Source");
+    $("#MyModal").modal();
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function loadFilter() {
 
     $.ajax({
         url: "/Source/GetFieldList",
@@ -109,7 +188,13 @@ function loadFilterSource() {
             if ($("#sourceDateSourceString").val() == null) {
                 dateSourceArray.sort();
                 for (var i = 0, n = dateSourceArray.length; i < n; i++) {
-                    $("#sourceDateSourceString").append("<option value='" + dateSourceArray[i] + "'>" + dateSourceArray[i] + "</option>");
+
+                    // json to dateTime format
+                    var seconds = parseInt(dateSourceArray[i].replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                    var date = new Date(seconds);
+                    var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+
+                    $("#sourceDateSourceString").append("<option value='" + date.toLocaleDateString("en-US", options) + "'>" + date.toLocaleDateString("en-US", options) + "</option>");
                 }
             }
 
@@ -129,6 +214,307 @@ function loadFilterSource() {
         }
     });
 
+}
+
+// Filter Source
+function FilterSource(selectSortable) {
+
+    var sortable1;
+    var pathImg1 = document.getElementById("idSortable1").src;
+    if (pathImg1.includes("asc"))
+        sortable1 = "asc";
+    else if (pathImg1.includes("desc"))
+        sortable1 = "desc";
+    else //caso in cui non è stato cliccato nessun filtro
+        sortable1 = null;
+
+    var sortable2;
+    var pathImg2 = document.getElementById("idSortable2").src;
+    if (pathImg2.includes("asc"))
+        sortable2 = "asc";
+    else if (pathImg2.includes("desc"))
+        sortable2 = "desc";
+    else //caso in cui non è stato cliccato nessun filtro
+        sortable2 = null;
+
+    var sortable3;
+    var pathImg3 = document.getElementById("idSortable3").src;
+    if (pathImg3.includes("asc"))
+        sortable3 = "asc";
+    else if (pathImg3.includes("desc"))
+        sortable3 = "desc";
+    else //caso in cui non è stato cliccato nessun filtro
+        sortable3 = null;
+
+    var sortable4;
+    var pathImg4 = document.getElementById("idSortable4").src;
+    if (pathImg4.includes("asc"))
+        sortable4 = "asc";
+    else if (pathImg4.includes("desc"))
+        sortable4 = "desc";
+    else //caso in cui non è stato cliccato nessun filtro
+        sortable4 = null;
+
+    var sortable5;
+    var pathImg5 = document.getElementById("idSortable5").src;
+    if (pathImg5.includes("asc"))
+        sortable5 = "asc";
+    else if (pathImg5.includes("desc"))
+        sortable5 = "desc";
+    else //caso in cui non è stato cliccato nessun filtro
+        sortable5 = null;
+
+    $.ajax({
+        type: "POST",
+        dataType: 'json',
+        cache: false,
+        traditional: true,
+        url: "/Source/GetSourceList",
+        headers: { "__RequestVerificationToken": token },
+        data: {
+            sourceName: ($("#sourceNameString").val() != null) ? $("#sourceNameString").chosen().val() : undefined,
+            link: ($("#sourceLinkString").val() != null) ? $("#sourceLinkString").val() : undefined,
+            repository: ($("#sourceRepositoryString").val() != null) ? $("#sourceRepositoryString").val() : undefined,
+            dateSource: ($("#sourceDateSourceString").val() != null) ? $("#sourceDateSourceString").val() : undefined,
+            username: ($("#sourceUsernameString").val() != null) ? $("#sourceUsernameString").val() : undefined,
+            orderSourceName: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
+            orderLink: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
+            orderRepository: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
+            orderDateDownload: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined,
+            orderUsername: (sortable5 != null && selectSortable == 5) ? sortable5 : undefined,
+        },
+        success: function (result) {
+            $("#SetSourceList").empty();
+            $("#myPager").empty();
+            DataBind(result);
+            // resetto stato select all/deselect all
+            selectAll = true;
+            // resetto l'immagine dei filtri
+            if (selectSortable == 0) {
+                document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+            } else if (selectSortable == 1) {
+                document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+            } else if (selectSortable == 2) {
+                document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+            } else if (selectSortable == 3) {
+                document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+            } else if (selectSortable == 4) {
+                document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+            } else if (selectSortable == 5) {
+                document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+            }
+            // passo al tab dei row
+            $("#collapseOne").prop('class', 'panel-collapse collapse');
+            $("#collapseTwo").prop('class', 'panel-collapse collapse in');
+            $("#collapseTitleOne").prop('class', 'collapsed');
+            $("#collapseTitleTwo").prop('class', '');
+        }
+    })
+
+}
+
+//Sortable Source
+
+function SortableName() {
+
+    // cambio immagine
+    var pathImg1 = document.getElementById("idSortable1").src;
+    if (pathImg1.includes("asc"))
+        document.getElementById("idSortable1").src = "/Images/Sortable/desc.png";
+    else if (pathImg1.includes("desc"))
+        document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
+    else // se è ancora l'immagine predefinita
+        document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
+
+    FilterSource(1);
+
+}
+
+function SortableLink() {
+
+    // cambio immagine
+    var pathImg2 = document.getElementById("idSortable2").src;
+    if (pathImg2.includes("asc"))
+        document.getElementById("idSortable2").src = "/Images/Sortable/desc.png";
+    else if (pathImg2.includes("desc"))
+        document.getElementById("idSortable2").src = "/Images/Sortable/asc.png";
+    else // se è ancora l'immagine predefinita
+        document.getElementById("idSortable2").src = "/Images/Sortable/asc.png";
+
+    FilterSource(2);
+
+}
+
+function SortableRepository() {
+
+    // cambio immagine
+    var pathImg2 = document.getElementById("idSortable3").src;
+    if (pathImg2.includes("asc"))
+        document.getElementById("idSortable3").src = "/Images/Sortable/desc.png";
+    else if (pathImg2.includes("desc"))
+        document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
+    else // se è ancora l'immagine predefinita
+        document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
+
+    FilterSource(3);
+
+}
+
+function SortableDateDownload() {
+
+    // cambio immagine
+    var pathImg2 = document.getElementById("idSortable4").src;
+    if (pathImg2.includes("asc"))
+        document.getElementById("idSortable4").src = "/Images/Sortable/desc.png";
+    else if (pathImg2.includes("desc"))
+        document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
+    else // se è ancora l'immagine predefinita
+        document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
+
+    FilterSource(4);
+
+}
+
+function SortableUsername() {
+
+    // cambio immagine
+    var pathImg2 = document.getElementById("idSortable5").src;
+    if (pathImg2.includes("asc"))
+        document.getElementById("idSortable5").src = "/Images/Sortable/desc.png";
+    else if (pathImg2.includes("desc"))
+        document.getElementById("idSortable5").src = "/Images/Sortable/asc.png";
+    else // se è ancora l'immagine predefinita
+        document.getElementById("idSortable5").src = "/Images/Sortable/asc.png";
+
+    FilterSource(5);
+
+}
+
+// seleziono tutti gli elementi
+var selectAll = true;
+function toggle2() {
+    checkboxes = document.getElementsByName('foo2');
+
+    // non ci sono elementi nella tabella
+    if (checkboxes.length == 0) {
+        swal("Attention!", "there aren't rows in the table!", "error");
+        return;
+    }
+
+    for (var i = 0, n = checkboxes.length; i < n; i++) {
+
+        checkboxes[i].checked = selectAll;
+    }
+    // cambio in true così la prossima volta viene fatto il contrario
+    if (selectAll == false)
+        selectAll = true;
+    else
+        selectAll = false;
+}
+
+// tasto cancella button
+function deleteRows() {
+
+    // resetto array
+    rowDaCancellareArray = new Array();
+    // numero di checked trovati
+    var numeroCheck = 0;
+
+    var table = document.getElementById("SetSourceList");
+    for (var i = 0; i < table.children.length; i++) {
+        var riga = table.children[i];
+        // vedo la cella checkbox
+        var cellaCheckbox = riga.cells[0];
+        var c = cellaCheckbox.children[0].children[0];
+        if (c.checked) {
+            numeroCheck++;
+            var className = riga.className;
+            rowDaCancellareArray.push(className.replace("row_", ""));
+        }
+    }
+
+    if (numeroCheck == 0)
+        swal("Attention!", "Select at least one a row!", "error");
+    else {
+        DeleteSource();
+    }
+
+}
+
+// copio i valori selezionati
+function Copy() {
+
+    // resetto array
+    var rowDaCopiareArray = new Array();
+    // numero di checked trovati
+    var numeroCheck = 0;
+
+    var table = document.getElementById("SetSourceList");
+    for (var i = 0; i < table.children.length; i++) {
+        var riga = table.children[i];
+        // vedo la cella checkbox
+        var cellaCheckbox = riga.cells[0];
+        var c = cellaCheckbox.children[0].children[0];
+        if (c.checked) {
+            numeroCheck++;
+            // salvo tutti i valori della riga
+            var valori_riga = "";
+            for (var t = 1, n = riga.children.length - 1; t < n; t++) {
+                if (riga.children[t].children.length > 0)
+                    valori_riga += riga.children[t].children[0].value + "\t";
+                else
+                    valori_riga += riga.children[t].outerText + "\t";
+            }
+            // aggiungo riga
+            rowDaCopiareArray.push(valori_riga.trim('\t'));
+        }
+    }
+
+    if (numeroCheck == 0)
+        swal("Attention!", "Select at least one a row!", "error");
+    else {
+        var stringaFinale = "";
+        for (var i = 0, n = rowDaCopiareArray.length; i < n; i++) {
+            stringaFinale += rowDaCopiareArray[i] + "\n";
+        }
+        copyToClipboard(stringaFinale.trim('\n'));
+    }
+
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            // Success!
+            swal({
+                title: "Row/s copied!",
+                timer: 1000,
+                showConfirmButton: false
+            });
+        })
+        .catch(err => {
+            swal("Something went wrong!", err, "error");
+            //console.log('Something went wrong', err);
+        });
 }
 
 Dropzone.options.myDropzone = {

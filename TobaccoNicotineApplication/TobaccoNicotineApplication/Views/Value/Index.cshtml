@@ -360,7 +360,7 @@
                                         </dt>
 
                                         <dd>
-                                            @Html.EditorFor(model => model.PublicNotes, new { htmlAttributes = new { @id = "publicNotes", @class = "form-control", @placeholder = "Insert " + publicNotes } })
+                                            @Html.EditorFor(model => model.PublicNotes, new { htmlAttributes = new { @id = "PublicNotes", @maxlength = publicNotesLenAttr.MaximumLength, @class = "form-control", @placeholder = "Insert " + publicNotes } })
                                             @Html.ValidationMessageFor(model => model.PublicNotes, "", new { @class = "text-danger" })
                                         </dd>
 
@@ -369,7 +369,7 @@
                                         </dt>
 
                                         <dd>
-                                            @Html.EditorFor(model => model.InternalNotes, new { htmlAttributes = new { @id = "InternalNotes", @class = "form-control", @placeholder = "Insert " + internalNotes } })
+                                            @Html.EditorFor(model => model.InternalNotes, new { htmlAttributes = new { @id = "InternalNotes", @maxlength = internalNotesLenAttr.MaximumLength, @class = "form-control", @placeholder = "Insert " + internalNotes } })
                                             @Html.ValidationMessageFor(model => model.InternalNotes, "", new { @class = "text-danger" })
                                         </dd>
                                     </dl>

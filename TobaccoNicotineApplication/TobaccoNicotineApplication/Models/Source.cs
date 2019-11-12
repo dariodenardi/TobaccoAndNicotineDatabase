@@ -22,6 +22,7 @@ namespace TobaccoNicotineApplication.Models
         }
 
         [Required(ErrorMessage = "Name is required.")]
+        [StringLength(255, MinimumLength = 4, ErrorMessage = "Source Name must be at least 4 characters.")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Date is required.")]

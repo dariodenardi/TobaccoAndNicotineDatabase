@@ -34,6 +34,9 @@
     string sourceRepository = StaticName.Repository();
     string sourceDateDownload = StaticName.DownloadDate();
     string sourceUsername = StaticName.UserName();
+
+    StringLengthAttribute linkLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("Link").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
+    StringLengthAttribute sourceNameLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("Name").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
 }
 
 @section styles {
@@ -199,12 +202,93 @@
     }
 </div>
 
+@*Create A Popup Modal For Add*@
+
+<div class="modal fade" id="MyModal">
+    <div class="modal-dialog" style="width:55%">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 id="ModalTitle"></h4>
+            </div>
+
+            <div class="modal-body">
+                <!-- Start panel -->
+                <div class="col-lg">
+                    <div class="panel panel-default panel-success">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" id="PanelTitleAddEditDetails"></h4>
+                        </div>
+                        <div class="panel-body">
+                            <!-- Start form -->
+                            <form id="form">
+                                <fieldset id="SubmitForm">
+                                    <dl class="dl-horizontal">
+
+                                        @Html.HiddenFor(model => model.Date, new { id = DateTime.Now.Date })
+                                        @Html.HiddenFor(model => model.Time, new { id = DateTime.Now.Date.TimeOfDay })
+                                        @Html.HiddenFor(model => model.Username, new { id = User.Identity.Name })
+
+                                        <dt>
+                                            @Html.Label(sourceName, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            @Html.TextBoxFor(m => m.Name, new { @id = "SourceName", @class = "form-control", @maxlength = sourceNameLenAttr.MaximumLength, @placeholder = "Insert " + sourceName + "*" })
+                                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                        </dd>
+
+                                        <dt>
+                                            @Html.Label(sourceLink, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            @Html.TextBoxFor(m => m.Link, new { @id = "SourceLink", @class = "form-control", @maxlength = linkLenAttr.MaximumLength, @placeholder = "Insert " + sourceLink })
+                                            @Html.ValidationMessageFor(model => model.Link, "", new { @class = "text-danger" })
+                                        </dd>
+
+                                        <dt>
+                                            @Html.Label(sourceDateDownload, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            <div class="input-group">
+                                                @Html.Editor("DateDownload", new { htmlAttributes = new { @readonly = "readonly", @placeholder = "mm/dd/yyyy", @id = "datepicker", @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.DateDownload, "", new { @class = "text-danger" })
+                                                <span class="input-group-addon bg-custom b-0"><i class="mdi mdi-calendar"></i></span>
+                                            </div><!-- input-group -->
+                                        </dd>
+                                    </dl>
+
+                                </fieldset>
+                            </form>
+                            <!-- End form -->
+                        </div>
+                    </div>
+                </div>
+                <!-- End panel -->
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="r">Cancel</button>
+                <button type="button" class="btn btn-success" id="CreateVariable">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @section scripts {
     <!-- Pagination  -->
     @Scripts.Render("~/Scripts/pagination")
 
     <!-- Chosen  -->
     <script src="//cdn.jsdelivr.net/chosen/1.1.0/chosen.jquery.js"></script>
+
+    <!-- Plugins js -->
+    @Scripts.Render("~/Scripts/colorpicker")
+    @Scripts.Render("~/Scripts/maxlength")
 
     <!-- Sweet-Alert  -->
     @Scripts.Render("~/Scripts/sweetalert")
@@ -216,6 +300,10 @@
         var boolAdmin = '@User.IsInRole("Admin")' == "True";
         var boolWriter = '@User.IsInRole("Writer")' == "True";
         var boolReader = '@User.IsInRole("Reader")' == "True";
+
+        var linkMax = '@linkLenAttr.MaximumLength';
+
+        var sourceLink = '@sourceLink';
     </script>
 
     @Scripts.Render("~/Scripts/source")

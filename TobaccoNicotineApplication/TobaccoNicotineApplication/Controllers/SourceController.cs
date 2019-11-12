@@ -27,7 +27,8 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Source/GetSourceList
         [HttpPost]
-        public JsonResult GetSourceList(string orderName, string orderDate, string orderTime, string orderLink, string orderRepository, string orderDateDownload, string orderUsername)
+        public JsonResult GetSourceList(string[] sourceName, string[] link, string[] repository, DateTime[] dateSource, string[] username, 
+            string orderSourceName, string orderLink, string orderRepository, string orderDateDownload, string orderUsername)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
@@ -36,50 +37,25 @@ namespace TobaccoNicotineApplication.Controllers
                 IQueryable<Source> sources = from s in db.Sources
                                              select s;
 
-                //if (!string.IsNullOrEmpty(idContinentString[0]))
-                //    sources = sources.Where(t => t.Values.Any(x => idRegionString.Select(short.Parse).Contains(x.IdContinent)));
+                if (ArrayUtils.IsNullOrEmpty(sourceName) == false)
+                    sources = sources.Where(t => sourceName.Contains(t.Name));
 
-                /*if (!string.IsNullOrEmpty(idRegionString[0]))
-                    sources = sources.Where(t => idRegionString.Select(short.Parse).Contains(t.IdRegion));
+                if (ArrayUtils.IsNullOrEmpty(link) == false)
+                    sources = sources.Where(t => link.Contains(t.Link));
 
-                if (!string.IsNullOrEmpty(idCountryString[0]))
-                    sources = sources.Where(t => idCountryString.Select(short.Parse).Contains(t.Id));
+                if (ArrayUtils.IsNullOrEmpty(repository) == false)
+                    sources = sources.Where(t => repository.Contains(t.Repository));
 
-                if (!string.IsNullOrEmpty(pmiCodeString[0]))
-                    sources = sources.Where(t => pmiCodeString.Contains(t.Regions.PmiCode));
+                if (ArrayUtils.IsNullOrEmpty(dateSource) == false)
+                    sources = sources.Where(t => dateSource.Contains(t.DateDownload.Value));
 
-                if (!string.IsNullOrEmpty(countryNameString[0]))
-                    sources = sources.Where(t => countryNameString.Contains(t.Name));
+                if (ArrayUtils.IsNullOrEmpty(username) == false)
+                    sources = sources.Where(t => username.Contains(t.Username));
 
-                if (!string.IsNullOrEmpty(topicString[0]))
-                    sources = sources.Where(t => topicString.Select(short.Parse).Contains(t.Topic));
-
-                if (!string.IsNullOrEmpty(numberString[0]))
-                    sources = sources.Where(t => numberString.Select(short.Parse).Contains(t.Number));
-
-                if (!string.IsNullOrEmpty(variableNameString[0]))
-                    sources = sources.Where(t => variableNameString.Contains(t.Name));
-
-                if (!string.IsNullOrEmpty(measurementUnitString[0]))
-                    sources = sources.Where(t => measurementUnitString.Contains(t.MeasurementUnitName));
-
-                if (!string.IsNullOrEmpty(varLcString[0]))
-                    sources = sources.Where(t => varLcString.Select(bool.Parse).Contains(t.VarLc));*/
-
-                if (orderName == "desc")
+                if (orderSourceName == "desc")
                     sources = sources.OrderByDescending(x => x.Name);
-                else if (orderName == "asc")
+                else if (orderSourceName == "asc")
                     sources = sources.OrderBy(x => x.Name);
-
-                if (orderDate == "desc")
-                    sources = sources.OrderByDescending(x => x.Date);
-                else if (orderDate == "asc")
-                    sources = sources.OrderBy(x => x.Date);
-
-                if (orderTime == "desc")
-                    sources = sources.OrderByDescending(x => x.Time);
-                else if (orderTime == "asc")
-                    sources = sources.OrderBy(x => x.Time);
 
                 if (orderLink == "desc")
                     sources = sources.OrderByDescending(x => x.Link);

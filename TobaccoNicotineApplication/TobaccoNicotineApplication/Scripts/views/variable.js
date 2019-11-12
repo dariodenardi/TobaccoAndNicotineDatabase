@@ -16,6 +16,16 @@ $('document').ready(function () {
         placement: 'top-left'
     });
 
+    $('input#PhaseName').maxlength({
+        alwaysShow: true,
+        placement: 'top-left'
+    });
+
+    $('input#UnitName').maxlength({
+        alwaysShow: true,
+        placement: 'top-left'
+    });
+
 });
 
 // inserisco gli elementi nella table

@@ -219,7 +219,7 @@
                                         </dt>
 
                                         <dd>
-                                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @id = "VarName", @maxlength = 100, @class = "form-control", @placeholder = "Insert " + variableName + "*" } })
+                                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @id = "VarName", @maxlength = variableNameLenAttr.MaximumLength, @class = "form-control", @placeholder = "Insert " + variableName + "*" } })
                                             @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                                         </dd>
 
@@ -237,7 +237,7 @@
                                         </dt>
 
                                         <dd>
-                                            @Html.TextBoxFor(m => m.PhaseName, new { @id = "PhaseName", @class = "form-control", @placeholder = "Insert " + phaseName + "*" })
+                                            @Html.TextBoxFor(m => m.PhaseName, new { @id = "PhaseName", @class = "form-control", @maxlength = phaseNameLenAttr.MaximumLength, @placeholder = "Insert " + phaseName + "*" })
                                             @Html.ValidationMessageFor(model => model.PhaseName, "", new { @class = "text-danger" })
                                         </dd>
 
@@ -255,7 +255,7 @@
                                         </dt>
 
                                         <dd>
-                                            @Html.EditorFor(model => model.MeasurementUnitName, new { htmlAttributes = new { @id = "UnitName", @class = "form-control", @placeholder = "Insert " + unitName + "*" } })
+                                            @Html.EditorFor(model => model.MeasurementUnitName, new { htmlAttributes = new { @id = "UnitName", @maxlength = unitNameLenAttr.MaximumLength, @class = "form-control", @placeholder = "Insert " + unitName + "*" } })
                                             @Html.ValidationMessageFor(model => model.MeasurementUnitName, "", new { @class = "text-danger" })
                                         </dd>
                                     </dl>

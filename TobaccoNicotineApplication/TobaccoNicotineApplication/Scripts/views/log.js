@@ -16,7 +16,7 @@ function DataBind(LogList) {
         var date = new Date(seconds);
         var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 
-        var Data = "<tr class='row_" + LogList[i].LogID + "'>" +
+        var Data = "<tr class='row_" + LogList[i].id + "'>" +
             "<td>" + date.toLocaleDateString("en-US", options) + "</td>" +
             "<td>" + LogList[i].IPAddress + "</td>" +
             "<td>" + LogList[i].UserName + "</td>" +

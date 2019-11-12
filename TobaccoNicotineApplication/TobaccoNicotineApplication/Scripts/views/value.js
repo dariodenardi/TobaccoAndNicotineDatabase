@@ -14,6 +14,18 @@ $('document').ready(function () {
     loadCountrySelect();
     loadVariableSelect();
 
+    // Bootstrap-MaxLength (Modal)
+    $('input#PublicNotes').maxlength({
+        alwaysShow: true,
+        placement: 'top-left'
+    });
+
+    // Bootstrap-MaxLength (Modal)
+    $('input#InternalNotes').maxlength({
+        alwaysShow: true,
+        placement: 'top-left'
+    });
+
 });
 
 // inserisco gli elementi nella table
