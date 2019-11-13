@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Log";
+    ViewBag.PageTitle = "Log";
+    ViewBag.TitlePrincipal = "List of Log";
+
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem
+    {
+        Text = "20",
+        Value = "20"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "30",
+        Value = "30",
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "40",
+        Value = "40"
+    });
+}
+
+<div class="col-lg-12">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th width="25%">Time Accessed</th>
+                    <th width="25%">IP Address</th>
+                    <th width="25%">Username</th>
+                    <th width="25%">Area Accessed</th>
+                </tr>
+            </thead>
+            <tbody id="SetLogList"></tbody>
+            <tr id="LoadingStatus"></tr>
+        </table>
+    </div>
+
+    <div style="display: inline-grid">
+        @Html.Label("Show entries", new { @class = "control-label" })
+        @Html.DropDownList("showEntry", listItems, new { @class = "form-control", @onchange = "FilterLog()" })
+    </div>
+    <br />
+    <br />
+    <div class="col-md-12 text-center">
+        <!--<ul class="pagination pagination-lg pager" id="myPager"></ul>-->
+        <ul class="pagination m-b-5" id="myPager"></ul>
+    </div>
+</div>
+
+@section scripts {
+    <!-- Pagination  -->
+    @Scripts.Render("~/Scripts/pagination")
+
+    @Scripts.Render("~/Scripts/log")
+}
