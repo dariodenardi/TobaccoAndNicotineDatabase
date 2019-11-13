@@ -86,7 +86,7 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
         [Log]
-        public JsonResult Edit(string SourceName, DateTime date, TimeSpan time, string link, string repository, string dateDownload)
+        public JsonResult Edit(string SourceName, DateTime date, TimeSpan time, string link, string repository, string dateDownload, string username)
         {
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
@@ -112,15 +112,15 @@ namespace TobaccoNicotineApplication.Controllers
                             model.DateDownload = null;
                         else
                             model.DateDownload = DateTime.Parse(dateDownload);
+                    if (!String.IsNullOrEmpty(username))
+                            model.Username = username;
 
-                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(dateDownload))
+                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(dateDownload) || !String.IsNullOrEmpty(username))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo
                     if (status == true)
                     {
-                        model.Username = User.Identity.Name;
-
                         db.Entry(model).State = EntityState.Modified;
 
                         db.SaveChanges();

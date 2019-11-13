@@ -24,13 +24,90 @@ $('document').ready(function () {
         placement: 'top-left'
     });
 
+    $('input#SourceUsername').maxlength({
+        alwaysShow: true,
+        placement: 'top-left'
+    });
+
     $("#datepicker-inline").datepicker({
         format: "mm/dd/yyyy",
         altField: "#DateDownload"
     });
 });
 
+// inserisco gli elementi nella table
+function DataBind(SourceList) {
 
+    $("#LoadingStatus").html("Loading....");
+
+    var SetData = $("#SetSourceList");
+    for (var i = 0; i < SourceList.length; i++) {
+
+        // json to dateTime format
+        var seconds = parseInt(SourceList[i].DateDownload.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+        var date = new Date(seconds);
+        var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+
+        var seconds2 = parseInt(SourceList[i].Date.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+        var date2 = new Date(seconds2);
+
+        var Data = "<tr class='row_" + SourceList[i].Name + "_" + date2.toLocaleDateString("en-US", options) + "_" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "'>";
+
+        if (boolAdmin || boolWriter) {
+            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
+                + "<td>" + SourceList[i].Name + "</td>"
+                + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + SourceList[i].Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 0, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', SourceLinkTable" + i + ")\" >" + "</td>"
+                + "<td><select id=\"selectRepository" + i + "\" class=\"form-control\" onchange=\"saveRowCombo('" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', selectRepository" + i + ")\"></select></td></td>"
+                + "<td>" + "<input id=\"DateDownloadTable" + i + "\"" + "class=\"form-control\" maxlength=10 type=\"textbox\" value=\"" + date.toLocaleDateString("en-US", options) + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 1, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', DateDownloadTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"SourceUsernameTable" + i + "\"" + "class=\"form-control\" maxlength=" + usernameMax + " type=\"textbox\" value=\"" + SourceList[i].Username + "\" placeholder=\"Insert " + sourceUsername + "*\" onkeypress=\"saveRow(event, 0, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', SourceUsernameTable" + i + ")\" >" + "</td>";
+        } else {
+            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
+                "<td>" + SourceList[i].Name + "</td>" +
+                "<td>" + SourceList[i].Link + "</td>" +
+                "<td>" + SourceList[i].Repository + "</td>" +
+                "<td>" + date.toLocaleDateString("en-US", options) + "</td>" +
+                "<td>" + SourceList[i].Username + "</td>";
+        }
+
+        Data = Data + "<td>" +
+            "<div class=\"dropdown\">" +
+            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
+            "Search" +
+            "<span class=\"caret\"></span></button>" +
+            "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
+            "<li><a href=\"#\">Values</a></li>" +
+            "</ul>" +
+            "</div>";
+
+        Data = Data + "</td>" + "</tr>";
+
+        SetData.append(Data);
+
+        for (var t = 0; t < repositoryArray.length; t++) {
+            $("#selectRepository" + i).append("<option value='" + repositoryArray[t] + "'>" + repositoryArray[t] + "</option>");
+        }
+
+        // aggiungo caratteri campo
+        $('input#SourceLinkTable' + i).maxlength({
+            alwaysShow: true,
+            placement: 'top-left'
+        });
+
+        $('input#DateDownloadTable' + i).maxlength({
+            alwaysShow: true,
+            placement: 'top-left'
+        });
+
+        $('input#SourceUsernameTable' + i).maxlength({
+            alwaysShow: true,
+            placement: 'top-left'
+        });
+    }
+
+    $("#LoadingStatus").html(" ");
+    var page = $("#showEntry").val();
+    $('#SetSourceList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+}
 
 function AddNewSource() {
     $("#form")[0].reset();
@@ -111,7 +188,7 @@ function findVariableNumber() {
 }
 
 // invia richiesta Ajax per salvare un rows cambiato
-function saveAjaxRequest(sourceName, sourceDate, sourceTime, link, dateDownload, repository, id) {
+function saveAjaxRequest(sourceName, sourceDate, sourceTime, link, dateDownload, username, repository, id) {
 
     $.ajax({
         type: "POST",
@@ -126,7 +203,8 @@ function saveAjaxRequest(sourceName, sourceDate, sourceTime, link, dateDownload,
             time: sourceTime,
             link: link,
             repository: repository,
-            dateDownload: dateDownload
+            dateDownload: dateDownload,
+            username: username
         },
         success: function (data) {
             var isSuccessful = (data['success']);
@@ -158,7 +236,7 @@ function saveAjaxRequest(sourceName, sourceDate, sourceTime, link, dateDownload,
 }
 
 function saveRowCombo(sourceName, sourceDate, sourceTime, id) {
-    saveAjaxRequest(sourceName, sourceDate, sourceTime, "", "", id.value, id);
+    saveAjaxRequest(sourceName, sourceDate, sourceTime, "", "", "", id.value, id);
 }
 
 // Save Row
@@ -167,12 +245,15 @@ function saveRow(e, params, sourceName, sourceDate, sourceTime, id) {
 
         var link = undefined;
         var dateDownload = undefined;
+        var username = undefined;
         if (params == '0')
             link = id.value;
         if (params == '1')
             dateDownload = id.value;
+        if (params == '2')
+            username = id.value;
 
-        saveAjaxRequest(sourceName, sourceDate, sourceTime, link, dateDownload, "", id);
+        saveAjaxRequest(sourceName, sourceDate, sourceTime, link, dateDownload, username, "", id);
 
         return false; // returning false will prevent the event from bubbling up.
     }
