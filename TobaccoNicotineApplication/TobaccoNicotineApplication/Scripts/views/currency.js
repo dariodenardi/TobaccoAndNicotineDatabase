@@ -160,9 +160,9 @@ function saveRow(e, params, countryCode, year, id) {
         var value;
         var note = undefined;
         if (params == '1')
-            value = id.value
+            value = id.value;
         if (params == '2')
-            note = id.value
+            note = id.value;
 
         saveAjaxRequest(countryCode, year, value, note, id);
 

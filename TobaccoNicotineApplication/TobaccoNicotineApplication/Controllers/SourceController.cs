@@ -86,7 +86,7 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
         [Log]
-        public JsonResult Edit(string SourceName, DateTime date, TimeSpan time, string link, string repository, string username, DateTime? dateDownload)
+        public JsonResult Edit(string SourceName, DateTime date, TimeSpan time, string link, string repository, string dateDownload)
         {
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
@@ -98,26 +98,37 @@ namespace TobaccoNicotineApplication.Controllers
                 if (model != null)
                 {
                     if (!String.IsNullOrEmpty(link))
-                    {
-                        model.Link = link;
-                        model.Username = username;
-                    }
+                        if (link == "null")
+                            model.Link = null;
+                        else
+                            model.Link = link;
                     if (!String.IsNullOrEmpty(repository))
+                        if (repository == "null")
+                            model.Repository = null;
+                        else
+                            model.Repository = repository;
+                    if (!String.IsNullOrEmpty(dateDownload))
+                        if (dateDownload == "null")
+                            model.DateDownload = null;
+                        else
+                            model.DateDownload = DateTime.Parse(dateDownload);
+
+                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(dateDownload))
+                        status = true;
+
+                    // solo se è stato modificato qualcosa salvo
+                    if (status == true)
                     {
-                        model.Repository = repository;
-                        model.Username = username;
-                    }
-                    if (dateDownload.HasValue)
-                    {
-                        model.DateDownload = dateDownload.Value;
-                        model.Username = username;
-                    }
+                        model.Username = User.Identity.Name;
 
-                    db.Entry(model).State = EntityState.Modified;
+                        db.Entry(model).State = EntityState.Modified;
 
-                    db.SaveChanges();
-
-                    status = true;
+                        db.SaveChanges();
+                    } // if
+                }
+                else
+                {
+                    return Json(new { success = false, error = "Source not found." }, JsonRequestBehavior.AllowGet);
                 }
 
                 return Json(new { success = status }, JsonRequestBehavior.AllowGet);
@@ -154,7 +165,7 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
         [Log]
-        public JsonResult Create(Source source)
+        public JsonResult Create(Source source, short countryCode, short number, short year)
         {
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())

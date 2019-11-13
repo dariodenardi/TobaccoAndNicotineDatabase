@@ -172,13 +172,13 @@ function saveRow(e, params, number, id) {
         var phaseName = undefined;
         var unit = undefined;
         if (params == '0')
-            name = id.value
+            name = id.value;
         if (params == '1')
-            phaseCode = id.value
+            phaseCode = id.value;
         if (params == '2')
-            phaseName = id.value
+            phaseName = id.value;
         if (params == '3')
-            unit = id.value
+            unit = id.value;
 
         saveAjaxRequest(number, name, phaseCode, phaseName, "", unit, id);
 

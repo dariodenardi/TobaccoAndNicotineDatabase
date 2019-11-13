@@ -182,13 +182,13 @@ function saveRow(e, params, countryCode, id) {
         var pmiCoding = undefined;
         // non metto else if perchè potrei modificare tutti i valori della riga (paste)
         if (params == '0')
-            countryName = id.value
+            countryName = id.value;
         if (params == '1')
-            regionName = id.value
+            regionName = id.value;
         if (params == '2')
-            continentName = id.value
+            continentName = id.value;
         if (params == '3')
-            pmiCoding = id.value
+            pmiCoding = id.value;
 
         saveAjaxRequest(countryCode, countryName, regionName, continentName, pmiCoding, "", id);
 

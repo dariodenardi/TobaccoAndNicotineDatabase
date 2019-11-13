@@ -118,6 +118,18 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
+        // GET: /Value/GetListValueYear
+        public JsonResult GetListValueYear()
+        {
+            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                return Json(db.Values.Select(x => new { x.Year }).Distinct().OrderBy(x => x.Year).ToList(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //
         // POST: /Value/Edit
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
@@ -127,7 +139,7 @@ namespace TobaccoNicotineApplication.Controllers
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
-                //db.Configuration.LazyLoadingEnabled = false;
+                db.Configuration.LazyLoadingEnabled = false;
 
                 Value model = db.Values.Where(x => x.CountryCode == countryCode && x.Year == year && x.Number == number).FirstOrDefault();
 

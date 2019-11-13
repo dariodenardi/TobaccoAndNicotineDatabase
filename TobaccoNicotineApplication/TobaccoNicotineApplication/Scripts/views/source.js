@@ -9,6 +9,9 @@ $('document').ready(function () {
 
     // Riempo campi filtri
     loadFilter();
+    loadCountrySelect();
+    loadVariableSelect();
+    loadYearSelect();
 
     // Bootstrap-MaxLength (Modal)
     $('input#SourceLink').maxlength({
@@ -27,65 +30,7 @@ $('document').ready(function () {
     });
 });
 
-// inserisco gli elementi nella table
-function DataBind(SourceList) {
 
-    $("#LoadingStatus").html("Loading....");
-
-    var SetData = $("#SetSourceList");
-    for (var i = 0; i < SourceList.length; i++) {
-
-        // json to dateTime format
-        var seconds = parseInt(SourceList[i].DateDownload.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
-        var date = new Date(seconds);
-        var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-
-        var seconds2 = parseInt(SourceList[i].Date.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
-        var date2 = new Date(seconds2);
-
-        var Data = "<tr class='row_" + SourceList[i].Name + "_" + date2.toLocaleDateString("en-US", options) + "_" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "'>";
-
-        if (boolAdmin || boolWriter) {
-            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
-                + "<td>" + SourceList[i].Name + "</td>"
-                + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + SourceList[i].Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 0, '" + SourceList[i].Name + "_" + SourceList[i].Date + "_" + SourceList[i].Time + "', SourceLinkTable" + i + ")\" >" + "</td>"
-                + "<td>" + SourceList[i].Repository + "</td>"
-                + "<td>" + date.toLocaleDateString("en-US", options) + "</td>"
-                + "<td>" + SourceList[i].Username + "</td>";
-        } else {
-            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
-                "<td>" + SourceList[i].Name + "</td>" +
-                "<td>" + SourceList[i].Link + "</td>" +
-                "<td>" + SourceList[i].Repository + "</td>" +
-                "<td>" + date.toLocaleDateString("en-US", options) + "</td>" +
-                "<td>" + SourceList[i].Username + "</td>";
-        }
-
-        Data = Data + "<td>" +
-            "<div class=\"dropdown\">" +
-            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
-            "Search" +
-            "<span class=\"caret\"></span></button>" +
-            "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
-            "<li><a href=\"#\">Values</a></li>" +
-            "</ul>" +
-            "</div>";
-
-        Data = Data + "</td>" + "</tr>";
-
-        SetData.append(Data);
-
-        // aggiungo caratteri campo
-        $('input#SourceLinkTable' + i).maxlength({
-            alwaysShow: true,
-            placement: 'top-left'
-        });
-    }
-
-    $("#LoadingStatus").html(" ");
-    var page = $("#showEntry").val();
-    $('#SetSourceList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
-}
 
 function AddNewSource() {
     $("#form")[0].reset();
@@ -99,8 +44,74 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function loadCountrySelect() {
+    $.ajax({
+        type: "GET",
+        dataType: 'json',
+        cache: false,
+        traditional: true,
+        url: "/Country/GetListCountryName",
+        success: function (data) {
+            $("#countryList").append("<option value='' disabled selected>Select Country</option>");
+            for (var i = 0, n = data.length; i < n; i++) {
+                $("#countryList").append("<option value='" + data[i].CountryCode + "'>" + data[i].CountryName + "</option>");
+            }
+        }
+    })
+}
+
+function loadVariableSelect() {
+    $.ajax({
+        type: "GET",
+        dataType: 'json',
+        cache: false,
+        traditional: true,
+        url: "/Variable/GetListVariableName",
+        success: function (data) {
+            $("#variableList").append("<option value='' disabled selected>Select Variable</option>");
+            for (var i = 0, n = data.length; i < n; i++) {
+                $("#variableList").append("<option value='" + data[i].Number + "'>" + data[i].Name + "</option>");
+            }
+        }
+    })
+}
+
+function loadYearSelect() {
+    $.ajax({
+        type: "GET",
+        dataType: 'json',
+        cache: false,
+        traditional: true,
+        url: "/Value/GetListValueYear",
+        success: function (data) {
+            $("#yearList").append("<option value='' disabled selected>Select Year</option>");
+            for (var i = 0, n = data.length; i < n; i++) {
+                $("#yearList").append("<option value='" + data[i].Year + "'>" + data[i].Year + "</option>");
+            }
+        }
+    })
+}
+
+function findCountryCode() {
+    var e = document.getElementById("countryList");
+    var select = e.options[e.selectedIndex].value;
+
+    // cambio testo
+    var textbox = document.getElementById('CountryCode');
+    textbox.value = select;
+}
+
+function findVariableNumber() {
+    var e = document.getElementById("variableList");
+    var select = e.options[e.selectedIndex].value;
+
+    // cambio testo
+    var textbox = document.getElementById('Number');
+    textbox.value = select;
+}
+
 // invia richiesta Ajax per salvare un rows cambiato
-function saveAjaxRequest(number, name, phaseCode, phaseName, varLc, unit, id) {
+function saveAjaxRequest(sourceName, sourceDate, sourceTime, link, dateDownload, repository, id) {
 
     $.ajax({
         type: "POST",
@@ -110,12 +121,12 @@ function saveAjaxRequest(number, name, phaseCode, phaseName, varLc, unit, id) {
         url: "/Source/Edit",
         headers: { '__RequestVerificationToken': token },
         data: {
-            number: number,
-            name: name,
-            phaseCode: phaseCode,
-            phaseName: phaseName,
-            varLc: varLc,
-            unit: unit
+            SourceName: sourceName,
+            date: sourceDate,
+            time: sourceTime,
+            link: link,
+            repository: repository,
+            dateDownload: dateDownload
         },
         success: function (data) {
             var isSuccessful = (data['success']);
@@ -146,24 +157,22 @@ function saveAjaxRequest(number, name, phaseCode, phaseName, varLc, unit, id) {
 
 }
 
+function saveRowCombo(sourceName, sourceDate, sourceTime, id) {
+    saveAjaxRequest(sourceName, sourceDate, sourceTime, "", "", id.value, id);
+}
+
 // Save Row
-function saveRow(e, params, number, id) {
+function saveRow(e, params, sourceName, sourceDate, sourceTime, id) {
     if (e.keyCode == 13) {
 
-        var name = undefined;
-        var phaseCode;
-        var phaseName = undefined;
-        var unit = undefined;
+        var link = undefined;
+        var dateDownload = undefined;
         if (params == '0')
-            name = id.value
+            link = id.value;
         if (params == '1')
-            phaseCode = id.value
-        if (params == '2')
-            phaseName = id.value
-        if (params == '3')
-            unit = id.value
+            dateDownload = id.value;
 
-        saveAjaxRequest(number, name, phaseCode, phaseName, "", unit, id);
+        saveAjaxRequest(sourceName, sourceDate, sourceTime, link, dateDownload, "", id);
 
         return false; // returning false will prevent the event from bubbling up.
     }
@@ -251,6 +260,9 @@ var ConfirmDelete = function () {
     }
 }
 
+// metto visibilità globale perchè mi serve anche quando devo selezionare
+var repositoryArray;
+
 //ComboBox element
 function loadFilter() {
 
@@ -272,7 +284,6 @@ function loadFilter() {
 
             var nameArray;
             var linkArray;
-            var repositoryArray;
             var dateSourceArray;
             var usernameArray;
 

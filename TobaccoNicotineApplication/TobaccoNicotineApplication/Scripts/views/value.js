@@ -256,13 +256,13 @@ function saveRow(e, params, countryCode, number, year, currencyValue, varLc, id)
         var public = undefined;
         var internal = undefined;
         if (params == '0')
-            data = id.value
+            data = id.value;
         if (params == '1')
-            dataUs = id.value
+            dataUs = id.value;
         if (params == '2')
-            public = id.value
+            public = id.value;
         if (params == '3')
-            internal = id.value
+            internal = id.value;
 
         saveAjaxRequest(countryCode, number, year, currencyValue, varLc, data, dataUs, public, internal, id);
 
