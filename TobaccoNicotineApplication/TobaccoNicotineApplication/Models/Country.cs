@@ -53,7 +53,7 @@ namespace TobaccoNicotineApplication.Models
 
         [Required(ErrorMessage = "Area Code is required.")]
         public bool AreaCode { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Currency> Currencies { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

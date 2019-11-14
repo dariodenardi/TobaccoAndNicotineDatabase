@@ -44,7 +44,7 @@ namespace TobaccoNicotineApplication.Models
 
         [Required(ErrorMessage = "Var Lc is required.")]
         public bool VarLc { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Value> Values { get; set; }
     }

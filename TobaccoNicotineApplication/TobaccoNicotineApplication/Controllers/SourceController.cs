@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -47,7 +49,7 @@ namespace TobaccoNicotineApplication.Controllers
                     sources = sources.Where(t => repository.Contains(t.Repository));
 
                 if (ArrayUtils.IsNullOrEmpty(dateSource) == false)
-                    sources = sources.Where(t => dateSource.Contains(t.DateDownload.Value));
+                    sources = sources.Where(t => dateSource.Contains(t.DateDownload));
 
                 if (ArrayUtils.IsNullOrEmpty(username) == false)
                     sources = sources.Where(t => username.Contains(t.Username));
@@ -107,15 +109,12 @@ namespace TobaccoNicotineApplication.Controllers
                             model.Repository = null;
                         else
                             model.Repository = repository;
-                    if (!String.IsNullOrEmpty(dateDownload))
-                        if (dateDownload == "null")
-                            model.DateDownload = null;
-                        else
-                            model.DateDownload = DateTime.Parse(dateDownload);
+                    if (DateUtils.IsDateTime(dateDownload))
+                        model.DateDownload = DateTime.Parse(dateDownload);
                     if (!String.IsNullOrEmpty(username))
-                            model.Username = username;
+                        model.Username = username;
 
-                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(dateDownload) || !String.IsNullOrEmpty(username))
+                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || DateUtils.IsDateTime(dateDownload) || !String.IsNullOrEmpty(username))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo
@@ -168,36 +167,74 @@ namespace TobaccoNicotineApplication.Controllers
         public JsonResult Create(Source source, short countryCode, short number, short year)
         {
             bool status = false;
-            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+            if (ModelState.IsValid)
             {
-                // check duplicate
-                bool result = db.Sources.Any(x => x.Name == source.Name && x.Date == source.Date && x.Time == source.Time);
-                if (result == true)
+                using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
                 {
-                    ModelState.AddModelError("Name", StaticName.SourceName() + " is already present.");
-                    ModelState.AddModelError("Date", StaticName.UploadDate() + " is already present.");
-                    ModelState.AddModelError("Time", StaticName.UploadTime() + " is already present.");
-                }
+                    db.Configuration.ProxyCreationEnabled = false;
 
-                if (ModelState.IsValid)
-                {
-                    db.Sources.Add(source);
+                    Value model = db.Values.Where(x => x.CountryCode == countryCode && x.Year == year && x.Number == number).FirstOrDefault();
 
-                    db.SaveChanges();
+                    try
+                    {
+                        model.Sources.Add(source);
+
+                        db.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        SqlException innerException = null;
+                        Exception tmp = e;
+                        while (innerException == null && tmp != null)
+                        {
+                            if (tmp != null)
+                            {
+                                innerException = tmp.InnerException as SqlException;
+                                tmp = tmp.InnerException;
+                            }
+
+                        }
+                        /*if (innerException != null && innerException.Number == 547)
+                        {
+                            // FK
+                            string[] error = { StaticName.CountryCode() + " isn't present." };
+                            string[] keys = { "IdCountry" };
+                            return Json(new { success = false, errors = keys.Select(x => new { key = x, errors = error }) }, JsonRequestBehavior.AllowGet);
+                        }
+                        else*/
+                        if (innerException != null && innerException.Number == 2627)
+                        {
+                            // PK
+                            string[] error = { StaticName.CountryName() + "-" + StaticName.VariableName() + "-" + StaticName.Year() + " are already present." };
+                            string[] keys = { "Year" };
+                            return Json(new { success = false, errors = keys.Select(x => new { key = x, errors = error }) }, JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    catch (NullReferenceException)
+                    {
+                        string[] error = { "Value not found." };
+                        string[] keys = { "Year" };
+                        return Json(new { success = false, errors = keys.Select(x => new { key = x, errors = error }) }, JsonRequestBehavior.AllowGet);
+                    }
 
                     status = true;
-                }
-                else
-                {
-                    IEnumerable<string> errorModel =
-                        from x in ModelState.Keys
-                        where ModelState[x].Errors.Count > 0
-                        select x;
 
-                    return Json(new { success = status, errors = errorModel.Select(x => new { key = x, errors = ModelState[x].Errors.Select(y => y.ErrorMessage).ToArray() }) }, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = status }, JsonRequestBehavior.AllowGet);
                 }
+            }
+            else
+            {
+                // errori dovuti check delle annotazioni
+                IEnumerable<string> errorModel =
+                    from x in ModelState.Keys
+                    where ModelState[x].Errors.Count > 0
+                    select x;
 
-                return Json(new { success = status });
+                return Json(new { success = status, errors = errorModel.Select(x => new { key = x, errors = ModelState[x].Errors.Select(y => y.ErrorMessage).ToArray() }) }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -223,7 +260,7 @@ namespace TobaccoNicotineApplication.Controllers
                     sources = sources.Where(t => repository.Contains(t.Repository));
 
                 if (ArrayUtils.IsNullOrEmpty(dateSource) == false)
-                    sources = sources.Where(t => dateSource.Contains(t.DateDownload.Value));
+                    sources = sources.Where(t => dateSource.Contains(t.DateDownload));
 
                 if (ArrayUtils.IsNullOrEmpty(username) == false)
                     sources = sources.Where(t => username.Contains(t.Username));

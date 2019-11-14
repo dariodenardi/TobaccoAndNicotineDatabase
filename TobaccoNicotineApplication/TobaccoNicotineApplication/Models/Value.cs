@@ -47,7 +47,7 @@ namespace TobaccoNicotineApplication.Models
 
         [StringLength(1000, MinimumLength = 0)]
         public string PmiNotes { get; set; }
-    
+
         public virtual Country Countries { get; set; }
         public virtual Variable Variables { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

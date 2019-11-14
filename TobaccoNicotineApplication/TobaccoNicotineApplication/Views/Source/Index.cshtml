@@ -235,8 +235,8 @@
                                 <fieldset id="SubmitForm">
                                     <dl class="dl-horizontal">
 
-                                        @Html.HiddenFor(model => model.Date, new { id = DateTime.Now.Date })
-                                        @Html.HiddenFor(model => model.Time, new { id = DateTime.Now.Date.TimeOfDay })
+                                        @Html.HiddenFor(model => model.Date, new { @Value = DateTime.Now.Date })
+                                        @Html.HiddenFor(model => model.Time, new { @Value = DateTime.Now.Date.TimeOfDay })
 
                                         <dt>
                                             @Html.Label(countryName, new { @class = "control-label col-md-2" })
@@ -275,7 +275,8 @@
                                         </dt>
 
                                         <dd>
-                                            <select class="form-control" id="yearList" onchange="findValueYear()" required></select>
+                                            <select name="year" class="form-control" id="yearList" required></select>
+                                            @Html.ValidationMessage("Year", "", new { @class = "text-danger" })
                                         </dd>
 
                                         <dt>
@@ -400,6 +401,7 @@
 
         var sourceLink = '@sourceLink';
         var sourceUsername = '@sourceUsername';
+        var sourceDateDownload = '@sourceDateDownload';
     </script>
 
     @Scripts.Render("~/Scripts/source")

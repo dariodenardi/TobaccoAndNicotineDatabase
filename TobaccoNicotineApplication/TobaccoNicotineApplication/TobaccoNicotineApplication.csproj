@@ -234,6 +234,7 @@
     <Compile Include="Sql\ExportRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\ApplicationVersion.cs" />
+    <Compile Include="Utilities\DateUtils.cs" />
     <Compile Include="Utilities\ArrayUtils.cs" />
     <Compile Include="Utilities\StaticName.cs" />
     <Compile Include="Utilities\ValidateAntiForgeryTokenOnAllPosts.cs" />
