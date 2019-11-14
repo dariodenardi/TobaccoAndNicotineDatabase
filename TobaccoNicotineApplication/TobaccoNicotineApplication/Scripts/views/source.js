@@ -1,5 +1,4 @@
-// ValidateAntiForgeryTokenOnAllPosts
-var token = $('[name=__RequestVerificationToken]').val();
+
 
 // carico script quando finisce di caricare la pagina
 $('document').ready(function () {
@@ -12,6 +11,7 @@ $('document').ready(function () {
     loadCountrySelect();
     loadVariableSelect();
     loadYearSelect();
+    getRepositoryNameArray();
 
     // Bootstrap-MaxLength (Modal)
     $('input#SourceLink').maxlength({
@@ -35,6 +35,9 @@ $('document').ready(function () {
     }).datepicker("setDate", new Date());
 });
 
+// serve quando nella SourceList posso cambiare file tra quelli già nel repository
+var RepositoryNameArray = new Array();
+
 // inserisco gli elementi nella table
 function DataBind(SourceList) {
 
@@ -57,7 +60,7 @@ function DataBind(SourceList) {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
                 + "<td>" + SourceList[i].Name + "</td>"
                 + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + SourceList[i].Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 0, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', SourceLinkTable" + i + ")\" >" + "</td>"
-                + "<td><select id=\"selectRepository" + i + "\" class=\"form-control\" onchange=\"saveRowCombo('" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', selectRepository" + i + ")\"></select></td></td>"
+                + "<td><select id=\"selectRepository" + i + "\" class=\"form-control\" onchange=\"saveRowCombo('" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', selectRepository" + i + ")\"></select></td>"
                 + "<td>" + "<input id=\"DateDownloadTable" + i + "\"" + "class=\"form-control\" maxlength=10 type=\"textbox\" value=\"" + date.toLocaleDateString("en-US", options) + "\" placeholder=\"Insert " + sourceDateDownload + "*\" onkeypress=\"saveRow(event, 1, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', DateDownloadTable" + i + ")\" >" + "</td>"
                 + "<td>" + "<input id=\"SourceUsernameTable" + i + "\"" + "class=\"form-control\" maxlength=" + usernameMax + " type=\"textbox\" value=\"" + SourceList[i].Username + "\" placeholder=\"Insert " + sourceUsername + "*\" onkeypress=\"saveRow(event, 2, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', SourceUsernameTable" + i + ")\" >" + "</td>";
         } else {
@@ -83,9 +86,10 @@ function DataBind(SourceList) {
 
         SetData.append(Data);
 
-        for (var t = 0; t < repositoryArray.length; t++) {
-            $("#selectRepository" + i).append("<option value='" + repositoryArray[t] + "'>" + repositoryArray[t] + "</option>");
+        for (var t = 0; t < RepositoryNameArray.length; t++) {
+            $("#selectRepository" + i).append("<option value='" + RepositoryNameArray[t] + "'>" + RepositoryNameArray[t] + "</option>");
         }
+        $("#selectRepository" + i + " option[value='" + SourceList[i].Repository + "']").attr('selected', 'selected');
 
         // aggiungo caratteri campo
         $('input#SourceLinkTable' + i).maxlength({
@@ -107,6 +111,21 @@ function DataBind(SourceList) {
     $("#LoadingStatus").html(" ");
     var page = $("#showEntry").val();
     $('#SetSourceList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+}
+
+function getRepositoryNameArray() {
+    $.ajax({
+        type: "GET",
+        dataType: 'json',
+        cache: false,
+        traditional: true,
+        url: "/Source/GetListRepositoryName",
+        success: function (data) {
+            for (var i = 0, n = data.length; i < n; i++) {
+                RepositoryNameArray.push(data[i].Repository);
+            }
+        }
+    })
 }
 
 function AddNewSource() {
@@ -341,9 +360,6 @@ var ConfirmDelete = function () {
     }
 }
 
-// metto visibilità globale perchè mi serve anche quando devo selezionare
-var repositoryArray;
-
 //ComboBox element
 function loadFilter() {
 
@@ -365,6 +381,7 @@ function loadFilter() {
 
             var nameArray;
             var linkArray;
+            var repositoryArray;
             var dateSourceArray;
             var usernameArray;
 
@@ -901,93 +918,3 @@ function Paste() {
     }
 }
 
-Dropzone.options.myDropzone = {
-    paramName: "file",
-    autoProcessQueue: true,
-    parallelUploads: 1,
-    maxFiles: 150,
-    acceptedFiles: "image/*,text/csv,application/pdf,text/plain,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    maxFilesize: 20, //MB
-    addRemoveLinks: true,
-    headers: { "__RequestVerificationToken": token },
-    success: function (file, response) {
-
-        if (response.status == true) {
-            file.previewElement.classList.add("dz-success");
-            // Remove the file preview.
-            this.removeFile(file);
-        }
-        else {
-            // se file esiste
-            if (response.filePath != null) {
-                //Warning Message
-                swal({
-                    title: "There is a file, do you want to delete it?",
-                    text: "File name: " + file.name,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: 'btn-warning',
-                    confirmButtonText: "Yes, delete it!",
-                    closeOnConfirm: false
-                }, function () {
-
-                    // invio richiesta per cancellare il file
-                    $.post('/Source/DeleteFile', { filePath: response.filePath + "/" + file.name }).then(res => {
-                        // risultato della risposta
-                        if (res == true) {
-                            // invio di nuovo la richiesta
-                            this.uploadFile(file);
-                        } else {
-                            swal("An error has occurred!", "Please wait a few minutes and try again.", "error");
-                        }
-                    });
-
-                });
-                return;
-            }
-
-            file.previewElement.classList.add("dz-error");
-            $(file.previewElement).addClass("dz-error").find('.dz-error-message').text(response.response);
-        }
-    },
-    error: function (file, errorMessage, xhr) {
-
-        // Trigger an error on submit
-        view.onSubmitComplete({
-            file: file,
-            xhr: xhr
-        });
-
-        // Allow file to be reuploaded !
-        file.previewElement.classList.add("dz-error");
-        file.status = Dropzone.QUEUED;
-        // this.cancelUpload(file);
-        // this.disable();
-        // this.uploadFile(file);
-
-    },
-
-    init: function () {
-        this.on("addedfile", function (file) {
-            // prevent duplicate
-            if (this.files.length) {
-                var _i, _len;
-                for (_i = 0, _len = this.files.length; _i < _len - 1; _i++) // -1 to exclude current file
-                {
-                    if (this.files[_i].name === file.name && this.files[_i].size === file.size && this.files[_i].lastModifiedDate.toString() === file.lastModifiedDate.toString()) {
-                        this.removeFile(file);
-                    }
-                }
-            }
-
-        });
-
-        this.on("removedfile", function (file) {
-            // Only files that have been programmatically added should
-            // have a url property.
-
-        });
-
-    },
-    url: "/Source/LoadSource"
-};

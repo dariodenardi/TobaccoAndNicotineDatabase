@@ -84,6 +84,18 @@ namespace TobaccoNicotineApplication.Controllers
         }
 
         //
+        // GET: /Source/GetListRepositoryName
+        public JsonResult GetListRepositoryName()
+        {
+            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                return Json(db.Sources.Select(x => new { x.Repository }).OrderBy(x => x.Repository).Distinct().ToList(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //
         // POST: /Source/Edit
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
@@ -274,7 +286,7 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         public JsonResult LoadSource(HttpPostedFileBase file)
         {
-            string path = Server.MapPath("~/Uploads");
+            string path = Server.MapPath("~/Uploads/Sources");
             try
             {
                 string message = "File uploaded.";
@@ -289,7 +301,7 @@ namespace TobaccoNicotineApplication.Controllers
                     {
                         // converto la prima parte che dovrebbe essere un numero
                         int number = int.Parse(slitFileNames[0]);
-                        Value value = db.Values.Where(x => x.NomismaCode == short.Parse(slitFileNames[0])).FirstOrDefault();
+                        Value value = db.Values.Where(x => x.NomismaCode == number).FirstOrDefault();
 
                         // controllo che il valore esista
                         if (value != null)
@@ -299,17 +311,22 @@ namespace TobaccoNicotineApplication.Controllers
                             Source source = value.Sources.FirstOrDefault();
                             if (source != null)
                             {
-                                string filePath = source.Name + "-" + source.Date.Day + "-" + source.Date.Month + "-" + source.Date.Year + "-" + source.Time.Hours + "-" + source.Time.Minutes + "-" + source.Time.Seconds;
+                                string directoryName = source.Name + "-" + source.Date.Day + "-" + source.Date.Month + "-" + source.Date.Year + "-" + source.Time.Hours + "-" + source.Time.Minutes + "-" + source.Time.Seconds;
 
                                 // vedo se esiste già il file
-                                if (System.IO.File.Exists(path + "/Sources" + "/" + filePath + "/" + source.Repository))
-                                    return Json(new { success = false, response = "File already exists.", filePath }, JsonRequestBehavior.AllowGet);
+                                if (System.IO.File.Exists(path + "/" + directoryName + "/" + source.Repository))
+                                    return Json(new { success = false, response = "File already exists.", directoryName }, JsonRequestBehavior.AllowGet);
 
                                 // aggiorno il nomeFile
                                 source.Repository = file.FileName;
 
+                                // creo directory se non è presente
+                                if (!Directory.Exists(path + "/" + directoryName))
+                                    Directory.CreateDirectory(path + "/" + directoryName);
+
                                 // carico file
-                                file.SaveAs(filePath);
+                                string saveAsPath = Path.Combine(path, directoryName, file.FileName);
+                                file.SaveAs(saveAsPath);
 
                                 db.Entry(source).State = EntityState.Modified;
                                 db.SaveChanges();
@@ -344,12 +361,12 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Source/DeleteFile
         [HttpPost]
-        public JsonResult DeleteFile(string filePath)
+        public JsonResult DeleteFile(string file)
         {
             string path = Server.MapPath("~/Uploads");
             try
             {
-                System.IO.File.Delete(path + "/Sources" + "/" + filePath);
+                System.IO.File.Delete(path + "/Sources" + "/" + file);
 
                 return Json(true, JsonRequestBehavior.AllowGet);
             }
