@@ -305,12 +305,6 @@ namespace TobaccoNicotineApplication.Controllers
                                 if (System.IO.File.Exists(path + "/Sources" + "/" + filePath + "/" + source.Repository))
                                     return Json(new { success = false, response = "File already exists.", filePath }, JsonRequestBehavior.AllowGet);
 
-                                // creo l'eventuale cartella della fonte
-                                if (!Directory.Exists(path + "/Sources" + "/" + filePath))
-                                {
-                                    Directory.CreateDirectory(path + "/Sources" + "/" + filePath);
-                                }
-
                                 // aggiorno il nomeFile
                                 source.Repository = file.FileName;
 
@@ -323,7 +317,7 @@ namespace TobaccoNicotineApplication.Controllers
                             else
                             {
                                 status = false;
-                                message += file.FileName + ": source not found.";
+                                message = file.FileName + ": source not found.";
                             }
                         }
                         else

@@ -1,8 +1,10 @@
 ﻿using OfficeOpenXml;
+using OfficeOpenXml.Style.XmlAccess;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -392,6 +394,10 @@ namespace TobaccoNicotineApplication.Controllers
                     // change zoom view
                     ws.View.ZoomScale = 80;
 
+                    ExcelNamedStyleXml namedStyle = ws.Workbook.Styles.CreateNamedStyle("HyperLink");
+                    namedStyle.Style.Font.UnderLine = true;
+                    namedStyle.Style.Font.Color.SetColor(Color.Blue);
+
                     int rowStart = 2;
                     foreach (ExportView export in ExportRepository.getExport(countrySelected, variableSelected, yearSelected, columnSelected))
                     {
@@ -585,10 +591,12 @@ namespace TobaccoNicotineApplication.Controllers
                             }
                         }
 
-                        if (export.SourceName != null)
+                        if (!String.IsNullOrEmpty(export.Link))
                         {
                             if (columnSelected.Contains("Link"))
                             {
+                                ws.Cells[rowStart, column].Hyperlink = new ExcelHyperLink(export.Link);
+                                ws.Cells[rowStart, column].StyleName = namedStyle.Name;
                                 ws.Cells[rowStart, column].Value = export.Link;
                                 column++;
                             }
@@ -688,10 +696,12 @@ namespace TobaccoNicotineApplication.Controllers
                             }
                         }
 
-                        if (export.SourceName != null)
+                        if (!String.IsNullOrEmpty(export.Repository))
                         {
                             if (columnSelected.Contains("reference data repository"))
                             {
+                                ws.Cells[rowStart, column].Hyperlink = new ExcelHyperLink(export.Repository);
+                                ws.Cells[rowStart, column].StyleName = namedStyle.Name;
                                 ws.Cells[rowStart, column].Value = export.Repository;
                                 column++;
                             }
