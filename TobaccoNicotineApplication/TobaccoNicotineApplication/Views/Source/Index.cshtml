@@ -44,6 +44,7 @@
     StringLengthAttribute linkLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("Link").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
     StringLengthAttribute sourceNameLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("Name").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
     StringLengthAttribute sourceUsernameLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("Username").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
+    StringLengthAttribute sourceRepositoryLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("Repository").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
 }
 
 @section styles {
@@ -397,7 +398,9 @@
         var boolReader = '@User.IsInRole("Reader")' == "True";
 
         var linkMax = '@linkLenAttr.MaximumLength';
+        var usernameMin = '@sourceUsernameLenAttr.MinimumLength';
         var usernameMax = '@sourceUsernameLenAttr.MaximumLength';
+        var repositoryMax = '@sourceRepositoryLenAttr.MaximumLength';
 
         var sourceLink = '@sourceLink';
         var sourceUsername = '@sourceUsername';

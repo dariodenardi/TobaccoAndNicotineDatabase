@@ -770,6 +770,137 @@ function copyToClipboard(text) {
         });
 }
 
+// incollo i valori selezionati
+function pasteFromClipboard(numeroCheck) {
+    navigator.clipboard.readText()
+        .then(text => {
+            // `text` contains the text read from the clipboard
+            // suddivido i valori a capo
+            var res = text.trim('\n').split("\n");
+
+            // controllo se il numero di slit è minore delle righe selezionate
+            if ((res.length) < numeroCheck) {
+                swal("Attention!", "Number of rows is different from the copied values!", "error");
+                return;
+            }
+
+            // serve per i valori dell'array dello slit
+            var m = 0;
+            var table = document.getElementById("SetSourceList");
+            for (var i = 0; i < table.children.length; i++) {
+                var riga = table.children[i];
+                // vedo la cella checkbox
+                var cellaCheckbox = riga.cells[0];
+                var c = cellaCheckbox.children[0].children[0];
+                if (c.checked) {
+                    // suddivido ancora per quanto riguarda la linea
+                    var res2 = res[m].split('\t');
+
+                    // metto in preventivo che l'ultimo campo possa essere ""
+                    if (res2.length < 5) {
+                        swal("Attention!", "Number of columns is different from the copied values!", "error");
+                        return;
+                    }
+
+                    var className = riga.className.replace("row_", "");
+                    var sourceName = className.split("_")[0];
+                    var sourceDate = className.split("_")[1];
+                    var sourceTime = className.split("_")[2];
+
+                    var link = res2[1];
+                    var repository = res2[2];
+                    var dateDownload = res2[3];
+                    var username = res2[4];
+
+                    // i valori ammessi sono anche nulli
+                    if (link == null || link == "")
+                        link = "null";
+
+                    if (repository == null || repository == "")
+                        repository = "null";
+
+                    // controllo
+                    if (Validation(link, repository, dateDownload, username) == false)
+                        return;
+
+                    // cambio valori riga
+                    riga.children[2].children[0].value = link;
+                    riga.children[3].children[0].value = repository;
+                    riga.children[4].children[0].value = dateDownload;
+                    riga.children[5].children[0].value = username;
+
+                    // invio richiesta ajax per salvare
+                    saveAjaxRequest(sourceName, sourceDate, sourceTime, link, dateDownload, username, repository, riga);
+
+                    m++;
+                }
+            }
+
+        })
+        .catch(err => {
+            // maybe user didn't grant access to read from clipboard
+            swal("Something went wrong!", err, "error");
+            //console.log('Something went wrong', err);
+        });
+}
+
+function Validation(link, repository, dateDownload, username) {
+
+    // valori nulli?
+    if (dateDownload == "null" || dateDownload == "") {
+        swal("Attention!", "Date Download: cannot be null!", "error");
+        return false;
+    }
+
+    if (username == "null" || username == "") {
+        swal("Attention!", "Username: cannot be null!", "error");
+        return false;
+    }
+
+    // lunghezza della stringa
+    if (username.length < usernameMin || username.length > usernameMax) {
+        swal("Attention!", username + ": check length!", "error");
+        return false;
+    }
+
+    if (dateDownload.length < 10) {
+        swal("Attention!", dateDownload + ": check length!", "error");
+        return false;
+    }
+
+    if (repository.length > repositoryMax) {
+        swal("Attention!", repository + ": check length!", "error");
+        return false;
+    }
+
+    if (link.length > linkMax) {
+        swal("Attention!", link + ": check length!", "error");
+        return false;
+    }
+
+}
+
+function Paste() {
+    var numeroCheck = 0;
+
+    var table = document.getElementById("SetSourceList");
+    for (var i = 0, n = table.children.length; i < n; i++) {
+        var riga = table.children[i];
+        // vedo la cella checkbox
+        var cellaCheckbox = riga.cells[0];
+        var c = cellaCheckbox.children[0].children[0];
+        if (c.checked) {
+            numeroCheck++;
+        }
+    }
+
+    if (numeroCheck == 0)
+        swal("Attention!", "Select at least one a row!", "error");
+    else {
+        pasteFromClipboard(numeroCheck);
+    }
+}
+
 Dropzone.options.myDropzone = {
     paramName: "file",
     autoProcessQueue: true,
