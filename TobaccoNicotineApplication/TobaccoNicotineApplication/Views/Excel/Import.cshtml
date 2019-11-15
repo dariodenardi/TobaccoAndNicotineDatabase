@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewBag.Title = "Import";
+    ViewBag.PageTitle = "Import";
+    ViewBag.TitlePrincipal = "Select File";
+}
+
+@section styles {
+    <!-- Sweet Alert -->
+    @Styles.Render("~/Content/sweetalert")
+}
+
+<form action="@Url.Action("Import", "Excel")" enctype="multipart/form-data" method="post">
+    <input type="file" name="postedFile" class="filestyle" data-buttonname="btn-default">
+    <br />
+    <button type="submit" class="btn btn-success waves-effect waves-light">Import</button>
+</form>
+
+@section scripts {
+    <!-- Bootstrap File Style -->
+    @Scripts.Render("~/Scripts/filestyle")
+
+    <!-- Sweet-Alert  -->
+    @Scripts.Render("~/Scripts/sweetalert")
+
+    @Scripts.Render("~/Scripts/import")
+
+    <script>
+        // ValidateAntiForgeryTokenOnAllPosts
+        var token = $('[name=__RequestVerificationToken]').val();
+
+        $('form').submit(function (event) {
+
+            var nomeFile = document.getElementsByName("postedFile")[0].value;
+
+            // file non selezionato
+            if (nomeFile == "" || nomeFile == null) {
+                swal("Select a file!", "No file has been selected", "error");
+                return false;
+            }
+
+            // cotrollo estensione del file
+            if (!(nomeFile.endsWith(".xls") || nomeFile.endsWith(".xlsx"))) {
+                swal("Check file!", "Extension is incorrect (only .xls or .xlsx)", "error");
+                return false;
+            }
+
+            var formdata = new FormData($(this).get(0));
+
+            $.ajax({
+                headers: { "__RequestVerificationToken": token },
+                url: this.action,
+                type: this.method,
+                data: formdata,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    // Doing some loading gif stuff
+                },
+                success: function (result) {
+                    // element is div holding the ParticalView
+                    $(element).html(result);
+                },
+                complete: function () {
+                    $.validator.unobtrusive.parse('form');
+                    // And so on.
+                }
+            });
+        });
+    </script>
+}

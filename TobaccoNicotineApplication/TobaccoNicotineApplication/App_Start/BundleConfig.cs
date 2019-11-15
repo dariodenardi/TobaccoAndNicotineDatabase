@@ -94,8 +94,11 @@ namespace TobaccoNicotineApplication
             bundles.Add(new ScriptBundle("~/Scripts/contact").Include(
                         "~/Scripts/views/contact.js"));
 
-            bundles.Add(new ScriptBundle("~/Scripts/excel").Include(
-                        "~/Scripts/views/excel.js"));
+            bundles.Add(new ScriptBundle("~/Scripts/export").Include(
+                        "~/Scripts/views/export.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/import").Include(
+                        "~/Scripts/views/import.js"));
 
             bundles.Add(new ScriptBundle("~/Scripts/variable").Include(
                         "~/Scripts/views/variable.js"));

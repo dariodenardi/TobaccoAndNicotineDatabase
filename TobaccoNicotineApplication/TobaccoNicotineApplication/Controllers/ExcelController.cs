@@ -3,6 +3,8 @@ using OfficeOpenXml.Style.XmlAccess;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
+using System.Data.Entity.Core;
 using System.Data.OleDb;
 using System.Drawing;
 using System.IO;
@@ -546,12 +548,6 @@ namespace TobaccoNicotineApplication.Controllers
                                 }
 
                             }
-
-                            if (columnSelected.Contains("Year"))
-                            {
-                                ws.Cells[rowStart, column].Value = export.Year;
-                                column++;
-                            }
                         }
                         else
                         {
@@ -566,12 +562,12 @@ namespace TobaccoNicotineApplication.Controllers
                                 ws.Cells[rowStart, column].Value = "";
                                 column++;
                             }
+                        }
 
-                            if (columnSelected.Contains("Year"))
-                            {
-                                ws.Cells[rowStart, column].Value = "";
-                                column++;
-                            }
+                        if (columnSelected.Contains("Year"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.Year;
+                            column++;
                         }
 
                         if (export.SourceName != null)
@@ -752,6 +748,230 @@ namespace TobaccoNicotineApplication.Controllers
                 //           redirect to another controller action - whatever fits with your application
                 return new EmptyResult();
             }
+        }
+
+        //
+        // GET: /Excel/Import
+        [Authorize(Roles = "Admin")]
+        public ActionResult Import()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Excel/Import
+        [HttpPost]
+        [Authorize(Roles = "Admin, Writer")]
+        [Log]
+        public ActionResult Import(HttpPostedFileBase postedFile)
+        {
+            string filePath = String.Empty;
+            if (postedFile != null)
+            {
+                string path = Server.MapPath("~/Uploads/Temp/");
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                filePath = path + Path.GetFileName(postedFile.FileName);
+                string extension = Path.GetExtension(postedFile.FileName);
+                postedFile.SaveAs(filePath);
+
+                string conString = string.Empty;
+                switch (extension)
+                {
+                    case ".xls": //Excel 97-03.
+                        conString = string.Format("Provider=Microsoft.Jet.OLEDB.4.0; data source={0}; Extended Properties=Excel 8.0;", filePath);
+                        break;
+                    case ".xlsx": //Excel 07 and above.
+                        conString = string.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=\"Excel 12.0 Xml;HDR=YES;IMEX=1\";", filePath);
+                        break;
+                }
+
+                DataTable dt2 = new DataTable();
+                conString = string.Format(conString, filePath);
+
+                using (OleDbConnection connExcel = new OleDbConnection(conString))
+                {
+                    using (OleDbCommand cmdExcel = new OleDbCommand())
+                    {
+                        using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                        {
+                            cmdExcel.Connection = connExcel;
+
+                            //Get the name of First Sheet.
+                            connExcel.Open();
+                            DataTable dtExcelSchema;
+                            dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                            string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                            connExcel.Close();
+
+                            //Read Data from First Sheet.
+                            connExcel.Open();
+                            cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
+                            odaExcel.SelectCommand = cmdExcel;
+                            odaExcel.Fill(dt2);
+                            connExcel.Close();
+                        }
+                    }
+                }
+
+                // file da importare
+                int nomismaCode;
+                short country_code;
+                short variable_number;
+                decimal? data;
+                short year;
+                string source_name;
+                string link;
+                string public_notes;
+                string internal_notes;
+                string username;
+                bool varLc;
+                decimal? ExchangeRateUs;
+                DateTime? download_source;
+                string reference_data_repository;
+
+                try
+                {
+                    // il primo elemento è sempre il valore vecchio, il secondo è sempre il valore nuovo
+                    // se invece la sorgente è già presente viene inserito solo il valore 1 volta
+                    Dictionary<List<Value>, string> warning = new Dictionary<List<Value>, string>();
+
+                    Value value = null;
+                    using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+                    {
+                        db.Configuration.LazyLoadingEnabled = false;
+
+                        foreach (DataRow row in dt2.Rows)
+                        {
+                            if (String.IsNullOrEmpty(row[0].ToString()))
+                                break;
+
+                            // prendo valori dall'excel
+                            nomismaCode = int.Parse(row[0].ToString());
+                            country_code = short.Parse(row[5].ToString());
+                            variable_number = short.Parse(row[11].ToString());
+                            varLc = (row[22].ToString() == "1") ? true : false;
+                            if (varLc == true) // valore economico
+                                if (!String.IsNullOrEmpty(row[16].ToString())) // se il valore è diverso da null
+                                    data = decimal.Parse(row[16].ToString());
+                                else
+                                    data = null;
+                            else
+                            {
+                                if (!String.IsNullOrEmpty(row[15].ToString())) // se il valore è diverso da null
+                                    data = decimal.Parse(row[15].ToString());
+                                else
+                                    data = null;
+                            }
+                            year = short.Parse(row[17].ToString());
+                            source_name = row[18].ToString();
+                            link = row[19].ToString();
+                            if (!String.IsNullOrEmpty(row[20].ToString()))
+                                ExchangeRateUs = decimal.Parse(row[20].ToString());
+                            else
+                                ExchangeRateUs = null;
+                            public_notes = row[21].ToString();
+                            internal_notes = row[24].ToString();
+                            username = row[25].ToString();
+                            if (!String.IsNullOrEmpty(row[26].ToString()))
+                                download_source = DateTime.ParseExact(row[26].ToString(), "MM/dd/yyyy", null);
+                            else
+                                download_source = null;
+                            reference_data_repository = row[27].ToString();
+
+                            value = db.Values.Where(x => x.NomismaCode == nomismaCode).FirstOrDefault();
+
+                            // se il valore è stato trovato
+                            if (value != null)
+                            {
+                                // caricamento lazy load
+                                db.Entry(value).Collection(x => x.Sources).Load();
+
+                                // valore non è stato già inserito
+                                if (value.Data == null)
+                                {
+                                    if (varLc == true)
+                                        if (ExchangeRateUs.HasValue)
+                                            value.Data = value.Data / ExchangeRateUs.Value;
+                                        else
+                                            value.Data = value.Data;
+                                    value.InternalNotes = value.InternalNotes;
+                                    value.PublicNotes = value.PublicNotes;
+
+                                    // salvo
+                                    db.Entry(value).State = EntityState.Modified;
+                                }
+                                // valore già inserito
+                                else
+                                {
+                                    Value newValue = new Value();
+                                    newValue.CountryCode = country_code;
+                                    newValue.Number = variable_number;
+                                    newValue.Year = year;
+                                    newValue.NomismaCode = nomismaCode;
+                                    newValue.Data = data;
+                                    newValue.PublicNotes = public_notes;
+                                    newValue.InternalNotes = internal_notes;
+
+                                    List<Value> temp = new List<Value>();
+                                    temp.Add(value);
+                                    temp.Add(newValue);
+
+                                    ViewBag.Result = value;
+
+                                    warning.Add(temp, "Value is already present.");
+                                }
+                            }
+                            // valore non presente all'interno del database
+                            else
+                            {
+                                Value newValue = new Value();
+                                newValue.CountryCode = country_code;
+                                newValue.Number = variable_number;
+                                newValue.Year = year;
+                                newValue.NomismaCode = nomismaCode;
+                                newValue.Data = data;
+                                newValue.PublicNotes = public_notes;
+                                newValue.InternalNotes = internal_notes;
+
+                                // salvo
+                                db.Values.Add(newValue);
+                            }
+                        } //foreach row
+
+                        // salvo le modifiche
+                        db.SaveChanges();
+
+                    } // using database
+
+                    return View(warning);
+                }
+                catch (ArgumentException ex)
+                {
+                    // colonna non valida
+                    // numero non valido/numero nullo
+                    ModelState.AddModelError("", ex.Message);
+                }
+                catch (FormatException ex2)
+                {
+                    // formato non valido della data
+                    ModelState.AddModelError("", ex2.Message);
+                }
+                catch (OverflowException ex3)
+                {
+                    // metto un numero più grande di quello dovuto
+                    ModelState.AddModelError("", ex3.Message);
+                }
+                catch (EntityException ex4)
+                {
+                    // metto un numero più grande di quello dovuto
+                    ModelState.AddModelError("", ex4.Message);
+                }
+
+            } // posted file
+
+            return View();
         }
 
     }

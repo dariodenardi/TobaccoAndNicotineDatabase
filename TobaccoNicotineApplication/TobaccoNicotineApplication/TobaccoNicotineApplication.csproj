@@ -297,9 +297,10 @@
     <Content Include="Scripts\plugins\bootstrap-datepicker\css\bootstrap-datepicker.min.css" />
     <Content Include="Scripts\plugins\bootstrap-datepicker\js\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\views\contact.js" />
-    <Content Include="Scripts\views\excel.js" />
+    <Content Include="Scripts\views\export.js" />
     <Content Include="Scripts\views\currency.js" />
     <Content Include="Scripts\views\country.js" />
+    <Content Include="Scripts\views\import.js" />
     <Content Include="Scripts\views\source.js" />
     <Content Include="Scripts\views\value.js" />
     <Content Include="Scripts\views\variable.js" />
@@ -418,6 +419,7 @@
     <Content Include="Views\Country\Index.cshtml" />
     <Content Include="Views\Currency\Index.cshtml" />
     <Content Include="Views\Value\Index.cshtml" />
+    <Content Include="Views\Excel\Import.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Uploads\Sources\" />
