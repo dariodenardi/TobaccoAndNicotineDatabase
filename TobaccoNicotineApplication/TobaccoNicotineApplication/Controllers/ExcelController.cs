@@ -1,4 +1,5 @@
-﻿using OfficeOpenXml;
+﻿using Newtonsoft.Json;
+using OfficeOpenXml;
 using OfficeOpenXml.Style.XmlAccess;
 using System;
 using System.Collections.Generic;
@@ -763,8 +764,9 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
         [Log]
-        public ActionResult Import(HttpPostedFileBase postedFile)
+        public JsonResult Import(HttpPostedFileBase postedFile)
         {
+            bool status = false;
             string filePath = String.Empty;
             if (postedFile != null)
             {
@@ -834,10 +836,9 @@ namespace TobaccoNicotineApplication.Controllers
                 try
                 {
                     // il primo elemento è sempre il valore vecchio, il secondo è sempre il valore nuovo
-                    // se invece la sorgente è già presente viene inserito solo il valore 1 volta
-                    Dictionary<List<Value>, string> warning = new Dictionary<List<Value>, string>();
+                    List<Value> warningList = new List<Value>();
 
-                    Value value = null;
+                    Value oldValue = null;
                     using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
                     {
                         db.Configuration.LazyLoadingEnabled = false;
@@ -880,27 +881,27 @@ namespace TobaccoNicotineApplication.Controllers
                                 download_source = null;
                             reference_data_repository = row[27].ToString();
 
-                            value = db.Values.Where(x => x.NomismaCode == nomismaCode).FirstOrDefault();
+                            oldValue = db.Values.Where(x => x.NomismaCode == nomismaCode).FirstOrDefault();
 
                             // se il valore è stato trovato
-                            if (value != null)
+                            if (oldValue != null)
                             {
                                 // caricamento lazy load
-                                db.Entry(value).Collection(x => x.Sources).Load();
+                                //db.Entry(oldValue).Collection(x => x.Sources).Load();
 
                                 // valore non è stato già inserito
-                                if (value.Data == null)
+                                if (oldValue.Data == null)
                                 {
                                     if (varLc == true)
                                         if (ExchangeRateUs.HasValue)
-                                            value.Data = value.Data / ExchangeRateUs.Value;
+                                            oldValue.Data = oldValue.Data / ExchangeRateUs.Value;
                                         else
-                                            value.Data = value.Data;
-                                    value.InternalNotes = value.InternalNotes;
-                                    value.PublicNotes = value.PublicNotes;
+                                            oldValue.Data = oldValue.Data;
+                                    oldValue.InternalNotes = oldValue.InternalNotes;
+                                    oldValue.PublicNotes = oldValue.PublicNotes;
 
                                     // salvo
-                                    db.Entry(value).State = EntityState.Modified;
+                                    db.Entry(oldValue).State = EntityState.Modified;
                                 }
                                 // valore già inserito
                                 else
@@ -914,13 +915,8 @@ namespace TobaccoNicotineApplication.Controllers
                                     newValue.PublicNotes = public_notes;
                                     newValue.InternalNotes = internal_notes;
 
-                                    List<Value> temp = new List<Value>();
-                                    temp.Add(value);
-                                    temp.Add(newValue);
-
-                                    ViewBag.Result = value;
-
-                                    warning.Add(temp, "Value is already present.");
+                                    warningList.Add(oldValue);
+                                    warningList.Add(newValue);
                                 }
                             }
                             // valore non presente all'interno del database
@@ -945,33 +941,42 @@ namespace TobaccoNicotineApplication.Controllers
 
                     } // using database
 
-                    return View(warning);
+                    return Json(new { status = true, warning = JsonConvert.SerializeObject(warningList) }, JsonRequestBehavior.AllowGet);
                 }
                 catch (ArgumentException ex)
                 {
                     // colonna non valida
                     // numero non valido/numero nullo
-                    ModelState.AddModelError("", ex.Message);
+                    return Json(new { status, error = ex.Message }, JsonRequestBehavior.AllowGet);
                 }
                 catch (FormatException ex2)
                 {
                     // formato non valido della data
-                    ModelState.AddModelError("", ex2.Message);
+                    return Json(new { status, error = ex2.Message }, JsonRequestBehavior.AllowGet);
                 }
                 catch (OverflowException ex3)
                 {
                     // metto un numero più grande di quello dovuto
-                    ModelState.AddModelError("", ex3.Message);
+                    return Json(new { status, error = ex3.Message }, JsonRequestBehavior.AllowGet);
                 }
                 catch (EntityException ex4)
                 {
                     // metto un numero più grande di quello dovuto
-                    ModelState.AddModelError("", ex4.Message);
+                    return Json(new { status, error = ex4.Message }, JsonRequestBehavior.AllowGet);
                 }
 
             } // posted file
 
-            return View();
+            return Json(new { status, error = "No file found." }, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // POST: /Excel/ReplaceValue
+        [HttpPost]
+        [Authorize(Roles = "Admin, Writer")]
+        public JsonResult ReplaceValue(Value oldValue, Value newValue)
+        {
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
 
     }

@@ -10,10 +10,10 @@
     @Styles.Render("~/Content/sweetalert")
 }
 
-<form action="@Url.Action("Import", "Excel")" enctype="multipart/form-data" method="post">
+<form>
     <input type="file" name="postedFile" class="filestyle" data-buttonname="btn-default">
     <br />
-    <button type="submit" class="btn btn-success waves-effect waves-light">Import</button>
+    <button id="importExcel" type="button" class="btn btn-success waves-effect waves-light">Import</button>
 </form>
 
 @section scripts {
@@ -24,12 +24,13 @@
     @Scripts.Render("~/Scripts/sweetalert")
 
     @Scripts.Render("~/Scripts/import")
+    @Scripts.Render("~/Scripts/utils")
 
     <script>
         // ValidateAntiForgeryTokenOnAllPosts
         var token = $('[name=__RequestVerificationToken]').val();
 
-        $('form').submit(function (event) {
+        $('#importExcel').click(function (event) {
 
             var nomeFile = document.getElementsByName("postedFile")[0].value;
 
@@ -45,27 +46,109 @@
                 return false;
             }
 
-            var formdata = new FormData($(this).get(0));
+            var formData = new FormData();
+            formData.append('postedFile', $('input[type=file]')[0].files[0]);
 
             $.ajax({
                 headers: { "__RequestVerificationToken": token },
-                url: this.action,
-                type: this.method,
-                data: formdata,
-                processData: false,
-                contentType: false,
+                url: '/Excel/Import',
+                type: 'POST',
+                data: formData,
+                contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+                processData: false, // NEEDED, DON'T OMIT THIS
                 beforeSend: function () {
                     // Doing some loading gif stuff
                 },
                 success: function (result) {
-                    // element is div holding the ParticalView
-                    $(element).html(result);
+
+                    if (result.status == false) {
+                        swal("Error!", result.error, "error");
+                    } else {
+                        // vedo se ci sono warning da segnalare
+                        var obj = JSON.parse(result.warning);
+                        if (!isEmpty(obj)) {
+                            next(0, obj);
+                        }
+                        else {
+                            swal({ title: "Good job!", text: "All your changes have been applied!", type: "success" },
+                                function () {
+                                    $('form').trigger("reset");
+                                }
+                            );
+                        } // isEmpty
+                    } // status = true
+
                 },
-                complete: function () {
-                    $.validator.unobtrusive.parse('form');
-                    // And so on.
+                error: function (result) {
+                    swal({ title: "An error has occurred!", text: "Please wait a few minutes and try again.", type: "error" },
+                        function () {
+                            $('form').trigger("reset");
+                        }
+                    );
                 }
             });
         });
+
+        function next(i, obj) {
+
+            swal({
+                title: "Do you want replace Nomisma Code: " + obj[i].NomismaCode + " ?",
+                text: "Value code: " + obj[i].NomismaCode,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: 'btn-warning',
+                confirmButtonText: "Yes, replace it!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+
+                    if (isConfirm) {
+                        // invio richiesta per cancellare il file
+                        $.ajax({
+                            url: '/Excel/ReplaceValue',
+                            headers: { '__RequestVerificationToken': token },
+                            method: 'POST',
+                            dataType: 'json',
+                            data: {
+                                oldValue: obj[i],
+                                newValue: obj[i + 1]
+                            },
+                            success: function (res) {
+                                // risultato della risposta
+                                if (res == true) {
+                                    swal({ title: "Good job!", text: "Your change have been applied!", type: "success" },
+                                        function () {
+                                            if ((i + 2) < obj.length)
+                                                next(i + 2, obj);
+                                            else
+                                                $('form').trigger("reset");
+                                        }
+                                    );
+                                } else {
+                                    swal({ title: "An error has occurred!", text: "Please wait a few minutes and try again.", type: "error" },
+                                        function () {
+                                            $('form').trigger("reset");
+                                        }
+                                    );
+                                }
+                            }
+                        });
+
+                    } else {
+                        if ((i + 2) < obj.length)
+                            next(i + 2, obj);
+                        else {
+                            swal({ title: "Good job!", text: "All your changes have been applied!", type: "success" },
+                                function () {
+                                    $('form').trigger("reset");
+                                }
+                            );
+                        }
+
+                    }
+                }); // swal
+
+        }
     </script>
 }

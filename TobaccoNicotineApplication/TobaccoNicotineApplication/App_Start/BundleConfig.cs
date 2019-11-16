@@ -115,6 +115,9 @@ namespace TobaccoNicotineApplication
             bundles.Add(new ScriptBundle("~/Scripts/country").Include(
                         "~/Scripts/views/country.js"));
 
+            bundles.Add(new ScriptBundle("~/Scripts/utils").Include(
+                        "~/Scripts/utils.js"));
+
             // style
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
