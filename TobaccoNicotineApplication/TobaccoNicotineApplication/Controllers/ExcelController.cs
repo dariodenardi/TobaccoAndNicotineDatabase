@@ -881,6 +881,10 @@ namespace TobaccoNicotineApplication.Controllers
                                 download_source = null;
                             reference_data_repository = row[27].ToString();
 
+                            if (varLc == true)
+                                if (ExchangeRateUs.HasValue && data.HasValue)
+                                    data = data / ExchangeRateUs.Value;
+
                             oldValue = db.Values.Where(x => x.NomismaCode == nomismaCode).FirstOrDefault();
 
                             // se il valore è stato trovato
@@ -892,11 +896,7 @@ namespace TobaccoNicotineApplication.Controllers
                                 // valore non è stato già inserito
                                 if (oldValue.Data == null)
                                 {
-                                    if (varLc == true)
-                                        if (ExchangeRateUs.HasValue)
-                                            oldValue.Data = oldValue.Data / ExchangeRateUs.Value;
-                                        else
-                                            oldValue.Data = oldValue.Data;
+                                    oldValue.Data = data;
                                     oldValue.InternalNotes = oldValue.InternalNotes;
                                     oldValue.PublicNotes = oldValue.PublicNotes;
 
@@ -906,20 +906,23 @@ namespace TobaccoNicotineApplication.Controllers
                                 // valore già inserito
                                 else
                                 {
-                                    Value newValue = new Value();
-                                    newValue.CountryCode = country_code;
-                                    newValue.Number = variable_number;
-                                    newValue.Year = year;
-                                    newValue.NomismaCode = nomismaCode;
-                                    newValue.Data = data;
-                                    newValue.PublicNotes = public_notes;
-                                    newValue.InternalNotes = internal_notes;
+                                    // modifico solo se il valore è diverso
+                                    if (oldValue.Data != data)
+                                    {
+                                        Value newValue = new Value();
+                                        newValue.CountryCode = country_code;
+                                        newValue.Number = variable_number;
+                                        newValue.Year = year;
+                                        newValue.NomismaCode = nomismaCode;
+                                        newValue.Data = data;
+                                        newValue.PublicNotes = public_notes;
+                                        newValue.InternalNotes = internal_notes;
 
-                                    warningList.Add(oldValue);
-                                    warningList.Add(newValue);
+                                        warningList.Add(oldValue);
+                                        warningList.Add(newValue);
+                                    }
                                 }
-                            }
-                            // valore non presente all'interno del database
+                            } // valore non presente all'interno del database
                             else
                             {
                                 Value newValue = new Value();
@@ -974,9 +977,21 @@ namespace TobaccoNicotineApplication.Controllers
         // POST: /Excel/ReplaceValue
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
-        public JsonResult ReplaceValue(Value oldValue, Value newValue)
+        public JsonResult ReplaceValue(Value newValue)
         {
-            return Json(true, JsonRequestBehavior.AllowGet);
+            bool status = false;
+            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+            {
+                if (newValue != null)
+                {
+                    // salvo
+                    status = true;
+                    db.Entry(newValue).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+
+                return Json(status, JsonRequestBehavior.AllowGet);
+            }
         }
 
     }

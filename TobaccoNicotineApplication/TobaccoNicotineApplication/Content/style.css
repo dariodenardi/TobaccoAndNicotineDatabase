@@ -4520,6 +4520,6 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
 }
 
 /* dropdown menu inserito all'interno della tabella */
-.dropdown-menu {
+.dropdownTable {
     position: static;
 }

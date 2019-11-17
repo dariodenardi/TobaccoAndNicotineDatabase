@@ -77,7 +77,7 @@ function DataBind(ValueList) {
             "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
             "Search" +
             "<span class=\"caret\"></span></button>" +
-            "<ul class=\"dropdown-menu\" aria-labelledby=\"about-us\">" +
+            "<ul class=\"dropdown-menu dropdownTable\" aria-labelledby=\"about-us\">" +
             "<li><a href=\"#\">Currency</a></li>" +
             "<li><a href=\"#\">Sources</a></li>" +
             "</ul>" +

@@ -14,6 +14,7 @@
     <input type="file" name="postedFile" class="filestyle" data-buttonname="btn-default">
     <br />
     <button id="importExcel" type="button" class="btn btn-success waves-effect waves-light">Import</button>
+    <img src="~/Images/loader.gif" alt="loading" width="200" height="150" id="centerLoading">
 </form>
 
 @section scripts {
@@ -58,6 +59,7 @@
                 processData: false, // NEEDED, DON'T OMIT THIS
                 beforeSend: function () {
                     // Doing some loading gif stuff
+                    $("#centerLoading").show();
                 },
                 success: function (result) {
 
@@ -73,6 +75,7 @@
                             swal({ title: "Good job!", text: "All your changes have been applied!", type: "success" },
                                 function () {
                                     $('form').trigger("reset");
+                                    $("#centerLoading").hide();
                                 }
                             );
                         } // isEmpty
@@ -83,6 +86,7 @@
                     swal({ title: "An error has occurred!", text: "Please wait a few minutes and try again.", type: "error" },
                         function () {
                             $('form').trigger("reset");
+                            $("#centerLoading").hide();
                         }
                     );
                 }
@@ -92,14 +96,15 @@
         function next(i, obj) {
 
             swal({
-                title: "Do you want replace Nomisma Code: " + obj[i].NomismaCode + " ?",
-                text: "Value code: " + obj[i].NomismaCode,
+                title: "Do you want replace this Value?",
+                text: "Nomisma Code: " + obj[i].NomismaCode + "\nVariable Number: " + obj[i].Number + "\nCountry Code: " + obj[i].CountryCode + "\nYear: " + obj[i].Year + "\nOld Data: " + obj[i].Data + "\nNew Data: " + obj[i + 1].Data,
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: 'btn-warning',
                 confirmButtonText: "Yes, replace it!",
                 closeOnConfirm: false,
-                closeOnCancel: false
+                closeOnCancel: false,
+                closeOnClickOutside: false //impedisco di chiudere la finestra cliccando fuori
             },
                 function (isConfirm) {
 
@@ -111,24 +116,31 @@
                             method: 'POST',
                             dataType: 'json',
                             data: {
-                                oldValue: obj[i],
                                 newValue: obj[i + 1]
                             },
                             success: function (res) {
                                 // risultato della risposta
                                 if (res == true) {
-                                    swal({ title: "Good job!", text: "Your change have been applied!", type: "success" },
+                                    swal({ title: "Good job!", text: "Your change have been applied!", type: "success", closeOnConfirm: false  },
                                         function () {
                                             if ((i + 2) < obj.length)
                                                 next(i + 2, obj);
-                                            else
-                                                $('form').trigger("reset");
+                                            else {
+                                                swal({ title: "Good job!", text: "All your changes have been applied!", type: "success" },
+                                                    function () {
+                                                        $('form').trigger("reset");
+                                                        $("#centerLoading").hide();
+                                                    }
+                                                );
+                                            }
+                                                
                                         }
                                     );
                                 } else {
                                     swal({ title: "An error has occurred!", text: "Please wait a few minutes and try again.", type: "error" },
                                         function () {
                                             $('form').trigger("reset");
+                                            $("#centerLoading").hide();
                                         }
                                     );
                                 }
@@ -142,6 +154,7 @@
                             swal({ title: "Good job!", text: "All your changes have been applied!", type: "success" },
                                 function () {
                                     $('form').trigger("reset");
+                                    $("#centerLoading").hide();
                                 }
                             );
                         }

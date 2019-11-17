@@ -1,0 +1,2 @@
+// nascondo immagine
+$("#centerLoading").hide();
