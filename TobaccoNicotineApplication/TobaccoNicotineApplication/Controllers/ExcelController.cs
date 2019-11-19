@@ -524,6 +524,8 @@ namespace TobaccoNicotineApplication.Controllers
                                 {
                                     if (columnSelected.Contains("Data"))
                                     {
+                                        // number with 1 decimal place and thousand separator
+                                        ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
                                         ws.Cells[rowStart, column].Value = export.Data;
                                         column++;
                                     }
@@ -531,7 +533,11 @@ namespace TobaccoNicotineApplication.Controllers
                                     if (columnSelected.Contains("Data_US$"))
                                     {
                                         if (export.CurrencyValue.Value != 0)
+                                        {
+                                            // number with 1 decimal place and thousand separator
+                                            ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
                                             ws.Cells[rowStart, column].Value = export.Data * export.CurrencyValue.Value;
+                                        }
                                         else
                                             ws.Cells[rowStart, column].Value = "";
                                         column++;
@@ -543,6 +549,8 @@ namespace TobaccoNicotineApplication.Controllers
                             {
                                 if (columnSelected.Contains("Data"))
                                 {
+                                    // number with 1 decimal place and thousand separator
+                                    ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
                                     ws.Cells[rowStart, column].Value = export.Data;
                                     column++;
                                 }
@@ -614,7 +622,7 @@ namespace TobaccoNicotineApplication.Controllers
 
                         if (export.VarLc == true)
                         {
-                            if (export.CurrencyValue.HasValue)
+                            if (export.CurrencyValue.HasValue && export.Data != null)
                             {
                                 if (columnSelected.Contains("Exchange_Rate_US$"))
                                 {
@@ -860,13 +868,13 @@ namespace TobaccoNicotineApplication.Controllers
                             varLc = (row[22].ToString() == "1") ? true : false;
                             if (varLc == true) // valore economico
                                 if (!String.IsNullOrEmpty(row[16].ToString())) // se il valore è diverso da null
-                                    data = decimal.Parse(row[16].ToString());
+                                    data = decimal.Parse(row[16].ToString().Replace(".", "").Replace(",", "."));
                                 else
                                     data = null;
                             else
                             {
                                 if (!String.IsNullOrEmpty(row[15].ToString())) // se il valore è diverso da null
-                                    data = decimal.Parse(row[15].ToString());
+                                    data = decimal.Parse(row[15].ToString().Replace(".", "").Replace(",", "."));
                                 else
                                     data = null;
                             }
@@ -874,7 +882,7 @@ namespace TobaccoNicotineApplication.Controllers
                             source_name = row[18].ToString();
                             link = row[19].ToString();
                             if (!String.IsNullOrEmpty(row[20].ToString()))
-                                ExchangeRateUs = decimal.Parse(row[20].ToString());
+                                ExchangeRateUs = decimal.Parse(row[20].ToString().Replace(".", "").Replace(",", "."));
                             else
                                 ExchangeRateUs = null;
                             public_notes = row[21].ToString();
@@ -947,9 +955,12 @@ namespace TobaccoNicotineApplication.Controllers
                         // salvo le modifiche
                         db.SaveChanges();
 
-                    } // using database
+                        // cancello il file se presente
+                        if (System.IO.File.Exists(filePath))
+                            System.IO.File.Delete(filePath);
 
-                    return Json(new { status = true, warning = JsonConvert.SerializeObject(warningList) }, JsonRequestBehavior.AllowGet);
+                        return Json(new { status = true, warning = JsonConvert.SerializeObject(warningList.Select(x => new { x.CountryCode, x.Data, x.NomismaCode, x.Number, x.Year, Name = ((x.Sources.FirstOrDefault() != null)? x.Sources.FirstOrDefault().Name : ""), Repository = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Repository : ""), Link = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Link : ""), Username = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Username : "") })) }, JsonRequestBehavior.AllowGet);
+                    } // using database
                 }
                 catch (ArgumentException ex)
                 {
