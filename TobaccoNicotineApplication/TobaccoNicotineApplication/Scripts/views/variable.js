@@ -61,7 +61,7 @@ function DataBind(VariableList) {
                 "<td>" + VariableList[i].MeasurementUnitName + "</td>";
         }
 
-        Data = Data + "<td>" +
+        /*Data = Data + "<td>" +
             "<div class=\"dropdown\" >" +
             "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
             "Search" +
@@ -70,7 +70,7 @@ function DataBind(VariableList) {
             "<li><a href=\"#\">Values</a></li>" +
             "<li><a href=\"#\">Sources</a></li>" +
             "</ul>" +
-            "</div>";
+            "</div>";*/
 
         Data = Data + "</td>" + "</tr>";
 

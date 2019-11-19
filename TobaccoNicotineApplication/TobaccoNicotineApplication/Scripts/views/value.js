@@ -72,7 +72,7 @@ function DataBind(ValueList) {
                 "<td>" + ValueList[i].InternalNotes + "</td>";
         }
 
-        Data = Data + "<td>" +
+        /*Data = Data + "<td>" +
             "<div class=\"dropdown\">" +
             "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
             "Search" +
@@ -81,7 +81,7 @@ function DataBind(ValueList) {
             "<li><a href=\"#\">Currency</a></li>" +
             "<li><a href=\"#\">Sources</a></li>" +
             "</ul>" +
-            "</div>" + "</td>";
+            "</div>" + "</td>";*/
 
         //Data = Data + "<td>";
 
@@ -92,10 +92,13 @@ function DataBind(ValueList) {
         //    }
         //}
 
-        //if (ValueList[i].IsSource == true) {
-        //    Data = Data +
-        //        " <a href='#' class='btn btn-dark btn-sm waves-effect' onclick='DownloadFile(\"" + ValueList[i].CountryName + "\")' ><span class='glyphicon glyphicon-save-file'></span></a>";
-        //}
+        if (ValueList[i].Repository != null) {
+            Data = Data +
+                "<td>" + "<a target=\"_blank\" rel=\"noopener noreferrer\" href='" + serverMap + ValueList[i].Link + "' class='btn btn-dark btn-sm waves-effect'><span class='glyphicon glyphicon-file'></span></a>" + "</td>";
+        } else {
+            Data = Data +
+                "<td>" + "</td>";
+        }
 
         //Data = Data + "</td>"
 

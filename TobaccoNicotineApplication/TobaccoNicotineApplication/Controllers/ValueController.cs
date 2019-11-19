@@ -113,7 +113,7 @@ namespace TobaccoNicotineApplication.Controllers
                 else if (orderInternalNotes == "asc")
                     values = values.OrderBy(x => x.InternalNotes);
 
-                return Json(values.Select(x => new { x.CountryCode, x.Number, x.Countries.CountryName, VariableName = x.Variables.Name, x.Data, x.Year, x.Variables.VarLc, CurrencyValue = (x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault() != null)? x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault().Value : 0, x.PublicNotes, x.InternalNotes, IsSource = (x.Sources.FirstOrDefault().Repository != null) ? true : false }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(values.Select(x => new { x.CountryCode, x.Number, x.Countries.CountryName, VariableName = x.Variables.Name, x.Data, x.Year, x.Variables.VarLc, CurrencyValue = (x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault() != null)? x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault().Value : 0, x.PublicNotes, x.InternalNotes, Repository = (x.Sources.FirstOrDefault().Repository != null) ? (x.Sources.FirstOrDefault().Name + "-" + x.Sources.FirstOrDefault().Date.Day + "-" + x.Sources.FirstOrDefault().Date.Month + "-" + x.Sources.FirstOrDefault().Date.Year + "-" + x.Sources.FirstOrDefault().Time.Hours + "-" + x.Sources.FirstOrDefault().Time.Minutes + "-" + x.Sources.FirstOrDefault().Time.Seconds + "/" + x.Sources.FirstOrDefault().Repository) : null }).ToList(), JsonRequestBehavior.AllowGet);
             }
         }
 

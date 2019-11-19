@@ -9,7 +9,7 @@
 -- v5: ottengo la tupla completa del valore
 
 SELECT co.[ContinentCode], co.[ContinentName], co.[RegionCode], co.[RegionName], v.[CountryCode], co.[PmiCoding], co.[CountryName], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[Year], s.[Name], s.[Link], cu2.[Value],
-v.[PublicNotes], va.[VarLc], co.[AreaCode], v.[InternalNotes], s.[DateDownload], s.[Repository], s.[Username]
+v.[PublicNotes], va.[VarLc], co.[AreaCode], v.[InternalNotes], s.[DateDownload], s.[Repository], s.[Username], s.[Date], s.[Time]
 FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2
 ON v.[CountryCode] = cu2.[CountryCode]
 AND v.[Year] = cu2.[Year]
@@ -31,7 +31,7 @@ AND v.Year =(SELECT MAX(v1.Year)
 				AND v1.[Number] = v.[Number])
 UNION
 SELECT co.[ContinentCode], co.[ContinentName], co.[RegionCode], co.[RegionName], v.[CountryCode], co.[PmiCoding], co.[CountryName], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[Year], s.[Name], s.[Link], cu2.[Value],
-v.[PublicNotes], va.[VarLc], co.[AreaCode], v.[InternalNotes], s.[DateDownload], s.[Repository], s.[Username]
+v.[PublicNotes], va.[VarLc], co.[AreaCode], v.[InternalNotes], s.[DateDownload], s.[Repository], s.[Username], s.[Date], s.[Time]
 FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2
 ON v.[CountryCode] = cu2.[CountryCode]
 AND v.[Year] = cu2.[Year]
@@ -75,7 +75,7 @@ ORDER BY v.[CountryCode], v.[Number], v.[Year]
 --NO MR:
 
 SELECT co.[ContinentCode], co.[ContinentName], co.[RegionCode], co.[RegionName], v.[CountryCode], co.[PmiCoding], co.[CountryName], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[Year], s.[Name], s.[Link], cu2.[Value],
-v.[PublicNotes], va.[VarLc], co.[AreaCode], v.[InternalNotes], s.[DateDownload], s.[Repository], s.[Username]
+v.[PublicNotes], va.[VarLc], co.[AreaCode], v.[InternalNotes], s.[DateDownload], s.[Repository], s.[Username], s.[Date], s.[Time]
 FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2
 ON v.[CountryCode] = cu2.[CountryCode]
 AND v.[Year] = cu2.[Year]

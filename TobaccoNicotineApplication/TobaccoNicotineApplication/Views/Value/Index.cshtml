@@ -53,6 +53,8 @@
 
     StringLengthAttribute publicNotesLenAttr = typeof(TobaccoNicotineApplication.Models.Value).GetProperty("PublicNotes").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
     StringLengthAttribute internalNotesLenAttr = typeof(TobaccoNicotineApplication.Models.Value).GetProperty("InternalNotes").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
+
+    string serverMap = System.Web.HttpContext.Current.Server.MapPath("~/Uploads/Sources/");
 }
 
 @section styles {
@@ -237,7 +239,7 @@
                                     <th width="11%">@exchangeRateUs</th>
                                     <th width="11%">@publicNotes <img id="idSortable5" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortablePublicNotes()" style="width:auto;"></th>
                                     <th width="11%">@internalNotes <img id="idSortable6" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableInternalNotes()" style="width:auto;"></th>
-                                    <th width="7%"></th>
+                                    <th width="7%">Source File</th>
                                 </tr>
                             </thead>
                             <tbody id="SetValueList"></tbody>
@@ -456,6 +458,8 @@
         var dataUs = '@dataUs';
         var publicNotes = '@publicNotes';
         var internalNotes = '@internalNotes';
+
+        var serverMap = '@Html.Raw(HttpUtility.JavaScriptStringEncode(serverMap))';
     </script>
 
     @Scripts.Render("~/Scripts/value")

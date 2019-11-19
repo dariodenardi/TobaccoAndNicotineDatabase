@@ -22,7 +22,7 @@ namespace TobaccoNicotineApplication.Models
         }
 
         [Required(ErrorMessage = "Name is required.")]
-        [StringLength(255, MinimumLength = 4, ErrorMessage = "Source Name must be at least 4 characters.")]
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Source Name must be at least 2 characters.")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Date is required.")]
@@ -45,6 +45,6 @@ namespace TobaccoNicotineApplication.Models
         public string Username { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Value> Values { get; set; }
+        public ICollection<Value> Values { get; set; }
     }
 }

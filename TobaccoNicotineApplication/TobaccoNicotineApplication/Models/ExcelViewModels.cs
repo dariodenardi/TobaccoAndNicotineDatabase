@@ -36,6 +36,8 @@ namespace TobaccoNicotineApplication.Models
         public Nullable<DateTime> DateDownload { get; set; }
         public string Repository { get; set; }
         public string Username { get; set; }
+        public Nullable<DateTime> SourceDate { get; set; }
+        public Nullable<TimeSpan> SourceTime { get; set; }
 
     }
 }

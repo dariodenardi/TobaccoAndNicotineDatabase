@@ -400,7 +400,12 @@ namespace TobaccoNicotineApplication.Controllers
                     ExcelNamedStyleXml namedStyle = ws.Workbook.Styles.CreateNamedStyle("HyperLink");
                     namedStyle.Style.Font.UnderLine = true;
                     namedStyle.Style.Font.Color.SetColor(Color.Blue);
+                    
+                    // aggiungo colonne
+                    columnSelected.Add("date");
+                    columnSelected.Add("time");
 
+                    string path = Server.MapPath("~/Uploads/Sources");
                     int rowStart = 2;
                     foreach (ExportView export in ExportRepository.getExport(countrySelected, variableSelected, yearSelected, columnSelected))
                     {
@@ -697,9 +702,9 @@ namespace TobaccoNicotineApplication.Controllers
                         {
                             if (columnSelected.Contains("reference data repository"))
                             {
-                                ws.Cells[rowStart, column].Hyperlink = new ExcelHyperLink(export.Repository);
+                                ws.Cells[rowStart, column].Hyperlink = new ExcelHyperLink(path + "/" + export.SourceName + "-" + export.SourceDate.Value.Day + "-" + export.SourceDate.Value.Month + "-" + export.SourceDate.Value.Year + "-" + export.SourceTime.Value.Hours + "-" + export.SourceTime.Value.Minutes + "-" + export.SourceTime.Value.Seconds + "/" + export.Repository);
                                 ws.Cells[rowStart, column].StyleName = namedStyle.Name;
-                                ws.Cells[rowStart, column].Value = export.Repository;
+                                ws.Cells[rowStart, column].Value = path + "/" + export.SourceName + "-" + export.SourceDate.Value.Day + "-" + export.SourceDate.Value.Month + "-" + export.SourceDate.Value.Year + "-" + export.SourceTime.Value.Hours + "-" + export.SourceTime.Value.Minutes + "-" + export.SourceTime.Value.Seconds + "/" + export.Repository;
                                 column++;
                             }
                         }
@@ -891,7 +896,7 @@ namespace TobaccoNicotineApplication.Controllers
                             if (oldValue != null)
                             {
                                 // caricamento lazy load
-                                //db.Entry(oldValue).Collection(x => x.Sources).Load();
+                                db.Entry(oldValue).Collection(x => x.Sources).Load();
 
                                 // valore non è stato già inserito
                                 if (oldValue.Data == null)

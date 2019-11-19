@@ -45,6 +45,8 @@
     StringLengthAttribute sourceNameLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("Name").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
     StringLengthAttribute sourceUsernameLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("Username").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
     StringLengthAttribute sourceRepositoryLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("Repository").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
+
+    string serverMap = System.Web.HttpContext.Current.Server.MapPath("~/Uploads/Sources/");
 }
 
 @section styles {
@@ -177,7 +179,7 @@
                                     <th width="17%">@sourceRepository <img id="idSortable3" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableRepository()" style="width:auto;"></th>
                                     <th width="17%">@sourceDateDownload <img id="idSortable4" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableDateDownload()" style="width:auto;"></th>
                                     <th width="17%">@sourceUsername <img id="idSortable5" src="~/Images/Sortable/bg.png" alt="bg" onclick="SortableUsername()" style="width:auto;"></th>
-                                    <th width="10%"></th>
+                                    <th width="10%">Source File</th>
                                 </tr>
                             </thead>
                             <tbody id="SetSourceList"></tbody>
@@ -405,6 +407,8 @@
         var sourceLink = '@sourceLink';
         var sourceUsername = '@sourceUsername';
         var sourceDateDownload = '@sourceDateDownload';
+
+        var serverMap = '@Html.Raw(HttpUtility.JavaScriptStringEncode(serverMap))';
     </script>
 
     @Scripts.Render("~/Scripts/source")

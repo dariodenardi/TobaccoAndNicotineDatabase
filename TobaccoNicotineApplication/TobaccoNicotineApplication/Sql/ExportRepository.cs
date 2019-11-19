@@ -187,6 +187,12 @@ namespace TobaccoNicotineApplication.Sql
                             case "reference data repository":
                                 columnQuery += "s.[Username], ";
                                 break;
+                            case "date":
+                                columnQuery += "s.[Date], ";
+                                break;
+                            case "time":
+                                columnQuery += "s.[Time], ";
+                                break;
                         }
 
                         if (i == columnSelected.Count - 1)
@@ -329,6 +335,12 @@ namespace TobaccoNicotineApplication.Sql
                                     if (columnSelected.Contains("CHI ha inserito/modificato il dato"))
                                             temp.Username = reader.GetValue(i + 24).ToString();
 
+                                    if (columnSelected.Contains("date"))
+                                        temp.SourceDate = ExportRepository.ToNullableDate(reader.GetValue(i + 25).ToString());
+
+                                    if (columnSelected.Contains("time"))
+                                        temp.SourceTime = ExportRepository.ToNullableTime(reader.GetValue(i + 26).ToString());
+
                                     excelViews.Add(temp);
                                 }
                             } // while
@@ -406,6 +418,15 @@ namespace TobaccoNicotineApplication.Sql
         {
             DateTime i;
             if (DateTime.TryParse(s, out i))
+                return i;
+
+            return null;
+        }
+
+        public static TimeSpan? ToNullableTime(this string s)
+        {
+            TimeSpan i;
+            if (TimeSpan.TryParse(s, out i))
                 return i;
 
             return null;

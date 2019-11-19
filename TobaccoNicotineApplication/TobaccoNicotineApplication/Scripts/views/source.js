@@ -73,7 +73,7 @@ function DataBind(SourceList) {
                 "<td>" + SourceList[i].Username + "</td>";
         }
 
-        Data = Data + "<td>" +
+        /*Data = Data + "<td>" +
             "<div class=\"dropdown\">" +
             "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
             "Search" +
@@ -81,7 +81,15 @@ function DataBind(SourceList) {
             "<ul class=\"dropdown-menu dropdownTable\" aria-labelledby=\"about-us\">" +
             "<li><a href=\"#\">Values</a></li>" +
             "</ul>" +
-            "</div>";
+            "</div>";*/
+
+        if (SourceList[i].Repository != null) {
+            Data = Data +
+                "<td>" + "<a target=\"_blank\" rel=\"noopener noreferrer\" href='" + serverMap + x.Sources.FirstOrDefault().Name + "-" + x.Sources.FirstOrDefault().Date.Day + "-" + x.Sources.FirstOrDefault().Date.Month + "-" + x.Sources.FirstOrDefault().Date.Year + "-" + x.Sources.FirstOrDefault().Time.Hours + "-" + x.Sources.FirstOrDefault().Time.Minutes + "-" + x.Sources.FirstOrDefault().Time.Seconds + "/" + x.Sources.FirstOrDefault().Repository + "' class='btn btn-dark btn-sm waves-effect'><span class='glyphicon glyphicon-file'></span></a>" + "</td>";
+        } else {
+            Data = Data +
+                "<td>" + "</td>";
+        }
 
         Data = Data + "</td>" + "</tr>";
 
