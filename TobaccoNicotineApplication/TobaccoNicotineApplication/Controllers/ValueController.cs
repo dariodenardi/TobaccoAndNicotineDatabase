@@ -29,7 +29,7 @@ namespace TobaccoNicotineApplication.Controllers
         // POST: /Value/GetValueList
         [HttpPost]
         public JsonResult GetValueList(string[] pmiCoding, string[] continentName, string[] regionName, string[] countryName, short[] continentCode, short[] regionCode, short[] countryCode, bool[] areaCode, short[] year, short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc, string[] measurementUnit,
-            string orderCountryName, string orderVariableName, string orderData, string orderYear, string orderPublicNotes, string orderInternalNotes)
+            string orderCountryName, string orderVariableName, string orderData, string orderDataUs, string orderYear, string orderPublicNotes, string orderInternalNotes)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
@@ -97,6 +97,11 @@ namespace TobaccoNicotineApplication.Controllers
                     values = values.OrderByDescending(x => x.Data);
                 else if (orderData == "asc")
                     values = values.OrderBy(x => x.Data);
+
+                if (orderDataUs == "desc")
+                    values = values.OrderByDescending(x => x.DataUs);
+                else if (orderDataUs == "asc")
+                    values = values.OrderBy(x => x.DataUs);
 
                 if (orderYear == "desc")
                     values = values.OrderByDescending(x => x.Year);

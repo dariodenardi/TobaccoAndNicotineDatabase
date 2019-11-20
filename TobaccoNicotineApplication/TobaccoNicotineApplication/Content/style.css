@@ -4511,6 +4511,9 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
 #idSortable6:hover {
     cursor: pointer
 }
+#idSortable7:hover {
+    cursor: pointer
+}
 
 /* immagine loading */
 #centerLoading {

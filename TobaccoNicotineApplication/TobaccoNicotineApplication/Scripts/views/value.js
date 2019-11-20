@@ -770,6 +770,15 @@ function FilterValue(selectSortable) {
     else //caso in cui non è stato cliccato nessun filtro
         sortable6 = null;
 
+    var sortable7;
+    var pathImg7 = document.getElementById("idSortable7").src;
+    if (pathImg7.includes("asc"))
+        sortable7 = "asc";
+    else if (pathImg7.includes("desc"))
+        sortable7 = "desc";
+    else //caso in cui non è stato cliccato nessun filtro
+        sortable7 = null;
+
     $.ajax({
         type: "POST",
         dataType: 'json',
@@ -798,7 +807,8 @@ function FilterValue(selectSortable) {
             orderData: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
             orderYear: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined,
             orderPublicNotes: (sortable5 != null && selectSortable == 5) ? sortable5 : undefined,
-            orderInternalNotes: (sortable6 != null && selectSortable == 6) ? sortable6 : undefined
+            orderInternalNotes: (sortable6 != null && selectSortable == 6) ? sortable6 : undefined,
+            orderDataUs: (sortable7 != null && selectSortable == 7) ? sortable7 : undefined
         },
         success: function (result) {
             $("#SetValueList").empty();
@@ -814,42 +824,56 @@ function FilterValue(selectSortable) {
                 document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable6").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable7").src = "/Images/Sortable/bg.png";
             } else if (selectSortable == 1) {
                 document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable6").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable7").src = "/Images/Sortable/bg.png";
             } else if (selectSortable == 2) {
                 document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable6").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable7").src = "/Images/Sortable/bg.png";
             } else if (selectSortable == 3) {
                 document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable6").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable7").src = "/Images/Sortable/bg.png";
             } else if (selectSortable == 4) {
                 document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable6").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable7").src = "/Images/Sortable/bg.png";
             } else if (selectSortable == 5) {
                 document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable6").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable7").src = "/Images/Sortable/bg.png";
             } else if (selectSortable == 6) {
                 document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
                 document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable7").src = "/Images/Sortable/bg.png";
+            } else if (selectSortable == 7) {
+                document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable6").src = "/Images/Sortable/bg.png";
             }
             // passo al tab dei row
             $("#collapseOne").prop('class', 'panel-collapse collapse');
@@ -948,6 +972,21 @@ function SortableInternalNotes() {
         document.getElementById("idSortable6").src = "/Images/Sortable/asc.png";
 
     FilterValue(6);
+
+}
+
+function SortableDataUs() {
+
+    // cambio immagine
+    var pathImg3 = document.getElementById("idSortable7").src;
+    if (pathImg3.includes("asc"))
+        document.getElementById("idSortable7").src = "/Images/Sortable/desc.png";
+    else if (pathImg3.includes("desc"))
+        document.getElementById("idSortable7").src = "/Images/Sortable/asc.png";
+    else // se è ancora l'immagine predefinita
+        document.getElementById("idSortable7").src = "/Images/Sortable/asc.png";
+
+    FilterValue(7);
 
 }
 
