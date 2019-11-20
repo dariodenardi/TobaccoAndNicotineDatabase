@@ -875,15 +875,15 @@ namespace TobaccoNicotineApplication.Controllers
                                 data = null;
                             year = short.Parse(row[17].ToString());
                             source_name = row[18].ToString();
-                            link = row[19].ToString();
-                            public_notes = row[21].ToString();
-                            internal_notes = row[24].ToString();
+                            link = (!String.IsNullOrEmpty(row[19].ToString())) ? row[19].ToString() : null;
+                            public_notes = (!String.IsNullOrEmpty(row[21].ToString())) ? row[21].ToString() : null;
+                            internal_notes = (!String.IsNullOrEmpty(row[24].ToString())) ? row[24].ToString() : null;
                             username = row[25].ToString();
                             if (!String.IsNullOrEmpty(row[26].ToString()))
                                 download_source = DateTime.ParseExact(row[26].ToString(), "MM/dd/yyyy", null);
                             else
                                 download_source = null;
-                            reference_data_repository = row[27].ToString();
+                            reference_data_repository = (!String.IsNullOrEmpty(row[27].ToString())) ? row[27].ToString() : null;
 
                             oldValue = db.Values.Where(x => x.NomismaCode == nomismaCode).FirstOrDefault();
 
@@ -901,13 +901,29 @@ namespace TobaccoNicotineApplication.Controllers
                                     oldValue.InternalNotes = oldValue.InternalNotes;
                                     oldValue.PublicNotes = oldValue.PublicNotes;
 
+                                    if (!String.IsNullOrEmpty(source_name))
+                                    {
+                                        Source newSource = new Source();
+                                        newSource.Name = source_name;
+                                        newSource.Date = DateTime.Now.Date;
+                                        newSource.Time = DateTime.Now.TimeOfDay;
+                                        newSource.Link = link;
+                                        if (!String.IsNullOrEmpty(reference_data_repository))
+                                        {
+                                            newSource.DateDownload = download_source.Value;
+                                            newSource.Repository = reference_data_repository;
+                                        }
+                                        newSource.Username = username;
+                                        oldValue.Sources.Add(newSource);
+                                    }
+
                                     // salvo
                                     db.Entry(oldValue).State = EntityState.Modified;
                                 }
                                 // valore già inserito
                                 else
                                 {
-                                    // modifico solo se il valore è diverso
+                                    // inserisco il warning solo se il valore è diverso
                                     if (oldValue.Data != data || varLc == true && oldValue.DataUs != dataUs)
                                     {
                                         Value newValue = new Value();
@@ -919,6 +935,22 @@ namespace TobaccoNicotineApplication.Controllers
                                         oldValue.DataUs = dataUs;
                                         newValue.PublicNotes = public_notes;
                                         newValue.InternalNotes = internal_notes;
+
+                                        if (!String.IsNullOrEmpty(source_name))
+                                        {
+                                            Source newSource = new Source();
+                                            newSource.Name = source_name;
+                                            newSource.Date = DateTime.Now.Date;
+                                            newSource.Time = DateTime.Now.TimeOfDay;
+                                            newSource.Link = link;
+                                            if (!String.IsNullOrEmpty(reference_data_repository))
+                                            {
+                                                newSource.DateDownload = download_source.Value;
+                                                newSource.Repository = reference_data_repository;
+                                            }
+                                            newSource.Username = username;
+                                            newValue.Sources.Add(newSource);
+                                        }
 
                                         warningList.Add(oldValue);
                                         warningList.Add(newValue);
@@ -937,6 +969,23 @@ namespace TobaccoNicotineApplication.Controllers
                                 newValue.PublicNotes = public_notes;
                                 newValue.InternalNotes = internal_notes;
 
+                                if (!String.IsNullOrEmpty(source_name))
+                                {
+                                    Source newSource = new Source();
+                                    newSource.Name = source_name;
+                                    newSource.Date = DateTime.Now.Date;
+                                    newSource.Time = DateTime.Now.TimeOfDay;
+                                    newSource.Link = link;
+                                    if (!String.IsNullOrEmpty(reference_data_repository))
+                                    {
+                                        newSource.DateDownload = download_source.Value;
+                                        newSource.Repository = reference_data_repository;
+                                        
+                                    }
+                                    newSource.Username = username;
+                                    newValue.Sources.Add(newSource);
+                                }
+
                                 // salvo
                                 db.Values.Add(newValue);
                             }
@@ -949,7 +998,7 @@ namespace TobaccoNicotineApplication.Controllers
                         if (System.IO.File.Exists(filePath))
                             System.IO.File.Delete(filePath);
 
-                        return Json(new { status = true, warning = JsonConvert.SerializeObject(warningList.Select(x => new { x.CountryCode, x.Data, x.DataUs, x.NomismaCode, x.Number, x.Year, Name = ((x.Sources.FirstOrDefault() != null)? x.Sources.FirstOrDefault().Name : ""), Repository = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Repository : ""), Link = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Link : ""), Username = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Username : "") })) }, JsonRequestBehavior.AllowGet);
+                        return Json(new { status = true, warning = JsonConvert.SerializeObject(warningList.Select(x => new { x.CountryCode, x.Data, x.DataUs, x.NomismaCode, x.Number, x.Year, Name = ((x.Sources.FirstOrDefault() != null)? x.Sources.FirstOrDefault().Name : null), Repository = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Repository : null), Link = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Link : null), Username = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Username : null) })) }, JsonRequestBehavior.AllowGet);
                     } // using database
                 }
                 catch (ArgumentException ex)
