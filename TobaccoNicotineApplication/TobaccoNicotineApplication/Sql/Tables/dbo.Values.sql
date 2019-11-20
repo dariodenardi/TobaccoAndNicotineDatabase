@@ -4,6 +4,7 @@
     [Year]          SMALLINT        NOT NULL,
     [NomismaCode]   INT             NOT NULL,
     [Data]          DECIMAL (18, 3) NULL,
+    [DataUs]        DECIMAL (18, 3) NULL,
     [DataPmi]       DECIMAL (18, 3) NULL,
     [PublicNotes]   VARCHAR (1000)  NULL,
     [InternalNotes] VARCHAR (1000)  NULL,

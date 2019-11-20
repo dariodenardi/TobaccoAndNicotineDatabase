@@ -267,6 +267,10 @@ $(document).ready(function () {
                     } else {
                         swal("An error has occurred!", "Please wait a few minutes and try again.", "error");
                     }
+                },
+                error: function (result) {
+                    $("#centerLoading").hide();
+                    swal("An error has occurred!", "Please wait a few minutes and try again.", "error");
                 }
             })
 

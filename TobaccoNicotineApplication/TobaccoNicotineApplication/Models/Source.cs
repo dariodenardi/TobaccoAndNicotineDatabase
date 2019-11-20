@@ -43,7 +43,7 @@ namespace TobaccoNicotineApplication.Models
         [Required(ErrorMessage = "Username is required.")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Username must be at least 3 characters.")]
         public string Username { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Value> Values { get; set; }
     }

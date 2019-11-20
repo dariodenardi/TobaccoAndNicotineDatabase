@@ -8,7 +8,7 @@
 -- v4: prendo l'anno più recente perchè avrei più anni
 -- v5: ottengo la tupla completa del valore
 
-SELECT co.[ContinentCode], co.[ContinentName], co.[RegionCode], co.[RegionName], v.[CountryCode], co.[PmiCoding], co.[CountryName], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[Year], s.[Name], s.[Link], cu2.[Value],
+SELECT v.[NomismaCode], co.[ContinentCode], co.[ContinentName], co.[RegionCode], co.[RegionName], v.[CountryCode], co.[PmiCoding], co.[CountryName], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[DataUs], v.[Year], s.[Name], s.[Link], cu2.[Value],
 v.[PublicNotes], va.[VarLc], co.[AreaCode], v.[InternalNotes], s.[DateDownload], s.[Repository], s.[Username], s.[Date], s.[Time]
 FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2
 ON v.[CountryCode] = cu2.[CountryCode]
@@ -26,11 +26,11 @@ AND v.[CountryCode] = co.[CountryCode]
 AND v.CountryCode = 108
 AND v.Year =(SELECT MAX(v1.Year)
 				FROM [dbo].[Values] v1
-				WHERE v1.Data IS NOT NULL
+				WHERE (v1.[Data] IS NOT NULL OR v1.[DataUs] IS NOT NULL)
 				AND v1.[CountryCode] = v.[CountryCode]
 				AND v1.[Number] = v.[Number])
 UNION
-SELECT co.[ContinentCode], co.[ContinentName], co.[RegionCode], co.[RegionName], v.[CountryCode], co.[PmiCoding], co.[CountryName], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[Year], s.[Name], s.[Link], cu2.[Value],
+SELECT v.[NomismaCode], co.[ContinentCode], co.[ContinentName], co.[RegionCode], co.[RegionName], v.[CountryCode], co.[PmiCoding], co.[CountryName], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[DataUs], v.[Year], s.[Name], s.[Link], cu2.[Value],
 v.[PublicNotes], va.[VarLc], co.[AreaCode], v.[InternalNotes], s.[DateDownload], s.[Repository], s.[Username], s.[Date], s.[Time]
 FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2
 ON v.[CountryCode] = cu2.[CountryCode]
@@ -61,7 +61,7 @@ AND v.Year = (SELECT MAX(v4.[Year])
 													AND v3.[Year] = v2.[Year]
 													AND v2.[Year] =(SELECT MAX(v1.[Year])
 																	FROM [dbo].[Values] v1
-																	WHERE v1.[Data] IS NOT NULL
+																	WHERE (v1.[Data] IS NOT NULL OR v1.[DataUs] IS NOT NULL)
 																	AND v1.[CountryCode] = v2.[CountryCode]
 																	AND v1.[Number] = v2.[Number]))
 								GROUP BY v3.[CountryCode], v3.[Number]
@@ -74,7 +74,7 @@ ORDER BY v.[CountryCode], v.[Number], v.[Year]
 
 --NO MR:
 
-SELECT co.[ContinentCode], co.[ContinentName], co.[RegionCode], co.[RegionName], v.[CountryCode], co.[PmiCoding], co.[CountryName], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[Year], s.[Name], s.[Link], cu2.[Value],
+SELECT v.[NomismaCode], co.[ContinentCode], co.[ContinentName], co.[RegionCode], co.[RegionName], v.[CountryCode], co.[PmiCoding], co.[CountryName], va.[PhaseCode], va.[PhaseName], v.[Number], va.[Name], va.[MeasurementUnitName], v.[Data], v.[DataUs], v.[Year], s.[Name], s.[Link], cu2.[Value],
 v.[PublicNotes], va.[VarLc], co.[AreaCode], v.[InternalNotes], s.[DateDownload], s.[Repository], s.[Username], s.[Date], s.[Time]
 FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2
 ON v.[CountryCode] = cu2.[CountryCode]

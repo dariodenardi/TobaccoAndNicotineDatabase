@@ -69,6 +69,7 @@
           <Property Name="Year" Type="smallint" Nullable="false" />
           <Property Name="NomismaCode" Type="int" Nullable="false" />
           <Property Name="Data" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="DataUs" Type="decimal" Precision="18" Scale="3" />
           <Property Name="DataPmi" Type="decimal" Precision="18" Scale="3" />
           <Property Name="PublicNotes" Type="varchar" MaxLength="1000" />
           <Property Name="InternalNotes" Type="varchar" MaxLength="1000" />
@@ -99,7 +100,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__MappingVariableS__34C8D9D1">
+        <Association Name="FK__MappingVariableS__04E4BC85">
           <End Role="Values" Type="Self.Values" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -135,7 +136,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Values__CountryC__619B8048">
+        <Association Name="FK__Values__CountryC__03F0984C">
           <End Role="Countries" Type="Self.Countries" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -149,7 +150,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Values__Number__2F10007B">
+        <Association Name="FK__Values__Number__02FC7413">
           <End Role="Variables" Type="Self.Variables" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -174,7 +175,7 @@
             <End Role="Countries" EntitySet="Countries" />
             <End Role="Currencies" EntitySet="Currencies" />
           </AssociationSet>
-          <AssociationSet Name="FK__MappingVariableS__34C8D9D1" Association="Self.FK__MappingVariableS__34C8D9D1">
+          <AssociationSet Name="FK__MappingVariableS__04E4BC85" Association="Self.FK__MappingVariableS__04E4BC85">
             <End Role="Values" EntitySet="Values" />
             <End Role="MappingVariableSource" EntitySet="MappingVariableSource" />
           </AssociationSet>
@@ -182,11 +183,11 @@
             <End Role="Sources" EntitySet="Sources" />
             <End Role="MappingVariableSource" EntitySet="MappingVariableSource" />
           </AssociationSet>
-          <AssociationSet Name="FK__Values__CountryC__619B8048" Association="Self.FK__Values__CountryC__619B8048">
+          <AssociationSet Name="FK__Values__CountryC__03F0984C" Association="Self.FK__Values__CountryC__03F0984C">
             <End Role="Countries" EntitySet="Countries" />
             <End Role="Values" EntitySet="Values" />
           </AssociationSet>
-          <AssociationSet Name="FK__Values__Number__2F10007B" Association="Self.FK__Values__Number__2F10007B">
+          <AssociationSet Name="FK__Values__Number__02FC7413" Association="Self.FK__Values__Number__02FC7413">
             <End Role="Variables" EntitySet="Variables" />
             <End Role="Values" EntitySet="Values" />
           </AssociationSet>
@@ -254,6 +255,7 @@
           <NavigationProperty Name="Countries" Relationship="Self.FK__Values__CountryC__619B8048" FromRole="Values" ToRole="Countries" />
           <NavigationProperty Name="Variables" Relationship="Self.FK__Values__Number__2F10007B" FromRole="Values" ToRole="Variables" />
           <NavigationProperty Name="Sources" Relationship="Self.MappingVariableSource" FromRole="Values" ToRole="Sources" />
+          <Property Name="DataUs" Type="Decimal" Precision="18" Scale="3" />
         </EntityType>
         <EntityType Name="Variable">
           <Key>
@@ -382,6 +384,7 @@
           <EntitySetMapping Name="Values">
             <EntityTypeMapping TypeName="TobaccoNicotineDatabaseModel.Value">
               <MappingFragment StoreEntitySet="Values">
+                <ScalarProperty Name="DataUs" ColumnName="DataUs" />
                 <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
                 <ScalarProperty Name="Year" ColumnName="Year" />

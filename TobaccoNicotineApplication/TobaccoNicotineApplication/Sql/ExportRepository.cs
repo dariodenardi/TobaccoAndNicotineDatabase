@@ -42,11 +42,11 @@ namespace TobaccoNicotineApplication.Sql
 
         private static string QUERY_MR_2 = " AND v.Year =(SELECT MAX(v1.Year) "
                                            + "FROM [dbo].[Values] v1 "
-                                           + "WHERE v1.Data IS NOT NULL "
+                                           + "WHERE (v1.[Data] IS NOT NULL OR v1.[DataUs] IS NOT NULL) "
                                            + "AND v1.[CountryCode] = v.[CountryCode] "
                                            + "AND v1.[Number] = v.[Number]) ";
 
-        private static string QUERY_MR_3 = " UNION ";
+        private static string QUERY_MR_3 = "UNION ";
 
         private static string QUERY_MR_4 = " FROM [dbo].Variables va, [dbo].Countries co, [dbo].[Values] v LEFT JOIN [dbo].Currencies cu2 "
                                            + "ON v.[CountryCode] = cu2.[CountryCode] "
@@ -66,7 +66,7 @@ namespace TobaccoNicotineApplication.Sql
                                                            + " FROM [dbo].[Values] v4"
                                                            + " WHERE v4.[CountryCode] = v.[CountryCode]"
                                                            + " AND v4.[Number] = v.[Number]"
-                                                           + " AND EXISTS(SELECT *"
+                                                           + " AND EXISTS (SELECT *"
                                                                         + " FROM [dbo].[Values] v3"
                                                                         + " WHERE v3.[CountryCode] = v4.[CountryCode]"
                                                                         + " AND v3.[Number] = v4.[Number]"
@@ -77,7 +77,7 @@ namespace TobaccoNicotineApplication.Sql
                                                                         + " AND v3.[Year] = v2.[Year]"
                                                                         + " AND v2.[Year] = (SELECT MAX(v1.[Year])"
                                                                                             + " FROM [dbo].[Values] v1"
-                                                                                            + " WHERE v1.[Data] IS NOT NULL"
+                                                                                            + " WHERE (v1.[Data] IS NOT NULL OR v1.[DataUs] IS NOT NULL)"
                                                                                             + " AND v1.[CountryCode] = v2.[CountryCode]"
                                                                                             + " AND v1.[Number] = v2.[Number]))"
                                                                         + " GROUP BY v3.[CountryCode], v3.[Number]"
@@ -153,6 +153,9 @@ namespace TobaccoNicotineApplication.Sql
                                 break;
                             case "Data":
                                 columnQuery += "v.[Data], ";
+                                break;
+                            case "Data_US$":
+                                columnQuery += "v.[DataUs], ";
                                 break;
                             case "Year":
                                 columnQuery += "v.[Year], ";
@@ -251,95 +254,110 @@ namespace TobaccoNicotineApplication.Sql
                         // Instance methods can be used on the SqlCommand.
                         // ... These read data.
                         //
+                        
+                        int countColumn = columnSelected.Count;
+
+                        if (columnSelected.Contains("Data_collection_year"))
+                            countColumn--;
+                        if (columnSelected.Contains("Variable"))
+                            countColumn--;
+                        if (columnSelected.Contains("workin comments_PMI"))
+                            countColumn--;
+
                         ExportView temp;
+                        int k = 1;
                         using (SqlDataReader reader = dbCommand.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                for (int i = 0; i < reader.FieldCount / 25; i++)
+                                for (int i = 0; i < reader.FieldCount / countColumn; i++)
                                 {
                                     temp = new ExportView();
+                                    k = 1;
 
                                     if (columnSelected.Contains("NEW ID TS"))
                                         temp.NomismaCode = reader.GetInt32(i);
 
                                     if (columnSelected.Contains("Continent_code"))
-                                        temp.ContinentCode = reader.GetInt16(i + 1);
+                                        temp.ContinentCode = reader.GetInt16(i + k++);
 
                                     if (columnSelected.Contains("Continent_name"))
-                                        temp.ContinentName = reader.GetString(i + 2);
+                                        temp.ContinentName = reader.GetString(i + k++);
 
                                     if (columnSelected.Contains("Region_code"))
-                                        temp.RegionCode = reader.GetInt16(i + 3);
+                                        temp.RegionCode = reader.GetInt16(i + k++);
 
                                     if (columnSelected.Contains("Region_name"))
-                                        temp.RegionName = reader.GetString(i + 4);
+                                        temp.RegionName = reader.GetString(i + k++);
 
                                     if (columnSelected.Contains("Country_code"))
-                                        temp.CountryCode = reader.GetInt16(i + 5);
+                                        temp.CountryCode = reader.GetInt16(i + k++);
 
                                     if (columnSelected.Contains("PMI_coding"))
-                                        temp.PmiCode = reader.GetString(i+ 6);
+                                        temp.PmiCode = reader.GetString(i+ k++);
 
                                     if (columnSelected.Contains("Country_name"))
-                                        temp.CountryName = reader.GetString(i + 7);
+                                        temp.CountryName = reader.GetString(i + k++);
 
                                     if (columnSelected.Contains("Supply chain phase_code"))
-                                        temp.PhaseCode = reader.GetInt16(i + 8);
+                                        temp.PhaseCode = reader.GetInt16(i + k++);
 
                                     if (columnSelected.Contains("Supply chain phase_name"))
-                                        temp.PhaseName = reader.GetString(i + 9);
+                                        temp.PhaseName = reader.GetString(i + k++);
 
                                     if (columnSelected.Contains("Variable_number"))
-                                        temp.Number = reader.GetInt16(i + 10);
+                                        temp.Number = reader.GetInt16(i + k++);
 
                                     if (columnSelected.Contains("Variable_name"))
-                                        temp.VariableName = reader.GetString(i + 11);
+                                        temp.VariableName = reader.GetString(i + k++);
 
                                     if (columnSelected.Contains("Measurement_unit"))
-                                        temp.MeasurementUnitName = reader.GetString(i + 12);
+                                        temp.MeasurementUnitName = reader.GetString(i + k++);
 
                                     if (columnSelected.Contains("Data"))
-                                        temp.Data = ExportRepository.ToNullableDecimal(reader.GetValue(i + 13).ToString());
+                                        temp.Data = ExportRepository.ToNullableDecimal(reader.GetValue(i + k++).ToString());
+
+                                    if (columnSelected.Contains("Data_US$"))
+                                        temp.DataUs = ExportRepository.ToNullableDecimal(reader.GetValue(i + k++).ToString());
 
                                     if (columnSelected.Contains("Year"))
-                                        temp.Year = reader.GetInt16(i + 14);
+                                        temp.Year = reader.GetInt16(i + k++);
 
                                     if (columnSelected.Contains("Source"))
-                                        temp.SourceName = reader.GetValue(i + 15).ToString();
+                                        temp.SourceName = reader.GetValue(i + k++).ToString();
 
                                     if (columnSelected.Contains("Link"))
-                                        temp.Link = reader.GetValue(i + 16).ToString();
+                                        temp.Link = reader.GetValue(i + k++).ToString();
 
                                     if (columnSelected.Contains("Exchange_Rate_US$"))
-                                        temp.CurrencyValue = ExportRepository.ToNullableDecimal(reader.GetValue(i + 17).ToString());
+                                        temp.CurrencyValue = ExportRepository.ToNullableDecimal(reader.GetValue(i + k++).ToString());
 
                                     if (columnSelected.Contains("Notes"))
-                                            temp.PublicNotes = reader.GetValue(i + 18).ToString();
+                                            temp.PublicNotes = reader.GetValue(i + k++).ToString();
 
                                     if (columnSelected.Contains("VAR LC"))
-                                        temp.VarLc = reader.GetBoolean(i + 19);
+                                        temp.VarLc = reader.GetBoolean(i + k++);
 
                                     if (columnSelected.Contains("Area_code"))
-                                        temp.AreaCode = reader.GetBoolean(i + 20);
+                                        temp.AreaCode = reader.GetBoolean(i + k++);
 
                                     if (columnSelected.Contains("COMMENTI NOMISMA (interno)"))
-                                            temp.InternalNotes = reader.GetValue(i + 21).ToString();
+                                            temp.InternalNotes = reader.GetValue(i + k++).ToString();
 
                                     if (columnSelected.Contains("collection date (consultation or download)"))
-                                            temp.DateDownload = ExportRepository.ToNullableDate(reader.GetValue(i + 22).ToString());
+                                            temp.DateDownload = ExportRepository.ToNullableDate(reader.GetValue(i + k++).ToString());
 
                                     if (columnSelected.Contains("reference data repository"))
-                                            temp.Repository = reader.GetValue(i + 23).ToString();
+                                            temp.Repository = reader.GetValue(i + k++).ToString();
 
                                     if (columnSelected.Contains("CHI ha inserito/modificato il dato"))
-                                            temp.Username = reader.GetValue(i + 24).ToString();
+                                            temp.Username = reader.GetValue(i + k++).ToString();
 
                                     if (columnSelected.Contains("date"))
-                                        temp.SourceDate = ExportRepository.ToNullableDate(reader.GetValue(i + 25).ToString());
+                                        temp.SourceDate = ExportRepository.ToNullableDate(reader.GetValue(i + k++).ToString());
 
                                     if (columnSelected.Contains("time"))
-                                        temp.SourceTime = ExportRepository.ToNullableTime(reader.GetValue(i + 26).ToString());
+                                        temp.SourceTime = ExportRepository.ToNullableTime(reader.GetValue(i + k++).ToString());
 
                                     excelViews.Add(temp);
                                 }

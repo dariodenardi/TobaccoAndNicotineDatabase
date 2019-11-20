@@ -25,6 +25,7 @@ namespace TobaccoNicotineApplication.Models
         public string VariableName { get; set; }
         public string MeasurementUnitName { get; set; }
         public Nullable<decimal> Data { get; set; }
+        public Nullable<decimal> DataUs { get; set; }
         public short Year { get; set; }
         public string SourceName { get; set; }
         public string Link { get; set; }

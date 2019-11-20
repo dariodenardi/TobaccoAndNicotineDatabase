@@ -391,7 +391,7 @@ namespace TobaccoNicotineApplication.Controllers
                     for (int i = 0; i < ws.Dimension.Columns; i++)
                     {
                         ws.Cells[1, 1 + i].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                        ws.Cells[1, 1 + i].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+                        ws.Cells[1, 1 + i].Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
                         ws.Cells[1, 1 + i].Style.Font.Bold = true;
                     }
                     // change zoom view
@@ -501,51 +501,49 @@ namespace TobaccoNicotineApplication.Controllers
                         }
 
                         // se il valore non è nullo
-                        if (export.Data != null)
+                        if (export.VarLc == true)
                         {
-                            // se la variabile è economica
-                            if (export.VarLc == true)
+                            if (export.Data != null)
                             {
-                                if (!export.CurrencyValue.HasValue)
+                                if (columnSelected.Contains("Data"))
                                 {
-                                    if (columnSelected.Contains("Data"))
-                                    {
-                                        ws.Cells[rowStart, column].Value = "";
-                                        column++;
-                                    }
-
-                                    if (columnSelected.Contains("Data_US$"))
-                                    {
-                                        ws.Cells[rowStart, column].Value = "";
-                                        column++;
-                                    }
+                                    // number with 1 decimal place and thousand separator
+                                    ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
+                                    ws.Cells[rowStart, column].Value = export.Data;
+                                    column++;
                                 }
-                                else
-                                {
-                                    if (columnSelected.Contains("Data"))
-                                    {
-                                        // number with 1 decimal place and thousand separator
-                                        ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
-                                        ws.Cells[rowStart, column].Value = export.Data;
-                                        column++;
-                                    }
-
-                                    if (columnSelected.Contains("Data_US$"))
-                                    {
-                                        if (export.CurrencyValue.Value != 0)
-                                        {
-                                            // number with 1 decimal place and thousand separator
-                                            ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
-                                            ws.Cells[rowStart, column].Value = export.Data * export.CurrencyValue.Value;
-                                        }
-                                        else
-                                            ws.Cells[rowStart, column].Value = "";
-                                        column++;
-                                    }
-                                }
-
                             }
                             else
+                            {
+                                if (columnSelected.Contains("Data"))
+                                {
+                                    ws.Cells[rowStart, column].Value = "";
+                                    column++;
+                                }
+                            }
+
+                            if (export.DataUs != null)
+                            {
+                                if (columnSelected.Contains("Data_US$"))
+                                {
+                                    // number with 1 decimal place and thousand separator
+                                    ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
+                                    ws.Cells[rowStart, column].Value = export.DataUs;
+                                    column++;
+                                }
+                            }
+                            else
+                            {
+                                if (columnSelected.Contains("Data_US$"))
+                                {
+                                    ws.Cells[rowStart, column].Value = "";
+                                    column++;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (export.Data != null)
                             {
                                 if (columnSelected.Contains("Data"))
                                 {
@@ -560,21 +558,20 @@ namespace TobaccoNicotineApplication.Controllers
                                     ws.Cells[rowStart, column].Value = "";
                                     column++;
                                 }
-
                             }
-                        }
-                        else
-                        {
-                            if (columnSelected.Contains("Data"))
+                            else
                             {
-                                ws.Cells[rowStart, column].Value = "";
-                                column++;
-                            }
+                                if (columnSelected.Contains("Data"))
+                                {
+                                    ws.Cells[rowStart, column].Value = "";
+                                    column++;
+                                }
 
-                            if (columnSelected.Contains("Data_US$"))
-                            {
-                                ws.Cells[rowStart, column].Value = "";
-                                column++;
+                                if (columnSelected.Contains("Data_US$"))
+                                {
+                                    ws.Cells[rowStart, column].Value = "";
+                                    column++;
+                                }
                             }
                         }
 
@@ -605,7 +602,8 @@ namespace TobaccoNicotineApplication.Controllers
                         {
                             if (columnSelected.Contains("Link"))
                             {
-                                ws.Cells[rowStart, column].Hyperlink = new ExcelHyperLink(export.Link);
+                                Uri uri = new UriBuilder(export.Link).Uri;
+                                ws.Cells[rowStart, column].Hyperlink = uri;
                                 ws.Cells[rowStart, column].StyleName = namedStyle.Name;
                                 ws.Cells[rowStart, column].Value = export.Link;
                                 column++;
@@ -620,9 +618,9 @@ namespace TobaccoNicotineApplication.Controllers
                             }
                         }
 
-                        if (export.VarLc == true)
+                        if (export.VarLc == true && export.DataUs != null)
                         {
-                            if (export.CurrencyValue.HasValue && export.Data != null)
+                            if (export.CurrencyValue.HasValue)
                             {
                                 if (columnSelected.Contains("Exchange_Rate_US$"))
                                 {
@@ -710,7 +708,8 @@ namespace TobaccoNicotineApplication.Controllers
                         {
                             if (columnSelected.Contains("reference data repository"))
                             {
-                                ws.Cells[rowStart, column].Hyperlink = new ExcelHyperLink(path + "/" + export.SourceName + "-" + export.SourceDate.Value.Day + "-" + export.SourceDate.Value.Month + "-" + export.SourceDate.Value.Year + "-" + export.SourceTime.Value.Hours + "-" + export.SourceTime.Value.Minutes + "-" + export.SourceTime.Value.Seconds + "/" + export.Repository);
+                                Uri uri = new UriBuilder(path + "/" + export.SourceName + "-" + export.SourceDate.Value.Day + "-" + export.SourceDate.Value.Month + "-" + export.SourceDate.Value.Year + "-" + export.SourceTime.Value.Hours + "-" + export.SourceTime.Value.Minutes + "-" + export.SourceTime.Value.Seconds + "/" + export.Repository).Uri;
+                                ws.Cells[rowStart, column].Hyperlink = uri;
                                 ws.Cells[rowStart, column].StyleName = namedStyle.Name;
                                 ws.Cells[rowStart, column].Value = path + "/" + export.SourceName + "-" + export.SourceDate.Value.Day + "-" + export.SourceDate.Value.Month + "-" + export.SourceDate.Value.Year + "-" + export.SourceTime.Value.Hours + "-" + export.SourceTime.Value.Minutes + "-" + export.SourceTime.Value.Seconds + "/" + export.Repository;
                                 column++;
@@ -835,6 +834,7 @@ namespace TobaccoNicotineApplication.Controllers
                 short country_code;
                 short variable_number;
                 decimal? data;
+                decimal? dataUs;
                 short year;
                 string source_name;
                 string link;
@@ -842,7 +842,6 @@ namespace TobaccoNicotineApplication.Controllers
                 string internal_notes;
                 string username;
                 bool varLc;
-                decimal? ExchangeRateUs;
                 DateTime? download_source;
                 string reference_data_repository;
 
@@ -866,25 +865,17 @@ namespace TobaccoNicotineApplication.Controllers
                             country_code = short.Parse(row[5].ToString());
                             variable_number = short.Parse(row[11].ToString());
                             varLc = (row[22].ToString() == "1") ? true : false;
-                            if (varLc == true) // valore economico
-                                if (!String.IsNullOrEmpty(row[16].ToString())) // se il valore è diverso da null
-                                    data = decimal.Parse(row[16].ToString().Replace(".", "").Replace(",", "."));
-                                else
-                                    data = null;
+                            if (!String.IsNullOrEmpty(row[16].ToString())) // se il valore è diverso da null
+                                dataUs = decimal.Parse(row[16].ToString().Replace(".", "").Replace(",", "."));
                             else
-                            {
-                                if (!String.IsNullOrEmpty(row[15].ToString())) // se il valore è diverso da null
-                                    data = decimal.Parse(row[15].ToString().Replace(".", "").Replace(",", "."));
-                                else
-                                    data = null;
-                            }
+                                dataUs = null;
+                            if (!String.IsNullOrEmpty(row[15].ToString())) // se il valore è diverso da null
+                                data = decimal.Parse(row[15].ToString().Replace(".", "").Replace(",", "."));
+                            else
+                                data = null;
                             year = short.Parse(row[17].ToString());
                             source_name = row[18].ToString();
                             link = row[19].ToString();
-                            if (!String.IsNullOrEmpty(row[20].ToString()))
-                                ExchangeRateUs = decimal.Parse(row[20].ToString().Replace(".", "").Replace(",", "."));
-                            else
-                                ExchangeRateUs = null;
                             public_notes = row[21].ToString();
                             internal_notes = row[24].ToString();
                             username = row[25].ToString();
@@ -893,10 +884,6 @@ namespace TobaccoNicotineApplication.Controllers
                             else
                                 download_source = null;
                             reference_data_repository = row[27].ToString();
-
-                            if (varLc == true)
-                                if (ExchangeRateUs.HasValue && data.HasValue)
-                                    data = data / ExchangeRateUs.Value;
 
                             oldValue = db.Values.Where(x => x.NomismaCode == nomismaCode).FirstOrDefault();
 
@@ -907,9 +894,10 @@ namespace TobaccoNicotineApplication.Controllers
                                 db.Entry(oldValue).Collection(x => x.Sources).Load();
 
                                 // valore non è stato già inserito
-                                if (oldValue.Data == null)
+                                if (oldValue.Data == null || varLc == true && oldValue.DataUs == null)
                                 {
                                     oldValue.Data = data;
+                                    oldValue.DataUs = dataUs;
                                     oldValue.InternalNotes = oldValue.InternalNotes;
                                     oldValue.PublicNotes = oldValue.PublicNotes;
 
@@ -920,7 +908,7 @@ namespace TobaccoNicotineApplication.Controllers
                                 else
                                 {
                                     // modifico solo se il valore è diverso
-                                    if (oldValue.Data != data)
+                                    if (oldValue.Data != data || varLc == true && oldValue.DataUs != dataUs)
                                     {
                                         Value newValue = new Value();
                                         newValue.CountryCode = country_code;
@@ -928,6 +916,7 @@ namespace TobaccoNicotineApplication.Controllers
                                         newValue.Year = year;
                                         newValue.NomismaCode = nomismaCode;
                                         newValue.Data = data;
+                                        oldValue.DataUs = dataUs;
                                         newValue.PublicNotes = public_notes;
                                         newValue.InternalNotes = internal_notes;
 
@@ -944,6 +933,7 @@ namespace TobaccoNicotineApplication.Controllers
                                 newValue.Year = year;
                                 newValue.NomismaCode = nomismaCode;
                                 newValue.Data = data;
+                                newValue.DataUs = dataUs;
                                 newValue.PublicNotes = public_notes;
                                 newValue.InternalNotes = internal_notes;
 
@@ -959,7 +949,7 @@ namespace TobaccoNicotineApplication.Controllers
                         if (System.IO.File.Exists(filePath))
                             System.IO.File.Delete(filePath);
 
-                        return Json(new { status = true, warning = JsonConvert.SerializeObject(warningList.Select(x => new { x.CountryCode, x.Data, x.NomismaCode, x.Number, x.Year, Name = ((x.Sources.FirstOrDefault() != null)? x.Sources.FirstOrDefault().Name : ""), Repository = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Repository : ""), Link = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Link : ""), Username = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Username : "") })) }, JsonRequestBehavior.AllowGet);
+                        return Json(new { status = true, warning = JsonConvert.SerializeObject(warningList.Select(x => new { x.CountryCode, x.Data, x.DataUs, x.NomismaCode, x.Number, x.Year, Name = ((x.Sources.FirstOrDefault() != null)? x.Sources.FirstOrDefault().Name : ""), Repository = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Repository : ""), Link = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Link : ""), Username = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Username : "") })) }, JsonRequestBehavior.AllowGet);
                     } // using database
                 }
                 catch (ArgumentException ex)

@@ -48,6 +48,9 @@ namespace TobaccoNicotineApplication.Models
         [StringLength(1000, MinimumLength = 0)]
         public string PmiNotes { get; set; }
 
+        [RegularExpression(@"[\d]{1,15}([.,][\d]{1,3})?", ErrorMessage = "Number must have a maximum of 3 decimals")]
+        public Nullable<decimal> DataUs { get; set; }
+    
         public virtual Country Countries { get; set; }
         public virtual Variable Variables { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
