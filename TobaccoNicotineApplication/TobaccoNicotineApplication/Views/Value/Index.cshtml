@@ -358,6 +358,15 @@
                                         </dd>
 
                                         <dt>
+                                            @Html.Label(dataUs, new { @class = "control-label col-md-2" })
+                                        </dt>
+
+                                        <dd>
+                                            @Html.EditorFor(model => model.DataUs, new { htmlAttributes = new { @id = "Data", @class = "form-control", @placeholder = "Insert " + dataUs } })
+                                            @Html.ValidationMessageFor(model => model.DataUs, "", new { @class = "text-danger" })
+                                        </dd>
+
+                                        <dt>
                                             @Html.Label(publicNotes, new { @class = "control-label col-md-2" })
                                         </dt>
 

@@ -980,7 +980,6 @@ namespace TobaccoNicotineApplication.Controllers
                                     {
                                         newSource.DateDownload = download_source.Value;
                                         newSource.Repository = reference_data_repository;
-                                        
                                     }
                                     newSource.Username = username;
                                     newValue.Sources.Add(newSource);

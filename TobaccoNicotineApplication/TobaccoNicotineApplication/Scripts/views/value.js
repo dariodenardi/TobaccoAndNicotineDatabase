@@ -42,10 +42,10 @@ function DataBind(ValueList) {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
                 + "<td>" + ValueList[i].CountryName + "</td>"
                 + "<td>" + ValueList[i].VariableName + "</td>"
-                + "<td>" + "<input id=\"DataTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + ValueList[i].Data + "\" placeholder=\"Insert " + data + "\" onkeypress=\"saveRow(event, 0, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", DataTable" + i + ")\" >" + "</td>";
+                + "<td>" + "<input id=\"DataTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + ((typeof ValueList[i].Data == 'number') ? parseFloat(ValueList[i].Data).toFixed(1) : ValueList[i].Data) + "\" placeholder=\"Insert " + data + "\" onkeypress=\"saveRow(event, 0, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", DataTable" + i + ")\" >" + "</td>";
 
             if (ValueList[i].VarLc == true)
-                Data = Data + "<td>" + "<input id=\"DataUsTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + eval((ValueList[i].Data * ValueList[i].CurrencyValue).toFixed(3)) + "\" placeholder=\"Insert " + dataUs + "\" onkeypress=\"saveRow(event, 1, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", DataUsTable" + i + ")\" >" + "</td>";
+                Data = Data + "<td>" + "<input id=\"DataUsTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + ((typeof ValueList[i].DataUs == 'number') ? parseFloat(ValueList[i].DataUs).toFixed(1) : ValueList[i].DataUs) + "\" placeholder=\"Insert " + dataUs + "\" onkeypress=\"saveRow(event, 1, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", DataUsTable" + i + ")\" >" + "</td>";
             else
                 Data = Data + "<td id=\"DataUsTable>\"" + "</td>";
 
@@ -57,8 +57,8 @@ function DataBind(ValueList) {
                 Data = Data + "<td>" + "</td>";
 
             Data = Data
-                + "<td>" + "<input id=\"PublicNotesTable" + i + "\"" + "class=\"form-control\" maxlength=" + publicNotesMax + " type=\"textbox\" value=\"" + ValueList[i].PublicNotes + "\" placeholder=\"Insert " + publicNotes + "\" onkeypress=\"saveRow(event, 2, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", PublicNotesTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"InternalNotesTable" + i + "\"" + "class=\"form-control\"  maxlength=" + internalNotesMax + " type=\"textbox\" value=\"" + ValueList[i].InternalNotes + "\" placeholder=\"Insert " + internalNotes + "\" onkeypress=\"saveRow(event, 3, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].CurrencyValue + ", " + ValueList[i].VarLc + ", InternalNotesTable" + i + ")\" >" + "</td>";
+                + "<td>" + "<input id=\"PublicNotesTable" + i + "\"" + "class=\"form-control\" maxlength=" + publicNotesMax + " type=\"textbox\" value=\"" + ValueList[i].PublicNotes + "\" placeholder=\"Insert " + publicNotes + "\" onkeypress=\"saveRow(event, 2, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", PublicNotesTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"InternalNotesTable" + i + "\"" + "class=\"form-control\"  maxlength=" + internalNotesMax + " type=\"textbox\" value=\"" + ValueList[i].InternalNotes + "\" placeholder=\"Insert " + internalNotes + "\" onkeypress=\"saveRow(event, 3, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", InternalNotesTable" + i + ")\" >" + "</td>";
 
         } else {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
@@ -187,7 +187,7 @@ function findVariableNumber() {
 }
 
 // invia richiesta Ajax per salvare un rows cambiato
-function saveAjaxRequest(countryCode, number, year, currencyValue, varLc, data, dataUs, public, internal, id) {
+function saveAjaxRequest(countryCode, number, year, varLc, data, dataUs, public, internal, id) {
 
     $.ajax({
         type: "POST",
@@ -200,7 +200,6 @@ function saveAjaxRequest(countryCode, number, year, currencyValue, varLc, data, 
             countryCode: countryCode,
             year: year,
             number: number,
-            currencyValue: currencyValue,
             data: data,
             dataUs: dataUs,
             varLc: varLc,
@@ -237,7 +236,7 @@ function saveAjaxRequest(countryCode, number, year, currencyValue, varLc, data, 
 }
 
 // Save Row
-function saveRow(e, params, countryCode, number, year, currencyValue, varLc, id) {
+function saveRow(e, params, countryCode, number, year, varLc, id) {
 
     if (e.keyCode == 13) {
 
@@ -246,28 +245,32 @@ function saveRow(e, params, countryCode, number, year, currencyValue, varLc, id)
             // cliccato invio con data -> aggiorno dataUs
             var numero_riga = id.id.replace("DataTable", "");
             var exhange = document.getElementById("SetValueList").children[numero_riga].children[6].outerText;
-            $('#DataUsTable' + numero_riga).val((id.value * exhange).toFixed(3));
+            $('#DataUsTable' + numero_riga).val((id.value * exhange).toFixed(1));
         } else if (params == '1') {
             // cliccato invio con dataUs -> aggiorno data
             var numero_riga = id.id.replace("DataUsTable", "");
             var exhange = document.getElementById("SetValueList").children[numero_riga].children[6].outerText;
-            $('#DataTable' + numero_riga).val((id.value / exhange).toFixed(3));
+            $('#DataTable' + numero_riga).val((id.value / exhange).toFixed(1));
         }
 
         var data;
         var dataUs;
         var public = undefined;
         var internal = undefined;
-        if (params == '0')
+        if (params == '0') {
             data = id.value;
-        if (params == '1')
+            dataUs = (id.value * exhange).toFixed(1);
+        }
+        if (params == '1') {
+            data = (id.value / exhange).toFixed(1);
             dataUs = id.value;
+        } 
         if (params == '2')
             public = id.value;
         if (params == '3')
             internal = id.value;
 
-        saveAjaxRequest(countryCode, number, year, currencyValue, varLc, data, dataUs, public, internal, id);
+        saveAjaxRequest(countryCode, number, year, varLc, data, dataUs, public, internal, id);
 
         return false; // returning false will prevent the event from bubbling up.
     }
@@ -1093,12 +1096,6 @@ function pasteFromClipboard(numeroCheck) {
                     var year = className.split("_")[1];
                     var number = className.split("_")[2];
 
-                    var currencyValue;
-                    if (riga.children[6].outerText != "")
-                        currencyValue = riga.children[6].outerText;
-                    else
-                        currencyValue = 0;
-
                     var varLc;
                     if (riga.children[6].outerText != "")
                         varLc = true;
@@ -1135,7 +1132,7 @@ function pasteFromClipboard(numeroCheck) {
                     riga.children[8].children[0].value = internal;
 
                     // invio richiesta ajax per salvare
-                    saveAjaxRequest(countryCode, number, year, currencyValue, varLc, data, dataUs, public, internal, riga);
+                    saveAjaxRequest(countryCode, number, year, varLc, data, dataUs, public, internal, riga);
 
                     m++;
                 }

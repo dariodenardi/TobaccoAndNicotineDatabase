@@ -113,7 +113,7 @@ namespace TobaccoNicotineApplication.Controllers
                 else if (orderInternalNotes == "asc")
                     values = values.OrderBy(x => x.InternalNotes);
 
-                return Json(values.Select(x => new { x.CountryCode, x.Number, x.Countries.CountryName, VariableName = x.Variables.Name, x.Data, x.Year, x.Variables.VarLc, CurrencyValue = (x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault() != null)? x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault().Value : 0, x.PublicNotes, x.InternalNotes, Repository = (x.Sources.FirstOrDefault().Repository != null) ? (x.Sources.FirstOrDefault().Name + "-" + x.Sources.FirstOrDefault().Date.Day + "-" + x.Sources.FirstOrDefault().Date.Month + "-" + x.Sources.FirstOrDefault().Date.Year + "-" + x.Sources.FirstOrDefault().Time.Hours + "-" + x.Sources.FirstOrDefault().Time.Minutes + "-" + x.Sources.FirstOrDefault().Time.Seconds + "/" + x.Sources.FirstOrDefault().Repository) : null }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(values.Select(x => new { x.CountryCode, x.Number, x.Countries.CountryName, VariableName = x.Variables.Name, x.Data, x.DataUs, x.Year, x.Variables.VarLc, CurrencyValue = (x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault() != null)? x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault().Value : 0, x.PublicNotes, x.InternalNotes, Repository = (x.Sources.FirstOrDefault().Repository != null) ? (x.Sources.FirstOrDefault().Name + "-" + x.Sources.FirstOrDefault().Date.Day + "-" + x.Sources.FirstOrDefault().Date.Month + "-" + x.Sources.FirstOrDefault().Date.Year + "-" + x.Sources.FirstOrDefault().Time.Hours + "-" + x.Sources.FirstOrDefault().Time.Minutes + "-" + x.Sources.FirstOrDefault().Time.Seconds + "/" + x.Sources.FirstOrDefault().Repository) : null }).ToList(), JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -134,7 +134,7 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
         [Log]
-        public JsonResult Edit(short countryCode, short year, short number, decimal currencyValue, string data, string dataUs, bool varLc, string publicNotes, string internalNotes)
+        public JsonResult Edit(short countryCode, short year, short number, string data, string dataUs, bool varLc, string publicNotes, string internalNotes)
         {
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
@@ -157,19 +157,13 @@ namespace TobaccoNicotineApplication.Controllers
                             model.InternalNotes = internalNotes;
                     if (varLc == true)
                     {
-                        //model.Data = valore in data
                         if (!String.IsNullOrEmpty(dataUs))
                             if (dataUs == "null")
-                                model.Data = null;
+                                model.DataUs = null;
                             else
-                            {
-                                if (currencyValue != 0)
-                                    model.Data = Math.Round(decimal.Parse(dataUs) / currencyValue, 3);
-                                else
-                                    model.Data = null;
-                            }
-                        else if (!String.IsNullOrEmpty(data))
-                                if (dataUs == "null")
+                                model.DataUs = decimal.Parse(dataUs);
+                        if (!String.IsNullOrEmpty(data))
+                                if (data == "null")
                                     model.Data = null;
                                 else
                                     model.Data = decimal.Parse(data);
@@ -177,7 +171,7 @@ namespace TobaccoNicotineApplication.Controllers
                     else
                     {
                         if (!String.IsNullOrEmpty(data))
-                            if (dataUs == "null")
+                            if (data == "null")
                                 model.Data = null;
                             else
                                 model.Data = decimal.Parse(data);
