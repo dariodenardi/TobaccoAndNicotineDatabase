@@ -968,7 +968,8 @@ namespace TobaccoNicotineApplication.Controllers
                                             if (oldValue.Sources.Count > 0)
                                                 oldValue.Sources.Remove(oldValue.Sources.FirstOrDefault());
 
-                                            if (!String.IsNullOrEmpty(source_name))
+                                            // metto la sorgente solo se è stato messo un dato diverso da null
+                                            if (!String.IsNullOrEmpty(source_name) && oldValue.Data != null || varLc == true && oldValue.DataUs != null)
                                             {
                                                 Source newSource = new Source();
                                                 newSource.Name = source_name;
@@ -985,6 +986,8 @@ namespace TobaccoNicotineApplication.Controllers
                                                 newValue.Sources.Add(newSource);
                                             }
                                         }
+                                        else
+                                            newValue.Sources.Add(oldValue.Sources.FirstOrDefault());
 
                                         warningList.Add(oldValue);
                                         warningList.Add(newValue);
