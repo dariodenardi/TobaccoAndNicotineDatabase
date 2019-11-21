@@ -517,6 +517,8 @@ namespace TobaccoNicotineApplication.Controllers
                             {
                                 if (columnSelected.Contains("Data"))
                                 {
+                                    // number with 1 decimal place and thousand separator
+                                    ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
                                     ws.Cells[rowStart, column].Value = "";
                                     column++;
                                 }
@@ -536,6 +538,8 @@ namespace TobaccoNicotineApplication.Controllers
                             {
                                 if (columnSelected.Contains("Data_US$"))
                                 {
+                                    // number with 1 decimal place and thousand separator
+                                    ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
                                     ws.Cells[rowStart, column].Value = "";
                                     column++;
                                 }
@@ -555,6 +559,8 @@ namespace TobaccoNicotineApplication.Controllers
 
                                 if (columnSelected.Contains("Data_US$"))
                                 {
+                                    // number with 1 decimal place and thousand separator
+                                    ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
                                     ws.Cells[rowStart, column].Value = "";
                                     column++;
                                 }
@@ -563,12 +569,16 @@ namespace TobaccoNicotineApplication.Controllers
                             {
                                 if (columnSelected.Contains("Data"))
                                 {
+                                    // number with 1 decimal place and thousand separator
+                                    ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
                                     ws.Cells[rowStart, column].Value = "";
                                     column++;
                                 }
 
                                 if (columnSelected.Contains("Data_US$"))
                                 {
+                                    // number with 1 decimal place and thousand separator
+                                    ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
                                     ws.Cells[rowStart, column].Value = "";
                                     column++;
                                 }
@@ -896,31 +906,45 @@ namespace TobaccoNicotineApplication.Controllers
                                 // valore non è stato già inserito
                                 if (oldValue.Data == null || varLc == true && oldValue.DataUs == null)
                                 {
-                                    oldValue.Data = data;
-                                    oldValue.DataUs = dataUs;
-                                    oldValue.InternalNotes = oldValue.InternalNotes;
-                                    oldValue.PublicNotes = oldValue.PublicNotes;
-
-                                    if (!String.IsNullOrEmpty(source_name))
+                                    // effettuo la modifica solo se è stato effettivamente cambiato
+                                    if (oldValue.Data != data || varLc == true && oldValue.DataUs != dataUs)
                                     {
-                                        Source newSource = new Source();
-                                        newSource.Name = source_name;
-                                        newSource.Date = DateTime.Now.Date;
-                                        newSource.Time = DateTime.Now.TimeOfDay;
-                                        newSource.Link = link;
-                                        if (!String.IsNullOrEmpty(reference_data_repository))
-                                        {
-                                            newSource.DateDownload = download_source.Value;
-                                            newSource.Repository = reference_data_repository;
-                                        }
-                                        newSource.Username = username;
-                                        oldValue.Sources.Add(newSource);
-                                    }
+                                        oldValue.Data = data;
+                                        oldValue.DataUs = dataUs;
+                                        oldValue.InternalNotes = internal_notes;
+                                        oldValue.PublicNotes = public_notes;
 
-                                    // salvo
-                                    db.Entry(oldValue).State = EntityState.Modified;
+                                        // vedo se la sorgente è stata cambiata
+                                        if (((oldValue.Sources.FirstOrDefault() != null) ? oldValue.Sources.FirstOrDefault().Name : null) != source_name)
+                                        {
+                                            // rimuovo vecchia sorgente se è presente
+                                            if (oldValue.Sources.Count > 0)
+                                                oldValue.Sources.Remove(oldValue.Sources.FirstOrDefault());
+
+                                            // metto la sorgente solo se è stato messo un dato diverso da null
+                                            if (!String.IsNullOrEmpty(source_name) && oldValue.Data != null || varLc == true && oldValue.DataUs != null)
+                                            {
+                                                Source newSource = new Source();
+                                                newSource.Name = source_name;
+                                                newSource.Date = DateTime.Now.Date;
+                                                newSource.Time = DateTime.Now.TimeOfDay;
+                                                newSource.Link = link;
+                                                if (download_source != null)
+                                                {
+                                                    newSource.DateDownload = download_source.Value;
+                                                    newSource.Repository = reference_data_repository;
+                                                }
+                                                newSource.Username = username;
+
+                                                oldValue.Sources.Add(newSource);
+                                            }
+                                        }
+
+                                        // salvo
+                                        db.Entry(oldValue).State = EntityState.Modified;
+                                    }
                                 }
-                                // valore già inserito
+                                // valore è già inserito
                                 else
                                 {
                                     // inserisco il warning solo se il valore è diverso
@@ -932,30 +956,72 @@ namespace TobaccoNicotineApplication.Controllers
                                         newValue.Year = year;
                                         newValue.NomismaCode = nomismaCode;
                                         newValue.Data = data;
+                                        newValue.DataPmi = Decimal.Parse("0.0");
                                         oldValue.DataUs = dataUs;
                                         newValue.PublicNotes = public_notes;
                                         newValue.InternalNotes = internal_notes;
 
-                                        if (!String.IsNullOrEmpty(source_name))
+                                        // vedo se la sorgente è stata cambiata
+                                        if (((oldValue.Sources.FirstOrDefault() != null) ? oldValue.Sources.FirstOrDefault().Name : null) != source_name)
                                         {
-                                            Source newSource = new Source();
-                                            newSource.Name = source_name;
-                                            newSource.Date = DateTime.Now.Date;
-                                            newSource.Time = DateTime.Now.TimeOfDay;
-                                            newSource.Link = link;
-                                            if (!String.IsNullOrEmpty(reference_data_repository))
+                                            // rimuovo vecchia sorgente se è presente
+                                            if (oldValue.Sources.Count > 0)
+                                                oldValue.Sources.Remove(oldValue.Sources.FirstOrDefault());
+
+                                            if (!String.IsNullOrEmpty(source_name))
                                             {
-                                                newSource.DateDownload = download_source.Value;
-                                                newSource.Repository = reference_data_repository;
+                                                Source newSource = new Source();
+                                                newSource.Name = source_name;
+                                                newSource.Date = DateTime.Now.Date;
+                                                newSource.Time = DateTime.Now.TimeOfDay;
+                                                newSource.Link = link;
+                                                if (download_source != null)
+                                                {
+                                                    newSource.DateDownload = download_source.Value;
+                                                    newSource.Repository = reference_data_repository;
+                                                }
+                                                newSource.Username = username;
+
+                                                newValue.Sources.Add(newSource);
                                             }
-                                            newSource.Username = username;
-                                            newValue.Sources.Add(newSource);
                                         }
 
                                         warningList.Add(oldValue);
                                         warningList.Add(newValue);
                                     }
+                                    else
+                                    {
+                                        // vedo se la sorgente è stata cambiata
+                                        if (((oldValue.Sources.FirstOrDefault() != null) ? oldValue.Sources.FirstOrDefault().Name : null) != source_name)
+                                        {
+                                            // rimuovo vecchia sorgente se è presente
+                                            if (oldValue.Sources.Count > 0)
+                                                oldValue.Sources.Remove(oldValue.Sources.FirstOrDefault());
+
+                                            // metto la sorgente solo se è stato messo un dato diverso da null
+                                            if (!String.IsNullOrEmpty(source_name) && oldValue.Data != null || varLc == true && oldValue.DataUs != null)
+                                            {
+                                                Source newSource = new Source();
+                                                newSource.Name = source_name;
+                                                newSource.Date = DateTime.Now.Date;
+                                                newSource.Time = DateTime.Now.TimeOfDay;
+                                                newSource.Link = link;
+                                                if (download_source != null)
+                                                {
+                                                    newSource.DateDownload = download_source.Value;
+                                                    newSource.Repository = reference_data_repository;
+                                                }
+                                                newSource.Username = username;
+
+                                                oldValue.Sources.Add(newSource);
+                                            }
+                                        }
+
+                                        // salvo
+                                        db.Entry(oldValue).State = EntityState.Modified;
+                                    }
                                 }
+
                             } // valore non presente all'interno del database
                             else
                             {
@@ -965,6 +1031,7 @@ namespace TobaccoNicotineApplication.Controllers
                                 newValue.Year = year;
                                 newValue.NomismaCode = nomismaCode;
                                 newValue.Data = data;
+                                newValue.DataPmi = Decimal.Parse("0.0");
                                 newValue.DataUs = dataUs;
                                 newValue.PublicNotes = public_notes;
                                 newValue.InternalNotes = internal_notes;
@@ -976,12 +1043,13 @@ namespace TobaccoNicotineApplication.Controllers
                                     newSource.Date = DateTime.Now.Date;
                                     newSource.Time = DateTime.Now.TimeOfDay;
                                     newSource.Link = link;
-                                    if (!String.IsNullOrEmpty(reference_data_repository))
+                                    if (download_source != null)
                                     {
                                         newSource.DateDownload = download_source.Value;
                                         newSource.Repository = reference_data_repository;
                                     }
                                     newSource.Username = username;
+
                                     newValue.Sources.Add(newSource);
                                 }
 
@@ -997,7 +1065,7 @@ namespace TobaccoNicotineApplication.Controllers
                         if (System.IO.File.Exists(filePath))
                             System.IO.File.Delete(filePath);
 
-                        return Json(new { status = true, warning = JsonConvert.SerializeObject(warningList.Select(x => new { x.CountryCode, x.Data, x.DataUs, x.NomismaCode, x.Number, x.Year, Name = ((x.Sources.FirstOrDefault() != null)? x.Sources.FirstOrDefault().Name : null), Repository = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Repository : null), Link = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Link : null), Username = ((x.Sources.FirstOrDefault() != null) ? x.Sources.FirstOrDefault().Username : null) })) }, JsonRequestBehavior.AllowGet);
+                        return Json(new { status = true, warning = JsonConvert.SerializeObject(warningList, Formatting.Indented, new JsonSerializerSettings() { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore}) }, JsonRequestBehavior.AllowGet);
                     } // using database
                 }
                 catch (ArgumentException ex)
