@@ -1105,17 +1105,17 @@ namespace TobaccoNicotineApplication.Controllers
             {
                 if (newValue != null)
                 {
-                    //Value oldValue = db.Values.Where(x => x.NomismaCode == newValue.NomismaCode).FirstOrDefault();
+                    Value oldValue = db.Values.Where(x => x.NomismaCode == newValue.NomismaCode).FirstOrDefault();
                     // caricamento lazy load
-                    //db.Entry(oldValue).Collection(x => x.Sources).Load();
-                    //oldValue.Sources = newValue.Sources;
-                    //oldValue.Data = newValue.Data;
-                    //oldValue.DataUs = newValue.DataUs;
-                    //oldValue.InternalNotes = newValue.InternalNotes;
-                    //oldValue.PublicNotes = newValue.PublicNotes;
+                    db.Entry(oldValue).Collection(x => x.Sources).Load();
+                    oldValue.Sources = newValue.Sources;
+                    oldValue.Data = newValue.Data;
+                    oldValue.DataUs = newValue.DataUs;
+                    oldValue.InternalNotes = newValue.InternalNotes;
+                    oldValue.PublicNotes = newValue.PublicNotes;
                     // salvo
                     status = true;
-                    db.Entry(newValue).State = EntityState.Modified;
+                    db.Entry(oldValue).State = EntityState.Modified;
                     db.SaveChanges();
                 }
 

@@ -232,6 +232,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sql\DataSource.cs" />
     <Compile Include="Sql\ExportRepository.cs" />
+    <Compile Include="Sql\ValueRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\ApplicationVersion.cs" />
     <Compile Include="Utilities\DateUtils.cs" />
@@ -316,7 +317,8 @@
     <Content Include="Scripts\plugins\dropzone\dist\min\dropzone-amd-module.min.js" />
     <Content Include="Scripts\plugins\dropzone\dist\min\dropzone.min.css" />
     <Content Include="Scripts\plugins\dropzone\dist\min\dropzone.min.js" />
-    <Content Include="Sql\Queries\Queries.sql" />
+    <Content Include="Sql\Queries\Value.sql" />
+    <Content Include="Sql\Queries\Export.sql" />
     <Content Include="Images\avatar-1.jpg" />
     <Content Include="Scripts\app.js" />
     <Content Include="fonts\FontAwesome.otf" />

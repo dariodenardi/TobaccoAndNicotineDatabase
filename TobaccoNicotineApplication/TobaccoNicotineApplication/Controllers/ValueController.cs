@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using TobaccoNicotineApplication.Filters;
 using TobaccoNicotineApplication.Models;
+using TobaccoNicotineApplication.Sql;
 using TobaccoNicotineApplication.Utilities;
 
 namespace TobaccoNicotineApplication.Controllers
@@ -360,6 +361,34 @@ namespace TobaccoNicotineApplication.Controllers
                     values = values.Where(t => measurementUnit.Contains(t.Variables.MeasurementUnitName));
 
                 return Json(values.Select(x => new { x.Year }).Distinct().OrderBy(x => x.Year).ToList(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public static int CheckValue(short CountryCode, short Number, short Year, decimal? Data, decimal? DataUs)
+        {
+            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                // Il tool genera un warning quando all’interno della stessa variabile e per singolo paese ci sono fonti diverse tra i vari anni
+                // (es. la variabile 2 del Burundi ha fonte X per il 2010-2015 e fonte Y per il 2016-18).
+                bool result = ValueRepository.getDifferentSource(CountryCode, Number);
+                if (result == true)
+                    return 1;
+
+                // Il tool genera un warning ogni volta che registra la presenza di dati poco verosimili (ad esempio quando un dato cambia in maniera troppo
+                // drastica tra un anno e l’altro (es. il numero di sigarette vendute passa da 1 miliardo a 1.000 nel giro di un anno)
+                Value model = db.Values.Where(x => x.CountryCode == CountryCode && x.Year == (Year - 1) && x.Number == Number).FirstOrDefault();
+
+                if (model != null)
+                {
+                    if (model.Data.HasValue && Data.HasValue && (model.Data - Data) >= 100000000)
+                        return 2;
+                    else if (model.DataUs.HasValue &&DataUs.HasValue && (model.DataUs - DataUs) >= 100000000)
+                        return 2;
+                }
+
+                return 0;
             }
         }
 
