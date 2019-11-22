@@ -1784,6 +1784,12 @@
                             var public = res2[6];
                             var internal = res2[7];
 
+                            var sourceName = (res2.length > 8) ? res2[8] : null;
+                            var link = (res2.length > 9) ? res2[9] : null;
+                            var repository = (res2.length > 10) ? res2[10] : null;
+                            var dateDownload = (res2.length > 11) ? res2[11] : null;
+                            var username = (res2.length > 12) ? res2[12] : null;
+
                             // i valori ammessi sono anche nulli
                             if (data == null)
                                 data = "null";
@@ -1797,8 +1803,23 @@
                             if (internal == null)
                                 internal = "null";
 
+                            if (sourceName == null)
+                                sourceName = "null";
+
+                            if (link == null)
+                                link = "null";
+
+                            if (repository == null)
+                                repository = "null";
+
+                            if (dateDownload == null)
+                                dateDownload = "null";
+
+                            if (username == null)
+                                username = "null";
+
                             // controllo
-                            if (Validation(data, dataUs, public, internal) == false)
+                            if (Validation(data, dataUs, public, internal, sourceName, link, repository, dateDownload, username) == false)
                                 return;
 
                             // cambio valori riga
@@ -1807,6 +1828,12 @@
                                 riga.children[4].children[0].value = dataUs;
                             riga.children[7].children[0].value = public;
                             riga.children[8].children[0].value = internal;
+                            riga.children[9].children[0].value = sourceName;
+                            riga.children[10].children[0].value = link;
+                            riga.children[11].children[0].value = repository;
+                            riga.children[12].children[0].value = dateDownload;
+                            riga.children[13].children[0].value = username;
+                            riga.children[14].children[0].outerText = "";
 
                             // invio richiesta ajax per salvare
                             saveAjaxRequest(countryCode, number, year, varLc, data, dataUs, public, internal, sourceName, link, repository, dateDownload, username, riga);
@@ -1822,7 +1849,7 @@
                 });
         }
 
-        function Validation(data, dataUs, public, internal) {
+        function Validation(data, dataUs, public, internal, sourceName, link, repository, dateDownload, username) {
 
             // se è un numero
             if (isNaN(data) && !(data != "null" || data != "")) {
@@ -1832,6 +1859,20 @@
 
             if (isNaN(dataUs) && !(dataUs != "null" || dataUs != "")) {
                 swal("Attention!", dataUs + ": isn't a number!", "error");
+                return false;
+            }
+
+            //
+            if (sourceName != "null") {
+                if (username == "null" || username == "") {
+                    swal("Attention!", "Username: cannot be null!", "error");
+                    return false;
+                }
+            }
+
+            // repository?
+            if (RepositoryNameArray.includes((repository == "null" ? null : repository)) == false) {
+                swal("Attention!", repository + ": check file name!", "error");
                 return false;
             }
 
@@ -1846,6 +1887,36 @@
                 return false;
             }
 
+            if (sourceName != "null" || sourceName != "") {
+                if (username != "null" || username != "") {
+                    if (username.length < usernameMin || username.length > usernameMax) {
+                        swal("Attention!", username + ": check length!", "error");
+                        return false;
+                    }
+                }
+
+                if (dateDownload != "null" || dateDownload != "") {
+                    if (dateDownload.length > 10 && (dateDownload != null || dateDownload != "")) {
+                        swal("Attention!", dateDownload + ": check length!", "error");
+                        return false;
+                    }
+                }
+
+                if (repository != "null" || repository != "") {
+                    if (repository.length > repositoryMax) {
+                        swal("Attention!", repository + ": check length!", "error");
+                        return false;
+                    }
+                }
+
+                if (link != "null" || link != "") {
+                    if (link.length > linkMax) {
+                        swal("Attention!", link + ": check length!", "error");
+                        return false;
+                    }
+                }
+
+            }
         }
 
         function Paste() {

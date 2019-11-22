@@ -888,13 +888,19 @@ function Validation(link, repository, dateDownload, username) {
         return false;
     }
 
+    // repository?
+    if (RepositoryNameArray.includes((repository == "null" ? null : repository)) == false) {
+        swal("Attention!", repository + ": check file name!", "error");
+        return false;
+    }
+
     // lunghezza della stringa
     if (username.length < usernameMin || username.length > usernameMax) {
         swal("Attention!", username + ": check length!", "error");
         return false;
     }
 
-    if (dateDownload.length < 10 && (dateDownload == null || dateDownload == "")) {
+    if (dateDownload.length > 10 && (dateDownload != null || dateDownload != "")) {
         swal("Attention!", dateDownload + ": check length!", "error");
         return false;
     }
