@@ -49,7 +49,7 @@ namespace TobaccoNicotineApplication.Controllers
                     sources = sources.Where(t => repository.Contains(t.Repository));
 
                 if (ArrayUtils.IsNullOrEmpty(dateSource) == false)
-                    sources = sources.Where(t => dateSource.Contains(t.DateDownload));
+                    sources = sources.Where(t => dateSource.Contains(t.DateDownload.Value));
 
                 if (ArrayUtils.IsNullOrEmpty(username) == false)
                     sources = sources.Where(t => username.Contains(t.Username));
@@ -121,12 +121,18 @@ namespace TobaccoNicotineApplication.Controllers
                             model.Repository = null;
                         else
                             model.Repository = repository;
-                    if (DateUtils.IsDateTime(dateDownload))
-                        model.DateDownload = DateTime.Parse(dateDownload);
+                    if (!String.IsNullOrEmpty(dateDownload))
+                        if (dateDownload == "null")
+                            model.DateDownload = null;
+                        else
+                        {
+                            if (DateUtils.IsDateTime(dateDownload))
+                                model.DateDownload = DateTime.Parse(dateDownload);
+                        }
                     if (!String.IsNullOrEmpty(username))
                         model.Username = username;
 
-                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || DateUtils.IsDateTime(dateDownload) || !String.IsNullOrEmpty(username))
+                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || DateUtils.IsDateTime(dateDownload) || !String.IsNullOrEmpty(dateDownload) && (dateDownload == "null" || DateUtils.IsDateTime(dateDownload)) || !String.IsNullOrEmpty(username))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo
@@ -272,7 +278,7 @@ namespace TobaccoNicotineApplication.Controllers
                     sources = sources.Where(t => repository.Contains(t.Repository));
 
                 if (ArrayUtils.IsNullOrEmpty(dateSource) == false)
-                    sources = sources.Where(t => dateSource.Contains(t.DateDownload));
+                    sources = sources.Where(t => dateSource.Contains(t.DateDownload.Value));
 
                 if (ArrayUtils.IsNullOrEmpty(username) == false)
                     sources = sources.Where(t => username.Contains(t.Username));

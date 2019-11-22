@@ -697,7 +697,7 @@ namespace TobaccoNicotineApplication.Controllers
                             }
                         }
 
-                        if (export.SourceName != null)
+                        if (export.DateDownload != null)
                         {
                             if (columnSelected.Contains("collection date (consultation or download)"))
                             {
@@ -889,7 +889,7 @@ namespace TobaccoNicotineApplication.Controllers
                             public_notes = (!String.IsNullOrEmpty(row[21].ToString())) ? row[21].ToString() : null;
                             internal_notes = (!String.IsNullOrEmpty(row[24].ToString())) ? row[24].ToString() : null;
                             username = row[25].ToString();
-                            if (!String.IsNullOrEmpty(row[26].ToString()))
+                            if (DateUtils.IsDateTime(row[26].ToString()))
                                 download_source = DateTime.ParseExact(row[26].ToString(), "MM/dd/yyyy", null);
                             else
                                 download_source = null;
@@ -930,10 +930,8 @@ namespace TobaccoNicotineApplication.Controllers
                                                 newSource.Time = DateTime.Now.TimeOfDay;
                                                 newSource.Link = link;
                                                 if (download_source != null)
-                                                {
                                                     newSource.DateDownload = download_source.Value;
-                                                    newSource.Repository = reference_data_repository;
-                                                }
+                                                newSource.Repository = reference_data_repository;
                                                 newSource.Username = username;
 
                                                 oldValue.Sources.Add(newSource);
@@ -973,10 +971,8 @@ namespace TobaccoNicotineApplication.Controllers
                                                 newSource.Time = DateTime.Now.TimeOfDay;
                                                 newSource.Link = link;
                                                 if (download_source != null)
-                                                {
                                                     newSource.DateDownload = download_source.Value;
-                                                    newSource.Repository = reference_data_repository;
-                                                }
+                                                newSource.Repository = reference_data_repository;
                                                 newSource.Username = username;
 
                                                 newValue.Sources.Add(newSource);
@@ -1006,10 +1002,8 @@ namespace TobaccoNicotineApplication.Controllers
                                                 newSource.Time = DateTime.Now.TimeOfDay;
                                                 newSource.Link = link;
                                                 if (download_source != null)
-                                                {
                                                     newSource.DateDownload = download_source.Value;
-                                                    newSource.Repository = reference_data_repository;
-                                                }
+                                                newSource.Repository = reference_data_repository;
                                                 newSource.Username = username;
 
                                                 oldValue.Sources.Add(newSource);
@@ -1043,10 +1037,8 @@ namespace TobaccoNicotineApplication.Controllers
                                     newSource.Time = DateTime.Now.TimeOfDay;
                                     newSource.Link = link;
                                     if (download_source != null)
-                                    {
                                         newSource.DateDownload = download_source.Value;
-                                        newSource.Repository = reference_data_repository;
-                                    }
+                                    newSource.Repository = reference_data_repository;
                                     newSource.Username = username;
 
                                     newValue.Sources.Add(newSource);

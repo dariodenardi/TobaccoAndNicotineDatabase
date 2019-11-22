@@ -119,7 +119,7 @@ namespace TobaccoNicotineApplication.Controllers
                 else if (orderInternalNotes == "asc")
                     values = values.OrderBy(x => x.InternalNotes);
 
-                return Json(values.Select(x => new { x.CountryCode, x.Number, x.Countries.CountryName, VariableName = x.Variables.Name, x.Data, x.DataUs, x.Year, x.Variables.VarLc, CurrencyValue = (x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault() != null)? x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault().Value : 0, x.PublicNotes, x.InternalNotes, Repository = (x.Sources.FirstOrDefault().Repository != null) ? (x.Sources.FirstOrDefault().Name + "-" + x.Sources.FirstOrDefault().Date.Day + "-" + x.Sources.FirstOrDefault().Date.Month + "-" + x.Sources.FirstOrDefault().Date.Year + "-" + x.Sources.FirstOrDefault().Time.Hours + "-" + x.Sources.FirstOrDefault().Time.Minutes + "-" + x.Sources.FirstOrDefault().Time.Seconds + "/" + x.Sources.FirstOrDefault().Repository) : null }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(values.Select(x => new { x.CountryCode, x.Number, x.Countries.CountryName, VariableName = x.Variables.Name, x.Data, x.DataUs, x.Year, x.Variables.VarLc, CurrencyValue = (x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault() != null)? x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault().Value : 0, x.PublicNotes, x.InternalNotes, Sources = x.Sources.FirstOrDefault() }).ToList(), JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -140,7 +140,7 @@ namespace TobaccoNicotineApplication.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Writer")]
         [Log]
-        public JsonResult Edit(short countryCode, short year, short number, string data, string dataUs, bool varLc, string publicNotes, string internalNotes)
+        public JsonResult Edit(short countryCode, short year, short number, string data, string dataUs, bool varLc, string publicNotes, string internalNotes, string sourceName, string link, string dateDownload, string repository, string username)
         {
             bool status = false;
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
@@ -182,8 +182,89 @@ namespace TobaccoNicotineApplication.Controllers
                             else
                                 model.Data = decimal.Parse(data);
                     }
+                    if (!String.IsNullOrEmpty(sourceName))
+                    {
+                        // caricamento lazy load
+                        db.Entry(model).Collection(x => x.Sources).Load();
 
-                    if (!String.IsNullOrEmpty(data) || !String.IsNullOrEmpty(dataUs) || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes))
+                        // vedo se la fonte di Value è la stessa di quella che appare in sourceName
+                        if ((model.Sources.FirstOrDefault() != null ? model.Sources.FirstOrDefault().Name : null ) != sourceName)
+                        {
+                            // fonte diversa
+
+                            // rimuovo vecchia sorgente se è presente
+                            if (model.Sources.Count > 0)
+                                model.Sources.Remove(model.Sources.FirstOrDefault());
+
+                            Source newSource = new Source();
+                            newSource.Name = sourceName;
+                            newSource.Date = DateTime.Now.Date;
+                            newSource.Time = DateTime.Now.TimeOfDay;
+                            newSource.Username = User.Identity.Name;
+
+                            if (!String.IsNullOrEmpty(link))
+                                if (link == "null")
+                                    newSource.Link = null;
+                                else
+                                    newSource.Link = link;
+                            if (!String.IsNullOrEmpty(repository))
+                                if (repository == "null")
+                                    newSource.Repository = null;
+                                else
+                                    newSource.Repository = repository;
+                            if (!String.IsNullOrEmpty(dateDownload))
+                                if (dateDownload == "null")
+                                    newSource.DateDownload = null;
+                                else
+                                {
+                                    if (DateUtils.IsDateTime(dateDownload))
+                                        newSource.DateDownload = DateTime.Parse(dateDownload);
+                                }     
+                            if (!String.IsNullOrEmpty(username))
+                                newSource.Username = username;
+
+                            model.Sources.Add(newSource);
+                        }
+                        else
+                        {
+                            // uguale
+
+                            if (!String.IsNullOrEmpty(link))
+                                if (link == "null")
+                                    model.Sources.FirstOrDefault().Link = null;
+                                else
+                                    model.Sources.FirstOrDefault().Link = link;
+                            if (!String.IsNullOrEmpty(repository))
+                                if (repository == "null")
+                                    model.Sources.FirstOrDefault().Repository = null;
+                                else
+                                    model.Sources.FirstOrDefault().Repository = repository;
+                            if (!String.IsNullOrEmpty(dateDownload))
+                                if (dateDownload == "null")
+                                    model.Sources.FirstOrDefault().DateDownload = null;
+                                else
+                                {
+                                    if (DateUtils.IsDateTime(dateDownload))
+                                        model.Sources.FirstOrDefault().DateDownload = DateTime.Parse(dateDownload);
+                                }
+                            if (!String.IsNullOrEmpty(username))
+                                model.Sources.FirstOrDefault().Username = username;
+
+                        }
+                    } else
+                    {
+                        if (sourceName == "null")
+                        {
+                            // caricamento lazy load
+                            db.Entry(model).Collection(x => x.Sources).Load();
+
+                            // rimuovo vecchia sorgente se è presente
+                            if (model.Sources.Count > 0)
+                                model.Sources.Remove(model.Sources.FirstOrDefault());
+                        }
+                    }
+
+                    if (!String.IsNullOrEmpty(data) || !String.IsNullOrEmpty(dataUs) || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes) || !String.IsNullOrEmpty(sourceName) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(dateDownload) && (dateDownload == "null" || DateUtils.IsDateTime(dateDownload)) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(username))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo

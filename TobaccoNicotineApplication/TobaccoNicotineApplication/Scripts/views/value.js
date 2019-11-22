@@ -28,100 +28,7 @@ $('document').ready(function () {
 
 });
 
-// inserisco gli elementi nella table
-function DataBind(ValueList) {
 
-    $("#LoadingStatus").html("Loading....");
-
-    var SetData = $("#SetValueList");
-    for (var i = 0; i < ValueList.length; i++) {
-
-        var Data = "<tr class='row_" + ValueList[i].CountryCode + "_" + ValueList[i].Year + "_" + ValueList[i].Number + "'>";
-
-        if (boolAdmin || boolWriter) {
-            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
-                + "<td>" + ValueList[i].CountryName + "</td>"
-                + "<td>" + ValueList[i].VariableName + "</td>"
-                + "<td>" + "<input id=\"DataTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + ((typeof ValueList[i].Data == 'number') ? parseFloat(ValueList[i].Data).toFixed(1) : ValueList[i].Data) + "\" placeholder=\"Insert " + data + "\" onkeypress=\"saveRow(event, 0, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", DataTable" + i + ")\" >" + "</td>";
-
-            if (ValueList[i].VarLc == true)
-                Data = Data + "<td>" + "<input id=\"DataUsTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + ((typeof ValueList[i].DataUs == 'number') ? parseFloat(ValueList[i].DataUs).toFixed(1) : ValueList[i].DataUs) + "\" placeholder=\"Insert " + dataUs + "\" onkeypress=\"saveRow(event, 1, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", DataUsTable" + i + ")\" >" + "</td>";
-            else
-                Data = Data + "<td id=\"DataUsTable>\"" + "</td>";
-
-            Data = Data + "<td>" + ValueList[i].Year + "</td>";
-
-            if (ValueList[i].VarLc == true)
-                Data = Data + "<td>" + ValueList[i].CurrencyValue + "</td>";
-            else
-                Data = Data + "<td>" + "</td>";
-
-            Data = Data
-                + "<td>" + "<input id=\"PublicNotesTable" + i + "\"" + "class=\"form-control\" maxlength=" + publicNotesMax + " type=\"textbox\" value=\"" + ValueList[i].PublicNotes + "\" placeholder=\"Insert " + publicNotes + "\" onkeypress=\"saveRow(event, 2, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", PublicNotesTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"InternalNotesTable" + i + "\"" + "class=\"form-control\"  maxlength=" + internalNotesMax + " type=\"textbox\" value=\"" + ValueList[i].InternalNotes + "\" placeholder=\"Insert " + internalNotes + "\" onkeypress=\"saveRow(event, 3, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", InternalNotesTable" + i + ")\" >" + "</td>";
-
-        } else {
-            Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
-                "<td>" + ValueList[i].CountryName + "</td>" +
-                "<td>" + ValueList[i].VariableName + "</td>" +
-                "<td>" + ValueList[i].Data + "</td>" +
-                "<td>" + ValueList[i].DataUs + "</td>" +
-                "<td>" + ValueList[i].Year + "</td>" +
-                "<td>" + ValueList[i].CurrencyValue + "</td>" +
-                "<td>" + ValueList[i].PublicNotes + "</td>" +
-                "<td>" + ValueList[i].InternalNotes + "</td>";
-        }
-
-        /*Data = Data + "<td>" +
-            "<div class=\"dropdown\">" +
-            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
-            "Search" +
-            "<span class=\"caret\"></span></button>" +
-            "<ul class=\"dropdown-menu dropdownTable\" aria-labelledby=\"about-us\">" +
-            "<li><a href=\"#\">Currency</a></li>" +
-            "<li><a href=\"#\">Sources</a></li>" +
-            "</ul>" +
-            "</div>" + "</td>";*/
-
-        //Data = Data + "<td>";
-
-        //if ((boolAdmin || boolWriter)) {
-        //    if (ValueList[i].IsSource == false) {
-        //        Data = Data +
-        //            "<input type='file' id='filestyle-0' tabindex='-1' style='position: absolute; clip: rect(0px, 0px, 0px, 0px);'><span class='group-span-filestyle ' tabindex='0'><label for='filestyle-0' class='btn btn-sm btn-default '><span class='icon-span-filestyle glyphicon glyphicon-folder-open'></span> </label></span>";
-        //    }
-        //}
-
-        if (ValueList[i].Repository != null) {
-            Data = Data +
-                "<td>" + "<a target=\"_blank\" rel=\"noopener noreferrer\" href='" + serverMap + ValueList[i].Link + "' class='btn btn-dark btn-sm waves-effect'><span class='glyphicon glyphicon-file'></span></a>" + "</td>";
-        } else {
-            Data = Data +
-                "<td>" + "</td>";
-        }
-
-        //Data = Data + "</td>"
-
-        Data = Data + "</tr>";
-
-        SetData.append(Data);
-
-        // aggiungo caratteri campo
-        $('input#PublicNotesTable' + i).maxlength({
-            alwaysShow: true,
-            placement: 'top-left'
-        });
-
-        $('input#InternalNotesTable' + i).maxlength({
-            alwaysShow: true,
-            placement: 'top-left'
-        });
-    }
-
-    $("#LoadingStatus").html(" ");
-    var page = $("#showEntry").val();
-    $('#SetValueList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
-}
 
 // Show The Popup Modal For Add
 function AddNewValue() {
@@ -187,7 +94,7 @@ function findVariableNumber() {
 }
 
 // invia richiesta Ajax per salvare un rows cambiato
-function saveAjaxRequest(countryCode, number, year, varLc, data, dataUs, public, internal, id) {
+function saveAjaxRequest(countryCode, number, year, varLc, data, dataUs, public, internal, sourceName, link, repository, dateDownload, username, id) {
 
     $.ajax({
         type: "POST",
@@ -204,7 +111,12 @@ function saveAjaxRequest(countryCode, number, year, varLc, data, dataUs, public,
             dataUs: dataUs,
             varLc: varLc,
             publicNotes: public,
-            internalNotes: internal
+            internalNotes: internal,
+            sourceName: sourceName,
+            link: link,
+            dateDownload: dateDownload,
+            repository: repository,
+            username: username
         },
         success: function (data) {
             var isSuccessful = (data['success']);
@@ -240,6 +152,42 @@ function saveRow(e, params, countryCode, number, year, varLc, id) {
 
     if (e.keyCode == 13) {
 
+        var sourceName = undefined;
+
+        if (params == '4') {
+            var numero_riga = id.id.replace("SourceNameTable", "");
+            if (id.value == "null") {
+                document.getElementById("SetValueList").children[numero_riga].children[10].value = "null";
+                document.getElementById("SetValueList").children[numero_riga].children[11].value = "null";
+                document.getElementById("SetValueList").children[numero_riga].children[12].value = "null";
+                document.getElementById("SetValueList").children[numero_riga].children[13].value = "null";
+            } else {
+                if (document.getElementById("SetValueList").children[numero_riga].children[13].value == "null")
+                    document.getElementById("SetValueList").children[numero_riga].children[13].value = myUsername;
+            }
+        } else if (params == '5') {
+            var numero_riga = id.id.replace("SourceLinkTable", "");
+            sourceName = document.getElementById("SetValueList").children[numero_riga].children[9].value;
+            if (sourceName == null) {
+                swal("Error!", "Change Source Name.", "error");
+                return;
+            }
+        } else if (params == '6') {
+            var numero_riga = id.id.replace("DateDownloadTable", "");
+            sourceName = document.getElementById("SetValueList").children[numero_riga].children[9].value;
+            if (sourceName == null) {
+                swal("Error!", "Change Source Name.", "error");
+                return;
+            }
+        } else if (params == '7') {
+            var numero_riga = id.id.replace("SourceUsernameTable", "");
+            sourceName = document.getElementById("SetValueList").children[numero_riga].children[9].value;
+            if (sourceName == null) {
+                swal("Error!", "Change Source Name.", "error");
+                return;
+            }
+        }
+
         // aggiorno conversione dato
         if (params == '0') {
             // cliccato invio con data -> aggiorno dataUs
@@ -270,7 +218,20 @@ function saveRow(e, params, countryCode, number, year, varLc, id) {
         if (params == '3')
             internal = id.value;
 
-        saveAjaxRequest(countryCode, number, year, varLc, data, dataUs, public, internal, id);
+        
+        var link = undefined;
+        var dateDownload = undefined;
+        var username = undefined;
+        if (params == '4')
+            sourceName = id.value;
+        if (params == '5')
+            link = id.value;
+        if (params == '6')
+            dateDownload = id.value;
+        if (params == '7')
+            username = id.value;
+
+        saveAjaxRequest(countryCode, number, year, varLc, data, dataUs, public, internal, sourceName, link, "", dateDownload, username, id);
 
         return false; // returning false will prevent the event from bubbling up.
     }

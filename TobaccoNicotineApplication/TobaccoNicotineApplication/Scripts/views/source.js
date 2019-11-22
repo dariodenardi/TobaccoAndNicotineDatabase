@@ -48,8 +48,11 @@ function DataBind(SourceList) {
     for (var i = 0; i < SourceList.length; i++) {
 
         // json to dateTime format
-        var seconds = parseInt(SourceList[i].DateDownload.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
-        var date = new Date(seconds);
+        var date = null;
+        if (SourceList[i].DateDownload != null) {
+            var seconds = parseInt(SourceList[i].DateDownload.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+            var date = new Date(seconds);
+        }
         var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
 
         var seconds2 = parseInt(SourceList[i].Date.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
@@ -62,8 +65,8 @@ function DataBind(SourceList) {
                 + "<td>" + SourceList[i].Name + "</td>"
                 + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + SourceList[i].Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 0, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', SourceLinkTable" + i + ")\" >" + "</td>"
                 + "<td><select id=\"selectRepository" + i + "\" class=\"form-control\" onchange=\"saveRowCombo('" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', selectRepository" + i + ")\"></select></td>"
-                + "<td>" + "<input id=\"DateDownloadTable" + i + "\"" + "class=\"form-control\" maxlength=10 type=\"textbox\" value=\"" + date.toLocaleDateString("en-US", options) + "\" placeholder=\"Insert " + sourceDateDownload + "*\" onkeypress=\"saveRow(event, 1, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', DateDownloadTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"SourceUsernameTable" + i + "\"" + "class=\"form-control\" maxlength=" + usernameMax + " type=\"textbox\" value=\"" + SourceList[i].Username + "\" placeholder=\"Insert " + sourceUsername + "*\" onkeypress=\"saveRow(event, 2, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', SourceUsernameTable" + i + ")\" >" + "</td>";
+                + "<td>" + "<input id=\"DateDownloadTable" + i + "\"" + "class=\"form-control\" maxlength=10 type=\"textbox\" value=\"" + (SourceList[i].DateDownload != null ? date.toLocaleDateString("en-US", options) : null) + "\" placeholder=\"Insert " + sourceDateDownload + "*\" onkeypress=\"saveRow(event, 1, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', DateDownloadTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"SourceUsernameTable" + i + "\"" + "class=\"form-control\" maxlength=" + usernameMax + " type=\"textbox\" value=\"" + SourceList[i].Username + "\" placeholder=\"Insert " + sourceUsername + "\" onkeypress=\"saveRow(event, 2, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', SourceUsernameTable" + i + ")\" >" + "</td>";
         } else {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
                 "<td>" + SourceList[i].Name + "</td>" +
@@ -467,13 +470,17 @@ function loadFilter() {
             if ($("#sourceDateSourceString").val() == null) {
                 dateSourceArray.sort();
                 for (var i = 0, n = dateSourceArray.length; i < n; i++) {
+                    
+                    if (dateSourceArray[i] != null) {
+                        // json to dateTime format
+                        var seconds = null;
+                        var seconds = parseInt(dateSourceArray[i].replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                        var date = new Date(seconds);
+                        var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
 
-                    // json to dateTime format
-                    var seconds = parseInt(dateSourceArray[i].replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
-                    var date = new Date(seconds);
-                    var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-
-                    $("#sourceDateSourceString").append("<option value='" + date.toLocaleDateString("en-US", options) + "'>" + date.toLocaleDateString("en-US", options) + "</option>");
+                        $("#sourceDateSourceString").append("<option value='" + date.toLocaleDateString("en-US", options) + "'>" + date.toLocaleDateString("en-US", options) + "</option>");
+                    }
+                    
                 }
             }
 
@@ -842,6 +849,9 @@ function pasteFromClipboard(numeroCheck) {
                     if (link == null || link == "")
                         link = "null";
 
+                    if (dateDownload == null || dateDownload == "")
+                        dateDownload = "null";
+
                     if (repository == null || repository == "")
                         repository = "null";
 
@@ -873,11 +883,6 @@ function pasteFromClipboard(numeroCheck) {
 function Validation(link, repository, dateDownload, username) {
 
     // valori nulli?
-    if (dateDownload == "null" || dateDownload == "") {
-        swal("Attention!", "Date Download: cannot be null!", "error");
-        return false;
-    }
-
     if (username == "null" || username == "") {
         swal("Attention!", "Username: cannot be null!", "error");
         return false;
@@ -889,7 +894,7 @@ function Validation(link, repository, dateDownload, username) {
         return false;
     }
 
-    if (dateDownload.length < 10) {
+    if (dateDownload.length < 10 && (dateDownload == null || dateDownload == "")) {
         swal("Attention!", dateDownload + ": check length!", "error");
         return false;
     }
