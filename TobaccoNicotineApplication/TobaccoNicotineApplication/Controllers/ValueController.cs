@@ -184,75 +184,6 @@ namespace TobaccoNicotineApplication.Controllers
                     }
                     if (!String.IsNullOrEmpty(sourceName))
                     {
-                        // caricamento lazy load
-                        db.Entry(model).Collection(x => x.Sources).Load();
-
-                        // vedo se la fonte di Value è la stessa di quella che appare in sourceName
-                        if ((model.Sources.FirstOrDefault() != null ? model.Sources.FirstOrDefault().Name : null ) != sourceName)
-                        {
-                            // fonte diversa
-
-                            // rimuovo vecchia sorgente se è presente
-                            if (model.Sources.Count > 0)
-                                model.Sources.Remove(model.Sources.FirstOrDefault());
-
-                            Source newSource = new Source();
-                            newSource.Name = sourceName;
-                            newSource.Date = DateTime.Now.Date;
-                            newSource.Time = DateTime.Now.TimeOfDay;
-                            newSource.Username = User.Identity.Name;
-
-                            if (!String.IsNullOrEmpty(link))
-                                if (link == "null")
-                                    newSource.Link = null;
-                                else
-                                    newSource.Link = link;
-                            if (!String.IsNullOrEmpty(repository))
-                                if (repository == "null")
-                                    newSource.Repository = null;
-                                else
-                                    newSource.Repository = repository;
-                            if (!String.IsNullOrEmpty(dateDownload))
-                                if (dateDownload == "null")
-                                    newSource.DateDownload = null;
-                                else
-                                {
-                                    if (DateUtils.IsDateTime(dateDownload))
-                                        newSource.DateDownload = DateTime.Parse(dateDownload);
-                                }     
-                            if (!String.IsNullOrEmpty(username))
-                                newSource.Username = username;
-
-                            model.Sources.Add(newSource);
-                        }
-                        else
-                        {
-                            // uguale
-
-                            if (!String.IsNullOrEmpty(link))
-                                if (link == "null")
-                                    model.Sources.FirstOrDefault().Link = null;
-                                else
-                                    model.Sources.FirstOrDefault().Link = link;
-                            if (!String.IsNullOrEmpty(repository))
-                                if (repository == "null")
-                                    model.Sources.FirstOrDefault().Repository = null;
-                                else
-                                    model.Sources.FirstOrDefault().Repository = repository;
-                            if (!String.IsNullOrEmpty(dateDownload))
-                                if (dateDownload == "null")
-                                    model.Sources.FirstOrDefault().DateDownload = null;
-                                else
-                                {
-                                    if (DateUtils.IsDateTime(dateDownload))
-                                        model.Sources.FirstOrDefault().DateDownload = DateTime.Parse(dateDownload);
-                                }
-                            if (!String.IsNullOrEmpty(username))
-                                model.Sources.FirstOrDefault().Username = username;
-
-                        }
-                    } else
-                    {
                         if (sourceName == "null")
                         {
                             // caricamento lazy load
@@ -262,9 +193,79 @@ namespace TobaccoNicotineApplication.Controllers
                             if (model.Sources.Count > 0)
                                 model.Sources.Remove(model.Sources.FirstOrDefault());
                         }
+                        else
+                        {
+                            // caricamento lazy load
+                            db.Entry(model).Collection(x => x.Sources).Load();
+
+                            // vedo se la fonte di Value è la stessa di quella che appare in sourceName
+                            if ((model.Sources.FirstOrDefault() != null ? model.Sources.FirstOrDefault().Name : null) != sourceName)
+                            {
+                                // fonte diversa
+
+                                // rimuovo vecchia sorgente se è presente
+                                if (model.Sources.Count > 0)
+                                    model.Sources.Remove(model.Sources.FirstOrDefault());
+
+                                Source newSource = new Source();
+                                newSource.Name = sourceName;
+                                newSource.Date = DateTime.Now.Date;
+                                newSource.Time = DateTime.Now.TimeOfDay;
+                                newSource.Username = User.Identity.Name;
+
+                                if (!String.IsNullOrEmpty(link))
+                                    if (link == "null")
+                                        newSource.Link = null;
+                                    else
+                                        newSource.Link = link;
+                                if (!String.IsNullOrEmpty(repository))
+                                    if (repository == "null")
+                                        newSource.Repository = null;
+                                    else
+                                        newSource.Repository = repository;
+                                if (!String.IsNullOrEmpty(dateDownload))
+                                    if (dateDownload == "null")
+                                        newSource.DateDownload = null;
+                                    else
+                                    {
+                                        if (DateUtils.IsDateTime(dateDownload))
+                                            newSource.DateDownload = DateTime.Parse(dateDownload);
+                                    }
+                                if (!String.IsNullOrEmpty(username))
+                                    newSource.Username = username;
+
+                                model.Sources.Add(newSource);
+                            }
+                            else
+                            {
+                                // uguale
+
+                                if (!String.IsNullOrEmpty(link))
+                                    if (link == "null")
+                                        model.Sources.FirstOrDefault().Link = null;
+                                    else
+                                        model.Sources.FirstOrDefault().Link = link;
+                                if (!String.IsNullOrEmpty(repository))
+                                    if (repository == "null")
+                                        model.Sources.FirstOrDefault().Repository = null;
+                                    else
+                                        model.Sources.FirstOrDefault().Repository = repository;
+                                if (!String.IsNullOrEmpty(dateDownload))
+                                    if (dateDownload == "null")
+                                        model.Sources.FirstOrDefault().DateDownload = null;
+                                    else
+                                    {
+                                        if (DateUtils.IsDateTime(dateDownload))
+                                            model.Sources.FirstOrDefault().DateDownload = DateTime.Parse(dateDownload);
+                                    }
+                                if (!String.IsNullOrEmpty(username))
+                                    model.Sources.FirstOrDefault().Username = username;
+
+                            }
+                        }
                     }
 
-                    if (!String.IsNullOrEmpty(data) || !String.IsNullOrEmpty(dataUs) || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes) || !String.IsNullOrEmpty(sourceName) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(dateDownload) && (dateDownload == "null" || DateUtils.IsDateTime(dateDownload)) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(username))
+                    if (!String.IsNullOrEmpty(data) || !String.IsNullOrEmpty(dataUs) || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes) || (model.Sources.FirstOrDefault() != null ? model.Sources.FirstOrDefault().Name : null) != sourceName || sourceName == "null" || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(dateDownload) && (dateDownload == "null" || DateUtils.IsDateTime(dateDownload)) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(username))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo
