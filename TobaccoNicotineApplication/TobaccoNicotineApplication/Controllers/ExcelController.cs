@@ -384,6 +384,9 @@ namespace TobaccoNicotineApplication.Controllers
                         column++;
                     }
 
+                    // auto filter columns
+                    ws.Cells[1, 1, 1, column - 1].AutoFilter = true;
+
                     // change font e size
                     ws.Cells.Style.Font.Name = "Calibri";
                     ws.Cells.Style.Font.Size = 11;
