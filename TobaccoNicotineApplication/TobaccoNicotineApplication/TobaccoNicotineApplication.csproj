@@ -291,6 +291,13 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <EntityDeploy Include="Models\TobaccoNicotineModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TobaccoNicotineModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\TobaccoNicotineModel.edmx.diagram">
+      <DependentUpon>TobaccoNicotineModel.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.11.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
@@ -333,13 +340,6 @@
     <Content Include="fonts\materialdesignicons-webfont.ttf" />
     <Content Include="fonts\materialdesignicons-webfont.woff" />
     <Content Include="fonts\materialdesignicons-webfont.woff2" />
-    <EntityDeploy Include="Models\TobaccoNicotineModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>TobaccoNicotineModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\TobaccoNicotineModel.edmx.diagram">
-      <DependentUpon>TobaccoNicotineModel.edmx</DependentUpon>
-    </Content>
     <Content Include="Scripts\detect.js" />
     <Content Include="Scripts\fastclick.js" />
     <Content Include="Scripts\jquery-1.11.3.min.map" />

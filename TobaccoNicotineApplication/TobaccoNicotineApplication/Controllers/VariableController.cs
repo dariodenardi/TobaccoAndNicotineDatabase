@@ -29,7 +29,7 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Variable/GetVariableList
         [HttpPost]
-        public JsonResult GetVariableList(short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc, string[] measurementUnit, string orderName, string orderPhaseCode, string orderPhaseName, string orderVarLc, string orderUnitName)
+        public JsonResult GetVariableList(short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc, string orderName, string orderPhaseCode, string orderPhaseName, string orderVarLc, string orderUnitName)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
@@ -52,9 +52,6 @@ namespace TobaccoNicotineApplication.Controllers
 
                 if (ArrayUtils.IsNullOrEmpty(varLc) == false)
                     variables = variables.Where(t => varLc.Contains(t.VarLc));
-
-                if (ArrayUtils.IsNullOrEmpty(measurementUnit) == false)
-                    variables = variables.Where(t => measurementUnit.Contains(t.MeasurementUnitName));
 
                 if (orderName == "desc")
                     variables = variables.OrderByDescending(x => x.Name);
@@ -276,7 +273,7 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Variable/GetFieldList
         [HttpPost]
-        public JsonResult GetFieldList(short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc, string[] measurementUnit)
+        public JsonResult GetFieldList(short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
@@ -300,10 +297,7 @@ namespace TobaccoNicotineApplication.Controllers
                 if (ArrayUtils.IsNullOrEmpty(varLc) == false)
                     variables = variables.Where(t => varLc.Contains(t.VarLc));
 
-                if (ArrayUtils.IsNullOrEmpty(measurementUnit) == false)
-                    variables = variables.Where(t => measurementUnit.Contains(t.MeasurementUnitName));
-
-                return Json(variables.Select(x => new { x.Number, x.Name, x.PhaseCode, x.PhaseName, x.VarLc, x.MeasurementUnitName }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(variables.Select(x => new { x.Number, x.Name, x.PhaseCode, x.PhaseName, x.VarLc }).ToList(), JsonRequestBehavior.AllowGet);
             }
         }
 

@@ -20,7 +20,7 @@ namespace TobaccoNicotineApplication.Models
         {
             this.Values = new HashSet<Value>();
         }
-
+    
         [Required(ErrorMessage = "Number is required.")]
         public short Number { get; set; }
 

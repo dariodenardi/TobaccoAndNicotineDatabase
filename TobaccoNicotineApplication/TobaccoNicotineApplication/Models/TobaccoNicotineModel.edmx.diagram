@@ -4,15 +4,15 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="bd0bd8ef6e504834bfb64c6f7b20391f" Name="Diagram1">
+      <Diagram DiagramId="6a99cafb1d4f44e3b0fd2db4bb7028cb" Name="Diagram1">
         <EntityTypeShape EntityType="TobaccoNicotineDatabaseModel.Country" Width="1.5" PointX="0.75" PointY="3.5" IsExpanded="true" />
         <EntityTypeShape EntityType="TobaccoNicotineDatabaseModel.Currency" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
         <EntityTypeShape EntityType="TobaccoNicotineDatabaseModel.Source" Width="1.5" PointX="8.25" PointY="3.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="TobaccoNicotineDatabaseModel.Value" Width="1.5" PointX="6" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TobaccoNicotineDatabaseModel.Value" Width="1.5" PointX="6" PointY="3.125" IsExpanded="true" />
         <EntityTypeShape EntityType="TobaccoNicotineDatabaseModel.Variable" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="TobaccoNicotineDatabaseModel.FK__Currencie__Count__60A75C0F" ManuallyRouted="false" />
-        <AssociationConnector Association="TobaccoNicotineDatabaseModel.FK__Values__CountryC__619B8048" ManuallyRouted="false" />
-        <AssociationConnector Association="TobaccoNicotineDatabaseModel.FK__Values__Number__2F10007B" ManuallyRouted="false" />
+        <AssociationConnector Association="TobaccoNicotineDatabaseModel.FK__Values__CountryC__03F0984C" ManuallyRouted="false" />
+        <AssociationConnector Association="TobaccoNicotineDatabaseModel.FK__Values__Number__02FC7413" ManuallyRouted="false" />
         <AssociationConnector Association="TobaccoNicotineDatabaseModel.MappingVariableSource" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>

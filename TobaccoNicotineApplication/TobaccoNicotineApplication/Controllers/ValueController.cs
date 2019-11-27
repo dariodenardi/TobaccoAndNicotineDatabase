@@ -29,7 +29,7 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Value/GetValueList
         [HttpPost]
-        public JsonResult GetValueList(string[] pmiCoding, string[] continentName, string[] regionName, string[] countryName, short[] continentCode, short[] regionCode, short[] countryCode, bool[] areaCode, short[] year, short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc, string[] measurementUnit,
+        public JsonResult GetValueList(string[] pmiCoding, string[] continentName, string[] regionName, string[] countryName, short[] continentCode, short[] regionCode, short[] countryCode, bool[] areaCode, short[] year, short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc,
             string orderCountryName, string orderVariableName, string orderData, string orderDataUs, string orderYear, string orderPublicNotes, string orderInternalNotes)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
@@ -80,9 +80,6 @@ namespace TobaccoNicotineApplication.Controllers
 
                 if (ArrayUtils.IsNullOrEmpty(varLc) == false)
                     values = values.Where(t => varLc.Contains(t.Variables.VarLc));
-
-                if (ArrayUtils.IsNullOrEmpty(measurementUnit) == false)
-                    values = values.Where(t => measurementUnit.Contains(t.Variables.MeasurementUnitName));
 
                 if (orderCountryName == "desc")
                     values = values.OrderByDescending(x => x.Countries.CountryName);
@@ -227,10 +224,7 @@ namespace TobaccoNicotineApplication.Controllers
                                     if (dateDownload == "null")
                                         newSource.DateDownload = null;
                                     else
-                                    {
-                                        if (DateUtils.IsDateTime(dateDownload))
-                                            newSource.DateDownload = DateTime.Parse(dateDownload);
-                                    }
+                                        newSource.DateDownload = dateDownload;
                                 if (!String.IsNullOrEmpty(username))
                                     newSource.Username = username;
 
@@ -254,10 +248,7 @@ namespace TobaccoNicotineApplication.Controllers
                                     if (dateDownload == "null")
                                         model.Sources.FirstOrDefault().DateDownload = null;
                                     else
-                                    {
-                                        if (DateUtils.IsDateTime(dateDownload))
-                                            model.Sources.FirstOrDefault().DateDownload = DateTime.Parse(dateDownload);
-                                    }
+                                        model.Sources.FirstOrDefault().DateDownload = dateDownload;
                                 if (!String.IsNullOrEmpty(username))
                                     model.Sources.FirstOrDefault().Username = username;
 
@@ -265,7 +256,7 @@ namespace TobaccoNicotineApplication.Controllers
                         }
                     }
 
-                    if (!String.IsNullOrEmpty(data) || !String.IsNullOrEmpty(dataUs) || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes) || (model.Sources.FirstOrDefault() != null ? model.Sources.FirstOrDefault().Name : null) != sourceName || sourceName == "null" || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(dateDownload) && (dateDownload == "null" || DateUtils.IsDateTime(dateDownload)) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(username))
+                    if (!String.IsNullOrEmpty(data) || !String.IsNullOrEmpty(dataUs) || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes) || (model.Sources.FirstOrDefault() != null ? model.Sources.FirstOrDefault().Name : null) != sourceName || sourceName == "null" || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(dateDownload) && dateDownload == "null"|| !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(username))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo
@@ -388,7 +379,7 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Value/GetFieldList
         [HttpPost]
-        public JsonResult GetFieldList(string[] pmiCoding, string[] continentName, string[] regionName, string[] countryName, short[] continentCode, short[] regionCode, short[] countryCode, bool[] areaCode, short[] year, short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc, string[] measurementUnit)
+        public JsonResult GetFieldList(string[] pmiCoding, string[] continentName, string[] regionName, string[] countryName, short[] continentCode, short[] regionCode, short[] countryCode, bool[] areaCode, short[] year, short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
@@ -438,9 +429,6 @@ namespace TobaccoNicotineApplication.Controllers
 
                 if (ArrayUtils.IsNullOrEmpty(varLc) == false)
                     values = values.Where(t => varLc.Contains(t.Variables.VarLc));
-
-                if (ArrayUtils.IsNullOrEmpty(measurementUnit) == false)
-                    values = values.Where(t => measurementUnit.Contains(t.Variables.MeasurementUnitName));
 
                 return Json(values.Select(x => new { x.Year }).Distinct().OrderBy(x => x.Year).ToList(), JsonRequestBehavior.AllowGet);
             }

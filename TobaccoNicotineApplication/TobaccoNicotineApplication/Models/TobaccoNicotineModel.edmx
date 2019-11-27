@@ -55,8 +55,8 @@
           <Property Name="Time" Type="time" Precision="7" Nullable="false" />
           <Property Name="Link" Type="varchar" MaxLength="2048" />
           <Property Name="Repository" Type="varchar" MaxLength="2048" />
-          <Property Name="DateDownload" Type="date" />
-          <Property Name="Username" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="DateDownload" Type="varchar" MaxLength="255" />
+          <Property Name="Username" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Values">
           <Key>
@@ -209,7 +209,7 @@
           <Property Name="PmiCoding" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="AreaCode" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Currencies" Relationship="Self.FK__Currencie__Count__60A75C0F" FromRole="Countries" ToRole="Currencies" />
-          <NavigationProperty Name="Values" Relationship="Self.FK__Values__CountryC__619B8048" FromRole="Countries" ToRole="Values" />
+          <NavigationProperty Name="Values" Relationship="Self.FK__Values__CountryC__03F0984C" FromRole="Countries" ToRole="Values" />
         </EntityType>
         <EntityType Name="Currency">
           <Key>
@@ -233,8 +233,8 @@
           <Property Name="Time" Type="Time" Nullable="false" Precision="7" />
           <Property Name="Link" Type="String" MaxLength="2048" FixedLength="false" Unicode="false" />
           <Property Name="Repository" Type="String" MaxLength="2048" FixedLength="false" Unicode="false" />
-          <Property Name="DateDownload" Type="DateTime" Precision="0" />
-          <Property Name="Username" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DateDownload" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Username" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Values" Relationship="Self.MappingVariableSource" FromRole="Sources" ToRole="Values" />
         </EntityType>
         <EntityType Name="Value">
@@ -248,14 +248,14 @@
           <Property Name="Year" Type="Int16" Nullable="false" />
           <Property Name="NomismaCode" Type="Int32" Nullable="false" />
           <Property Name="Data" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="DataUs" Type="Decimal" Precision="18" Scale="3" />
           <Property Name="DataPmi" Type="Decimal" Precision="18" Scale="3" />
           <Property Name="PublicNotes" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="InternalNotes" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="PmiNotes" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Countries" Relationship="Self.FK__Values__CountryC__619B8048" FromRole="Values" ToRole="Countries" />
-          <NavigationProperty Name="Variables" Relationship="Self.FK__Values__Number__2F10007B" FromRole="Values" ToRole="Variables" />
+          <NavigationProperty Name="Countries" Relationship="Self.FK__Values__CountryC__03F0984C" FromRole="Values" ToRole="Countries" />
+          <NavigationProperty Name="Variables" Relationship="Self.FK__Values__Number__02FC7413" FromRole="Values" ToRole="Variables" />
           <NavigationProperty Name="Sources" Relationship="Self.MappingVariableSource" FromRole="Values" ToRole="Sources" />
-          <Property Name="DataUs" Type="Decimal" Precision="18" Scale="3" />
         </EntityType>
         <EntityType Name="Variable">
           <Key>
@@ -267,7 +267,7 @@
           <Property Name="PhaseName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="MeasurementUnitName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="VarLc" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Values" Relationship="Self.FK__Values__Number__2F10007B" FromRole="Variables" ToRole="Values" />
+          <NavigationProperty Name="Values" Relationship="Self.FK__Values__Number__02FC7413" FromRole="Variables" ToRole="Values" />
         </EntityType>
         <Association Name="FK__Currencie__Count__60A75C0F">
           <End Role="Countries" Type="TobaccoNicotineDatabaseModel.Country" Multiplicity="1">
@@ -283,7 +283,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Values__CountryC__619B8048">
+        <Association Name="FK__Values__CountryC__03F0984C">
           <End Role="Countries" Type="TobaccoNicotineDatabaseModel.Country" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -297,7 +297,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Values__Number__2F10007B">
+        <Association Name="FK__Values__Number__02FC7413">
           <End Role="Variables" Type="TobaccoNicotineDatabaseModel.Variable" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -325,11 +325,11 @@
             <End Role="Countries" EntitySet="Countries" />
             <End Role="Currencies" EntitySet="Currencies" />
           </AssociationSet>
-          <AssociationSet Name="FK__Values__CountryC__619B8048" Association="Self.FK__Values__CountryC__619B8048">
+          <AssociationSet Name="FK__Values__CountryC__03F0984C" Association="Self.FK__Values__CountryC__03F0984C">
             <End Role="Countries" EntitySet="Countries" />
             <End Role="Values" EntitySet="Values" />
           </AssociationSet>
-          <AssociationSet Name="FK__Values__Number__2F10007B" Association="Self.FK__Values__Number__2F10007B">
+          <AssociationSet Name="FK__Values__Number__02FC7413" Association="Self.FK__Values__Number__02FC7413">
             <End Role="Variables" EntitySet="Variables" />
             <End Role="Values" EntitySet="Values" />
           </AssociationSet>
@@ -384,12 +384,12 @@
           <EntitySetMapping Name="Values">
             <EntityTypeMapping TypeName="TobaccoNicotineDatabaseModel.Value">
               <MappingFragment StoreEntitySet="Values">
-                <ScalarProperty Name="DataUs" ColumnName="DataUs" />
                 <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
                 <ScalarProperty Name="Year" ColumnName="Year" />
                 <ScalarProperty Name="NomismaCode" ColumnName="NomismaCode" />
                 <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="DataUs" ColumnName="DataUs" />
                 <ScalarProperty Name="DataPmi" ColumnName="DataPmi" />
                 <ScalarProperty Name="PublicNotes" ColumnName="PublicNotes" />
                 <ScalarProperty Name="InternalNotes" ColumnName="InternalNotes" />

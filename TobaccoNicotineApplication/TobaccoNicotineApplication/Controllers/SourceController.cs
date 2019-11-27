@@ -29,7 +29,7 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Source/GetSourceList
         [HttpPost]
-        public JsonResult GetSourceList(string[] sourceName, string[] link, string[] repository, DateTime[] dateSource, string[] username, 
+        public JsonResult GetSourceList(string[] sourceName, string[] link, string[] repository, string[] dateSource, string[] username, 
             string orderSourceName, string orderLink, string orderRepository, string orderDateDownload, string orderUsername)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
@@ -49,7 +49,7 @@ namespace TobaccoNicotineApplication.Controllers
                     sources = sources.Where(t => repository.Contains(t.Repository));
 
                 if (ArrayUtils.IsNullOrEmpty(dateSource) == false)
-                    sources = sources.Where(t => dateSource.Contains(t.DateDownload.Value));
+                    sources = sources.Where(t => dateSource.Contains(t.DateDownload));
 
                 if (ArrayUtils.IsNullOrEmpty(username) == false)
                     sources = sources.Where(t => username.Contains(t.Username));
@@ -125,14 +125,11 @@ namespace TobaccoNicotineApplication.Controllers
                         if (dateDownload == "null")
                             model.DateDownload = null;
                         else
-                        {
-                            if (DateUtils.IsDateTime(dateDownload))
-                                model.DateDownload = DateTime.Parse(dateDownload);
-                        }
+                            model.DateDownload = dateDownload;
                     if (!String.IsNullOrEmpty(username))
                         model.Username = username;
 
-                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || DateUtils.IsDateTime(dateDownload) || !String.IsNullOrEmpty(dateDownload) && (dateDownload == "null" || DateUtils.IsDateTime(dateDownload)) || !String.IsNullOrEmpty(username))
+                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || DateUtils.IsDateTime(dateDownload) || !String.IsNullOrEmpty(dateDownload) && dateDownload == "null" || !String.IsNullOrEmpty(username))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo
@@ -259,7 +256,7 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Source/GetFieldList
         [HttpPost]
-        public JsonResult GetFieldList(string[] name, string[] link, string[] repository, DateTime[] dateSource, string[] username)
+        public JsonResult GetFieldList(string[] name, string[] link, string[] repository, string[] dateSource, string[] username)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
@@ -278,7 +275,7 @@ namespace TobaccoNicotineApplication.Controllers
                     sources = sources.Where(t => repository.Contains(t.Repository));
 
                 if (ArrayUtils.IsNullOrEmpty(dateSource) == false)
-                    sources = sources.Where(t => dateSource.Contains(t.DateDownload.Value));
+                    sources = sources.Where(t => dateSource.Contains(t.DateDownload));
 
                 if (ArrayUtils.IsNullOrEmpty(username) == false)
                     sources = sources.Where(t => username.Contains(t.Username));

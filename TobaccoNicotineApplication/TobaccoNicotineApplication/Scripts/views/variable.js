@@ -279,8 +279,7 @@ function loadFilter() {
             variableName: ($("#variableNameString").val() != null) ? $("#variableNameString").val() : undefined,
             phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
             phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
-            varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
-            measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined
+            varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined
         },
         success: function (response) {
 
@@ -311,10 +310,6 @@ function loadFilter() {
                 $("#varLcString").empty();
                 varLcArray = new Array();
             }
-            if ($("#measurementUnitString").val() == null) {
-                $("#measurementUnitString").empty();
-                measurementUnitNameArray = new Array();
-            }
 
             $.each(response, function (index, row) {
                 if ($("#numberString").val() == null)
@@ -336,10 +331,6 @@ function loadFilter() {
                 if ($("#varLcString").val() == null)
                     if (varLcArray.includes(row.VarLc) == false)
                         varLcArray.push(row.VarLc);
-
-                if ($("#measurementUnitString").val() == null)
-                    if (measurementUnitNameArray.includes(row.MeasurementUnitName) == false)
-                        measurementUnitNameArray.push(row.MeasurementUnitName);
 
             });
 
@@ -383,18 +374,10 @@ function loadFilter() {
                 }
             }
 
-            if ($("#measurementUnitString").val() == null) {
-                measurementUnitNameArray.sort();
-                for (var i = 0, n = measurementUnitNameArray.length; i < n; i++) {
-                    $("#measurementUnitString").append("<option value='" + measurementUnitNameArray[i] + "'>" + measurementUnitNameArray[i] + "</option>");
-                }
-            }
-
             $('#numberString').trigger("chosen:updated");
             $('#variableNameString').trigger("chosen:updated");
             $('#phaseCodeString').trigger("chosen:updated");
             $('#phaseNameString').trigger("chosen:updated");
-            $('#measurementUnitString').trigger("chosen:updated");
             $('#varLcString').trigger("chosen:updated");
 
         }
@@ -463,7 +446,6 @@ function FilterVariable(selectSortable) {
             phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
             phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
             varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
-            measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined,
             orderName: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
             orderPhaseCode: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
             orderPhaseName: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,

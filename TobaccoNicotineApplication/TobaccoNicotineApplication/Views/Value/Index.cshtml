@@ -31,7 +31,6 @@
     string phaseName = StaticName.PhaseName();
     string number = StaticName.Number();
     string variableName = StaticName.VariableName();
-    string unitName = StaticName.MeasurementUnitName();
     string varLc = StaticName.VarLc();
     string pmiCoding = StaticName.PmiCoding();
     string continentCode = StaticName.ContinentCode();
@@ -200,14 +199,6 @@
 
                     <dd>
                         <select id="varLcString" onchange="loadFilterVariable()" class="form-control chosen-select" multiple="multiple"></select>
-                    </dd>
-
-                    <dt>
-                        @Html.Label(unitName, new { @class = "control-label col-md-2" })
-                    </dt>
-
-                    <dd>
-                        <select id="measurementUnitString" onchange="loadFilterVariable()" class="form-control chosen-select" multiple="multiple"></select>
                     </dd>
                 </dl>
 
@@ -1194,8 +1185,7 @@
                     variableName: ($("#variableNameString").val() != null) ? $("#variableNameString").val() : undefined,
                     phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
                     phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
-                    varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
-                    measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined
+                    varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined
                 },
                 success: function (response) {
 
@@ -1224,8 +1214,7 @@
                     variableName: ($("#variableNameString").val() != null) ? $("#variableNameString").val() : undefined,
                     phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
                     phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
-                    varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
-                    measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined
+                    varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined
                 },
                 success: function (response) {
 
@@ -1234,7 +1223,6 @@
                     var phaseCodeArray;
                     var phaseNameArray;
                     var varLcArray;
-                    var measurementUnitNameArray;
 
                     if ($("#numberString").val() == null) {
                         $("#numberString").empty();
@@ -1255,10 +1243,6 @@
                     if ($("#varLcString").val() == null) {
                         $("#varLcString").empty();
                         varLcArray = new Array();
-                    }
-                    if ($("#measurementUnitString").val() == null) {
-                        $("#measurementUnitString").empty();
-                        measurementUnitNameArray = new Array();
                     }
                     if ($("#yearString").val() == null) {
                         $('#yearString').empty();
@@ -1285,10 +1269,6 @@
                         if ($("#varLcString").val() == null)
                             if (varLcArray.includes(row.VarLc) == false)
                                 varLcArray.push(row.VarLc);
-
-                        if ($("#measurementUnitString").val() == null)
-                            if (measurementUnitNameArray.includes(row.MeasurementUnitName) == false)
-                                measurementUnitNameArray.push(row.MeasurementUnitName);
 
                     });
 
@@ -1332,18 +1312,10 @@
                         }
                     }
 
-                    if ($("#measurementUnitString").val() == null) {
-                        measurementUnitNameArray.sort();
-                        for (var i = 0, n = measurementUnitNameArray.length; i < n; i++) {
-                            $("#measurementUnitString").append("<option value='" + measurementUnitNameArray[i] + "'>" + measurementUnitNameArray[i] + "</option>");
-                        }
-                    }
-
                     $('#numberString').trigger("chosen:updated");
                     $('#variableNameString').trigger("chosen:updated");
                     $('#phaseCodeString').trigger("chosen:updated");
                     $('#phaseNameString').trigger("chosen:updated");
-                    $('#measurementUnitString').trigger("chosen:updated");
                     $('#varLcString').trigger("chosen:updated");
 
                 }
@@ -1439,7 +1411,6 @@
                     phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
                     phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
                     varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
-                    measurementUnit: ($("#measurementUnitString").val() != null) ? $("#measurementUnitString").val() : undefined,
                     orderCountryName: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
                     orderVariableName: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
                     orderData: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,

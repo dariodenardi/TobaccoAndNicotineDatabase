@@ -855,7 +855,7 @@ namespace TobaccoNicotineApplication.Controllers
                 string internal_notes;
                 string username;
                 bool varLc;
-                DateTime? download_source;
+                string download_source;
                 string reference_data_repository;
 
                 try
@@ -893,7 +893,7 @@ namespace TobaccoNicotineApplication.Controllers
                             internal_notes = (!String.IsNullOrEmpty(row[24].ToString())) ? row[24].ToString() : null;
                             username = row[25].ToString();
                             if (DateUtils.IsDateTime(row[26].ToString()))
-                                download_source = DateTime.ParseExact(row[26].ToString(), "MM/dd/yyyy", null);
+                                download_source = row[26].ToString();
                             else
                                 download_source = null;
                             reference_data_repository = (!String.IsNullOrEmpty(row[27].ToString())) ? row[27].ToString() : null;
@@ -932,8 +932,7 @@ namespace TobaccoNicotineApplication.Controllers
                                                 newSource.Date = DateTime.Now.Date;
                                                 newSource.Time = DateTime.Now.TimeOfDay;
                                                 newSource.Link = link;
-                                                if (download_source != null)
-                                                    newSource.DateDownload = download_source.Value;
+                                                newSource.DateDownload = download_source;
                                                 newSource.Repository = reference_data_repository;
                                                 newSource.Username = username;
 
@@ -973,8 +972,7 @@ namespace TobaccoNicotineApplication.Controllers
                                                 newSource.Date = DateTime.Now.Date;
                                                 newSource.Time = DateTime.Now.TimeOfDay;
                                                 newSource.Link = link;
-                                                if (download_source != null)
-                                                    newSource.DateDownload = download_source.Value;
+                                                newSource.DateDownload = download_source;
                                                 newSource.Repository = reference_data_repository;
                                                 newSource.Username = username;
 
@@ -1004,8 +1002,7 @@ namespace TobaccoNicotineApplication.Controllers
                                                 newSource.Date = DateTime.Now.Date;
                                                 newSource.Time = DateTime.Now.TimeOfDay;
                                                 newSource.Link = link;
-                                                if (download_source != null)
-                                                    newSource.DateDownload = download_source.Value;
+                                                newSource.DateDownload = download_source;
                                                 newSource.Repository = reference_data_repository;
                                                 newSource.Username = username;
 
@@ -1039,8 +1036,7 @@ namespace TobaccoNicotineApplication.Controllers
                                     newSource.Date = DateTime.Now.Date;
                                     newSource.Time = DateTime.Now.TimeOfDay;
                                     newSource.Link = link;
-                                    if (download_source != null)
-                                        newSource.DateDownload = download_source.Value;
+                                    newSource.DateDownload = download_source;
                                     newSource.Repository = reference_data_repository;
                                     newSource.Username = username;
 
