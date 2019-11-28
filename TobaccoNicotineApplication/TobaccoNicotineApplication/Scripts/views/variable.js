@@ -288,7 +288,6 @@ function loadFilter() {
             var phaseCodeArray;
             var phaseNameArray;
             var varLcArray;
-            var measurementUnitNameArray;
 
             if ($("#numberString").val() == null) {
                 $("#numberString").empty();
