@@ -127,11 +127,11 @@ namespace TobaccoNicotineApplication.Sql
                             case "Region_name":
                                 columnQuery += "co.[RegionName], ";
                                 break;
-                            case "Country_code":
-                                columnQuery += "v.[CountryCode], ";
-                                break;
                             case "PMI_coding":
                                 columnQuery += "co.[PmiCoding], ";
+                                break;
+                            case "Country_code":
+                                columnQuery += "v.[CountryCode], ";
                                 break;
                             case "Country_name":
                                 columnQuery += "co.[CountryName], ";
@@ -166,6 +166,9 @@ namespace TobaccoNicotineApplication.Sql
                             case "Link":
                                 columnQuery += "s.[Link], ";
                                 break;
+                            case "Access or download date":
+                                columnQuery += "s.[Repository], ";
+                                break;
                             case "Exchange_Rate_US$":
                                 columnQuery += "cu2.[Value], ";
                                 break;
@@ -183,9 +186,6 @@ namespace TobaccoNicotineApplication.Sql
                                 break;
                             case "CHI ha inserito/modificato il dato":
                                 columnQuery += "s.[DateDownload], ";
-                                break;
-                            case "collection date (consultation or download)":
-                                columnQuery += "s.[Repository], ";
                                 break;
                             case "reference data repository":
                                 columnQuery += "s.[Username], ";
@@ -290,11 +290,11 @@ namespace TobaccoNicotineApplication.Sql
                                     if (columnSelected.Contains("Region_name"))
                                         temp.RegionName = reader.GetString(i + k++);
 
+                                    if (columnSelected.Contains("PMI_coding"))
+                                        temp.PmiCode = reader.GetString(i + k++);
+
                                     if (columnSelected.Contains("Country_code"))
                                         temp.CountryCode = reader.GetInt16(i + k++);
-
-                                    if (columnSelected.Contains("PMI_coding"))
-                                        temp.PmiCode = reader.GetString(i+ k++);
 
                                     if (columnSelected.Contains("Country_name"))
                                         temp.CountryName = reader.GetString(i + k++);
@@ -329,6 +329,9 @@ namespace TobaccoNicotineApplication.Sql
                                     if (columnSelected.Contains("Link"))
                                         temp.Link = reader.GetValue(i + k++).ToString();
 
+                                    if (columnSelected.Contains("Access or download date"))
+                                        temp.DateDownload = ExportRepository.ToNullableDate(reader.GetValue(i + k++).ToString());
+
                                     if (columnSelected.Contains("Exchange_Rate_US$"))
                                         temp.CurrencyValue = ExportRepository.ToNullableDecimal(reader.GetValue(i + k++).ToString());
 
@@ -343,9 +346,6 @@ namespace TobaccoNicotineApplication.Sql
 
                                     if (columnSelected.Contains("COMMENTI NOMISMA (interno)"))
                                             temp.InternalNotes = reader.GetValue(i + k++).ToString();
-
-                                    if (columnSelected.Contains("collection date (consultation or download)"))
-                                            temp.DateDownload = ExportRepository.ToNullableDate(reader.GetValue(i + k++).ToString());
 
                                     if (columnSelected.Contains("reference data repository"))
                                             temp.Repository = reader.GetValue(i + k++).ToString();

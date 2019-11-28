@@ -248,15 +248,15 @@ namespace TobaccoNicotineApplication.Controllers
                         column++;
                     }
 
-                    if (columnSelected.Contains("Country_code"))
-                    {
-                        ws.Cells[1, column].Value = "Country_code";
-                        column++;
-                    }
-
                     if (columnSelected.Contains("PMI_coding"))
                     {
                         ws.Cells[1, column].Value = "PMI_coding";
+                        column++;
+                    }
+
+                    if (columnSelected.Contains("Country_code"))
+                    {
+                        ws.Cells[1, column].Value = "Country_code";
                         column++;
                     }
 
@@ -338,6 +338,12 @@ namespace TobaccoNicotineApplication.Controllers
                         column++;
                     }
 
+                    if (columnSelected.Contains("Access or download date"))
+                    {
+                        ws.Cells[1, column].Value = "Access or download date";
+                        column++;
+                    }
+
                     if (columnSelected.Contains("Exchange_Rate_US$"))
                     {
                         ws.Cells[1, column].Value = "Exchange_Rate_US$";
@@ -371,12 +377,6 @@ namespace TobaccoNicotineApplication.Controllers
                     if (columnSelected.Contains("CHI ha inserito/modificato il dato"))
                     {
                         ws.Cells[1, column].Value = "CHI ha inserito/modificato il dato";
-                        column++;
-                    }
-
-                    if (columnSelected.Contains("collection date (consultation or download)"))
-                    {
-                        ws.Cells[1, column].Value = "collection date (consultation or download)";
                         column++;
                     }
 
@@ -451,15 +451,15 @@ namespace TobaccoNicotineApplication.Controllers
                             column++;
                         }
 
-                        if (columnSelected.Contains("Country_code"))
-                        {
-                            ws.Cells[rowStart, column].Value = export.CountryCode;
-                            column++;
-                        }
-
                         if (columnSelected.Contains("PMI_coding"))
                         {
                             ws.Cells[rowStart, column].Value = export.PmiCode;
+                            column++;
+                        }
+
+                        if (columnSelected.Contains("Country_code"))
+                        {
+                            ws.Cells[rowStart, column].Value = export.CountryCode;
                             column++;
                         }
 
@@ -639,6 +639,23 @@ namespace TobaccoNicotineApplication.Controllers
                             }
                         }
 
+                        if (export.DateDownload != null)
+                        {
+                            if (columnSelected.Contains("Access or download date"))
+                            {
+                                ws.Cells[rowStart, column].Value = String.Format("{0:MM/dd/yyyy}", export.DateDownload);
+                                column++;
+                            }
+                        }
+                        else
+                        {
+                            if (columnSelected.Contains("Access or download date"))
+                            {
+                                ws.Cells[rowStart, column].Value = "";
+                                column++;
+                            }
+                        }
+
                         if (export.VarLc == true && export.DataUs != null)
                         {
                             if (export.CurrencyValue.HasValue)
@@ -702,23 +719,6 @@ namespace TobaccoNicotineApplication.Controllers
                         else
                         {
                             if (columnSelected.Contains("CHI ha inserito/modificato il dato"))
-                            {
-                                ws.Cells[rowStart, column].Value = "";
-                                column++;
-                            }
-                        }
-
-                        if (export.DateDownload != null)
-                        {
-                            if (columnSelected.Contains("collection date (consultation or download)"))
-                            {
-                                ws.Cells[rowStart, column].Value = String.Format("{0:MM/dd/yyyy}", export.DateDownload);
-                                column++;
-                            }
-                        }
-                        else
-                        {
-                            if (columnSelected.Contains("collection date (consultation or download)"))
                             {
                                 ws.Cells[rowStart, column].Value = "";
                                 column++;
@@ -883,9 +883,9 @@ namespace TobaccoNicotineApplication.Controllers
 
                             // prendo valori dall'excel
                             nomismaCode = int.Parse(row[0].ToString());
-                            country_code = short.Parse(row[5].ToString());
+                            country_code = short.Parse(row[6].ToString());
                             variable_number = short.Parse(row[11].ToString());
-                            varLc = (row[22].ToString() == "1") ? true : false;
+                            varLc = (row[23].ToString() == "1") ? true : false;
                             if (!String.IsNullOrEmpty(row[16].ToString())) // se il valore è diverso da null
                                 dataUs = decimal.Parse(row[16].ToString().Replace(".", "").Replace(",", "."));
                             else
@@ -897,11 +897,11 @@ namespace TobaccoNicotineApplication.Controllers
                             year = short.Parse(row[17].ToString());
                             source_name = row[18].ToString();
                             link = (!String.IsNullOrEmpty(row[19].ToString())) ? row[19].ToString() : null;
-                            public_notes = (!String.IsNullOrEmpty(row[21].ToString())) ? row[21].ToString() : null;
-                            internal_notes = (!String.IsNullOrEmpty(row[24].ToString())) ? row[24].ToString() : null;
-                            username = row[25].ToString();
-                            if (DateUtils.IsDateTime(row[26].ToString()))
-                                download_source = row[26].ToString();
+                            public_notes = (!String.IsNullOrEmpty(row[22].ToString())) ? row[22].ToString() : null;
+                            internal_notes = (!String.IsNullOrEmpty(row[25].ToString())) ? row[25].ToString() : null;
+                            username = row[26].ToString();
+                            if (row[20].ToString() != "")
+                                download_source = row[20].ToString();
                             else
                                 download_source = null;
                             reference_data_repository = (!String.IsNullOrEmpty(row[27].ToString())) ? row[27].ToString() : null;
