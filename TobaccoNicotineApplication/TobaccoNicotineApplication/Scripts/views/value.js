@@ -1318,7 +1318,7 @@ function pasteFromClipboard(numeroCheck) {
                     riga.children[11].children[0].value = repository;
                     riga.children[12].children[0].value = dateDownload;
                     riga.children[13].children[0].value = username;
-                    riga.children[14].children[0].outerText = "";
+                    //riga.children[14].children[0].outerText = "";
 
                     // invio richiesta ajax per salvare
                     saveAjaxRequest(countryCode, number, year, varLc, data, dataUs, public, internal, sourceName, link, repository, dateDownload, username, riga);
@@ -1345,14 +1345,6 @@ function Validation(data, dataUs, public, internal, sourceName, link, repository
     if (isNaN(dataUs) && !(dataUs != "null" || dataUs != "")) {
         swal("Attention!", dataUs + ": isn't a number!", "error");
         return false;
-    }
-
-    //
-    if (sourceName != "null") {
-        if (username == "null" || username == "") {
-            swal("Attention!", "Username: cannot be null!", "error");
-            return false;
-        }
     }
 
     // repository?
