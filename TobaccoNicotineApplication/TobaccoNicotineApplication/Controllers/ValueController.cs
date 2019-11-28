@@ -164,12 +164,20 @@ namespace TobaccoNicotineApplication.Controllers
                             if (dataUs == "null")
                                 model.DataUs = null;
                             else
-                                model.DataUs = decimal.Parse(dataUs);
+                            {
+                                decimal o;
+                                if (decimal.TryParse(dataUs, out o))
+                                    model.DataUs = o;
+                            }
                         if (!String.IsNullOrEmpty(data))
                                 if (data == "null")
                                     model.Data = null;
                                 else
-                                    model.Data = decimal.Parse(data);
+                                {
+                                    decimal o;
+                                    if (decimal.TryParse(data, out o))
+                                        model.Data = o;
+                                }
                     }
                     else
                     {
@@ -177,7 +185,11 @@ namespace TobaccoNicotineApplication.Controllers
                             if (data == "null")
                                 model.Data = null;
                             else
-                                model.Data = decimal.Parse(data);
+                            {
+                                decimal o;
+                                if (decimal.TryParse(data, out o))
+                                    model.Data = o;
+                            }
                     }
                     if (!String.IsNullOrEmpty(sourceName))
                     {
@@ -256,7 +268,7 @@ namespace TobaccoNicotineApplication.Controllers
                         }
                     }
 
-                    if (!String.IsNullOrEmpty(data) || !String.IsNullOrEmpty(dataUs) || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes) || (model.Sources.FirstOrDefault() != null ? model.Sources.FirstOrDefault().Name : null) != sourceName || sourceName == "null" || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(dateDownload) && dateDownload == "null"|| !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(username))
+                    if (data == "null" || decimal.TryParse(data, out decimal p) || dataUs == "null" || decimal.TryParse(dataUs, out decimal k) || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes) || (model.Sources.FirstOrDefault() != null ? model.Sources.FirstOrDefault().Name : null) != sourceName || sourceName == "null" || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(dateDownload) && dateDownload == "null"|| !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(username))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo
