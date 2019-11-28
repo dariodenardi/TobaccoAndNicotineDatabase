@@ -90,7 +90,7 @@ namespace TobaccoNicotineApplication.Controllers
                     }
                 }
 
-                /*using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+                using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
                 {
                     //CURRENCY
                     decimal d_2010;
@@ -101,6 +101,8 @@ namespace TobaccoNicotineApplication.Controllers
                     decimal d_2015;
                     decimal d_2016;
                     decimal d_2017;
+                    decimal d_2018;
+                    decimal d_2019;
                     string name;
                     string notes;
                     short year;
@@ -119,6 +121,8 @@ namespace TobaccoNicotineApplication.Controllers
                         d_2015 = decimal.Parse(row["2015"].ToString());
                         d_2016 = decimal.Parse(row["2016"].ToString());
                         d_2017 = decimal.Parse(row["2017"].ToString());
+                        d_2018 = decimal.Parse(row["2018"].ToString());
+                        d_2019 = decimal.Parse(row["2019"].ToString());
                         notes = row["Notes"].ToString().TrimEnd(' ');
 
                         List<Country> countries = db.Countries.Where(x => x.CountryName == name).ToList();
@@ -127,7 +131,7 @@ namespace TobaccoNicotineApplication.Controllers
                         if ((country = countries.FirstOrDefault()) != null)
                         {
                             year = 2010;
-                            for (int i = 0; i < 8; i++)
+                            for (int i = 0; i < 10; i++)
                             {
                                 Currency c = new Currency();
                                 c.Year = year;
@@ -149,6 +153,10 @@ namespace TobaccoNicotineApplication.Controllers
                                     c.Value = d_2016;
                                 else if (year == 2017)
                                     c.Value = d_2017;
+                                else if (year == 2018)
+                                    c.Value = d_2018;
+                                else if (year == 2019)
+                                    c.Value = d_2019;
 
                                 if (notes != "")
                                     c.Notes = notes;
@@ -162,7 +170,7 @@ namespace TobaccoNicotineApplication.Controllers
 
                         }
                     }
-                }*/ // using db
+                } // using db
 
             } // posted file
 
