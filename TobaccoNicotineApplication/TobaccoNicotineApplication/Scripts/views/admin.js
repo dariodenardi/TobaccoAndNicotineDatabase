@@ -58,7 +58,7 @@ var SaveUser = function (UserName) {
     var grant = $("#select_" + UserName).val();
 
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "/Admin/Edit",
         data: {
             userName: UserName,

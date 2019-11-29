@@ -167,7 +167,7 @@ namespace TobaccoNicotineApplication.Sql
                                 columnQuery += "s.[Link], ";
                                 break;
                             case "Access or download date":
-                                columnQuery += "s.[Repository], ";
+                                columnQuery += "s.[DateDownload], ";
                                 break;
                             case "Exchange_Rate_US$":
                                 columnQuery += "cu2.[Value], ";
@@ -185,10 +185,10 @@ namespace TobaccoNicotineApplication.Sql
                                 columnQuery += "v.[InternalNotes], ";
                                 break;
                             case "CHI ha inserito/modificato il dato":
-                                columnQuery += "s.[DateDownload], ";
+                                columnQuery += "s.[Username], ";
                                 break;
                             case "reference data repository":
-                                columnQuery += "s.[Username], ";
+                                columnQuery += "s.[Repository], ";
                                 break;
                             case "date":
                                 columnQuery += "s.[Date], ";
@@ -347,11 +347,11 @@ namespace TobaccoNicotineApplication.Sql
                                     if (columnSelected.Contains("COMMENTI NOMISMA (interno)"))
                                             temp.InternalNotes = reader.GetValue(i + k++).ToString();
 
+                                    if (columnSelected.Contains("CHI ha inserito/modificato il dato"))
+                                        temp.Username = reader.GetValue(i + k++).ToString();
+
                                     if (columnSelected.Contains("reference data repository"))
                                             temp.Repository = reader.GetValue(i + k++).ToString();
-
-                                    if (columnSelected.Contains("CHI ha inserito/modificato il dato"))
-                                            temp.Username = reader.GetValue(i + k++).ToString();
 
                                     if (columnSelected.Contains("date"))
                                         temp.SourceDate = ExportRepository.ToNullableDate(reader.GetValue(i + k++).ToString());
