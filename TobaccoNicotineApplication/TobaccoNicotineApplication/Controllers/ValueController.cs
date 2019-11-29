@@ -167,7 +167,7 @@ namespace TobaccoNicotineApplication.Controllers
                             {
                                 decimal o;
                                 if (decimal.TryParse(dataUs, out o))
-                                    model.DataUs = o;
+                                    model.DataUs = Math.Round(o, 1);
                             }
                         if (!String.IsNullOrEmpty(data))
                                 if (data == "null")
@@ -176,7 +176,7 @@ namespace TobaccoNicotineApplication.Controllers
                                 {
                                     decimal o;
                                     if (decimal.TryParse(data, out o))
-                                        model.Data = o;
+                                        model.Data = Math.Round(o, 1);
                                 }
                     }
                     else
@@ -188,7 +188,7 @@ namespace TobaccoNicotineApplication.Controllers
                             {
                                 decimal o;
                                 if (decimal.TryParse(data, out o))
-                                    model.Data = o;
+                                    model.Data = Math.Round(o, 1);
                             }
                     }
                     if (!String.IsNullOrEmpty(sourceName))

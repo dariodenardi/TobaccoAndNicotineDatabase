@@ -90,7 +90,7 @@ namespace TobaccoNicotineApplication.Controllers
                     }
                 }
 
-                using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+                /*using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
                 {
                     //CURRENCY
                     decimal d_2010;
@@ -170,7 +170,7 @@ namespace TobaccoNicotineApplication.Controllers
 
                         }
                     }
-                } // using db
+                }*/ // using db
 
             } // posted file
 
@@ -786,7 +786,7 @@ namespace TobaccoNicotineApplication.Controllers
 
         //
         // GET: /Excel/Import
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Writer")]
         public ActionResult Import()
         {
             return View();

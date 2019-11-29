@@ -375,12 +375,18 @@ function saveRow(e, params, countryCode, number, year, varLc, id) {
             // cliccato invio con data -> aggiorno dataUs
             var numero_riga = id.id.replace("DataTable", "");
             var exhange = document.getElementById("SetValueList").children[numero_riga].children[6].outerText;
-            $('#DataUsTable' + numero_riga).val((id.value * exhange).toFixed(1));
+            if (id.value == "null")
+                $('#DataUsTable' + numero_riga).val("null");
+            else
+                $('#DataUsTable' + numero_riga).val((id.value * exhange).toFixed(1));
         } else if (params == '1') {
             // cliccato invio con dataUs -> aggiorno data
             var numero_riga = id.id.replace("DataUsTable", "");
             var exhange = document.getElementById("SetValueList").children[numero_riga].children[6].outerText;
-            $('#DataTable' + numero_riga).val((id.value / exhange).toFixed(1));
+            if (id.value == "null")
+                $('#DataTable' + numero_riga).val("null");
+            else
+                $('#DataTable' + numero_riga).val((id.value / exhange).toFixed(1));
         }
 
         var data;
@@ -389,10 +395,16 @@ function saveRow(e, params, countryCode, number, year, varLc, id) {
         var internal = undefined;
         if (params == '0') {
             data = id.value;
-            dataUs = (id.value * exhange).toFixed(1);
+            if (id.value == "null")
+                dataUs = "null";
+            else
+                dataUs = (id.value * exhange).toFixed(1);
         }
         if (params == '1') {
-            data = (id.value / exhange).toFixed(1);
+            if (id.value == "null")
+                data = "null";
+            else
+                data = (id.value / exhange).toFixed(1);
             dataUs = id.value;
         }
         if (params == '2')
