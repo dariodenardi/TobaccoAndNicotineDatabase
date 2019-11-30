@@ -240,7 +240,10 @@ namespace TobaccoNicotineApplication.Controllers
                                     else
                                         newSource.DateDownload = dateDownload;
                                 if (!String.IsNullOrEmpty(username))
-                                    newSource.Username = username;
+                                    if (username == "null")
+                                        newSource.Username = null;
+                                    else
+                                        newSource.Username = username;
 
                                 model.Sources.Add(newSource);
                             }
@@ -264,7 +267,10 @@ namespace TobaccoNicotineApplication.Controllers
                                     else
                                         model.Sources.FirstOrDefault().DateDownload = dateDownload;
                                 if (!String.IsNullOrEmpty(username))
-                                    model.Sources.FirstOrDefault().Username = username;
+                                    if (username == "null")
+                                        model.Sources.FirstOrDefault().Username = null;
+                                    else
+                                        model.Sources.FirstOrDefault().Username = username;
 
                             }
                         }

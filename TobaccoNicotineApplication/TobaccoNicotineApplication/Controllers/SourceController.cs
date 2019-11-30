@@ -127,9 +127,12 @@ namespace TobaccoNicotineApplication.Controllers
                         else
                             model.DateDownload = dateDownload;
                     if (!String.IsNullOrEmpty(username))
-                        model.Username = username;
+                        if (username == "null")
+                            model.Username = null;
+                        else
+                            model.Username = username;
 
-                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(dateDownload) || !String.IsNullOrEmpty(dateDownload) && dateDownload == "null" || !String.IsNullOrEmpty(username))
+                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(dateDownload) || dateDownload == "null" || !String.IsNullOrEmpty(username))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo

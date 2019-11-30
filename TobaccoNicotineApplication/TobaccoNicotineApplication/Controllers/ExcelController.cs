@@ -662,6 +662,8 @@ namespace TobaccoNicotineApplication.Controllers
                             {
                                 if (columnSelected.Contains("Exchange_Rate_US$"))
                                 {
+                                    // number with 1 decimal place and thousand separator
+                                    ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
                                     ws.Cells[rowStart, column].Value = export.CurrencyValue.Value;
                                     column++;
                                 }
@@ -670,6 +672,8 @@ namespace TobaccoNicotineApplication.Controllers
                             {
                                 if (columnSelected.Contains("Exchange_Rate_US$"))
                                 {
+                                    // number with 1 decimal place and thousand separator
+                                    ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
                                     ws.Cells[rowStart, column].Value = "";
                                     column++;
                                 }
@@ -679,6 +683,8 @@ namespace TobaccoNicotineApplication.Controllers
                         {
                             if (columnSelected.Contains("Exchange_Rate_US$"))
                             {
+                                // number with 1 decimal place and thousand separator
+                                ws.Cells[rowStart, column].Style.Numberformat.Format = "#,##0.0";
                                 ws.Cells[rowStart, column].Value = "";
                                 column++;
                             }
@@ -886,16 +892,24 @@ namespace TobaccoNicotineApplication.Controllers
                             country_code = short.Parse(row[6].ToString());
                             variable_number = short.Parse(row[11].ToString());
                             varLc = (row[23].ToString() == "1") ? true : false;
-                            if (!String.IsNullOrEmpty(row[16].ToString())) // se il valore è diverso da null
+                            if (!String.IsNullOrEmpty(row[16].ToString()) && row[16].ToString().Contains(".") && row[16].ToString().Contains(",")) // se il valore è diverso da null
                                 dataUs = decimal.Parse(row[16].ToString().Replace(".", "").Replace(",", "."));
+                            else if (!String.IsNullOrEmpty(row[16].ToString()) && row[16].ToString().Contains(",")) // se il valore è diverso da null
+                                dataUs = decimal.Parse(row[16].ToString().Replace(",", "."));
+                            else if (!String.IsNullOrEmpty(row[16].ToString())) // se il valore è diverso da null
+                                dataUs = decimal.Parse(row[16].ToString());
                             else
                                 dataUs = null;
-                            if (!String.IsNullOrEmpty(row[15].ToString())) // se il valore è diverso da null
+                            if (!String.IsNullOrEmpty(row[15].ToString()) && row[15].ToString().Contains(".") && row[15].ToString().Contains(",")) // se il valore è diverso da null
                                 data = decimal.Parse(row[15].ToString().Replace(".", "").Replace(",", "."));
+                            else if (!String.IsNullOrEmpty(row[15].ToString()) && row[15].ToString().Contains(",")) // se il valore è diverso da null
+                                data = decimal.Parse(row[15].ToString().Replace(",", "."));
+                            else if (!String.IsNullOrEmpty(row[15].ToString())) // se il valore è diverso da null
+                                data = decimal.Parse(row[15].ToString());
                             else
                                 data = null;
                             year = short.Parse(row[17].ToString());
-                            source_name = row[18].ToString();
+                            source_name = (!String.IsNullOrEmpty(row[18].ToString())) ? row[18].ToString() : null;
                             link = (!String.IsNullOrEmpty(row[19].ToString())) ? row[19].ToString() : null;
                             public_notes = (!String.IsNullOrEmpty(row[22].ToString())) ? row[22].ToString() : null;
                             internal_notes = (!String.IsNullOrEmpty(row[25].ToString())) ? row[25].ToString() : null;

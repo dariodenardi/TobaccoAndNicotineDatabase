@@ -37,7 +37,12 @@ $('#importExcel').click(function (event) {
         success: function (result) {
 
             if (result.status == false) {
-                swal("Error!", result.error, "error");
+                swal({ title: "Error!", text: result.error, type: "error" },
+                    function () {
+                        $('form').trigger("reset");
+                        $("#centerLoading").hide();
+                    }
+                );
             } else {
                 // vedo se ci sono warning da segnalare
                 var obj = JSON.parse(result.warning);
