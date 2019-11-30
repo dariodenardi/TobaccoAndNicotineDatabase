@@ -646,7 +646,7 @@ function Copy() {
             numeroCheck++;
             // salvo tutti i valori della riga
             var valori_riga = "";
-            for (var t = 1, n = riga.children.length - 1; t < n; t++) {
+            for (var t = 1; t < riga.children.length; t++) {
                 if (riga.children[t].children.length > 0)
                     valori_riga += riga.children[t].children[0].value + "\t";
                 else

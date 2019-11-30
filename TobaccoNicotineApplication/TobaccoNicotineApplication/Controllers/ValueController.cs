@@ -191,6 +191,7 @@ namespace TobaccoNicotineApplication.Controllers
                                     model.Data = Math.Round(o, 1);
                             }
                     }
+                    bool sourceChange = false;
                     if (!String.IsNullOrEmpty(sourceName))
                     {
                         if (sourceName == "null")
@@ -211,6 +212,7 @@ namespace TobaccoNicotineApplication.Controllers
                             if ((model.Sources.FirstOrDefault() != null ? model.Sources.FirstOrDefault().Name : null) != sourceName)
                             {
                                 // fonte diversa
+                                sourceChange = true;
 
                                 // rimuovo vecchia sorgente se è presente
                                 if (model.Sources.Count > 0)
@@ -268,7 +270,7 @@ namespace TobaccoNicotineApplication.Controllers
                         }
                     }
 
-                    if (data == "null" || decimal.TryParse(data, out decimal p) || dataUs == "null" || decimal.TryParse(dataUs, out decimal k) || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes) || (model.Sources.FirstOrDefault() != null ? model.Sources.FirstOrDefault().Name : null) != sourceName || sourceName == "null" || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(dateDownload) && dateDownload == "null"|| !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(username))
+                    if (data == "null" || decimal.TryParse(data, out decimal p) || dataUs == "null" || decimal.TryParse(dataUs, out decimal k) || !String.IsNullOrEmpty(internalNotes) || !String.IsNullOrEmpty(publicNotes) || sourceChange || sourceName == "null" || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(sourceName) && (!String.IsNullOrEmpty(dateDownload) || dateDownload == "null") || !String.IsNullOrEmpty(sourceName) && !String.IsNullOrEmpty(username))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo

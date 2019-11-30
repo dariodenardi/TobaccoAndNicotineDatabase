@@ -129,7 +129,7 @@ namespace TobaccoNicotineApplication.Controllers
                     if (!String.IsNullOrEmpty(username))
                         model.Username = username;
 
-                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || DateUtils.IsDateTime(dateDownload) || !String.IsNullOrEmpty(dateDownload) && dateDownload == "null" || !String.IsNullOrEmpty(username))
+                    if (!String.IsNullOrEmpty(link) || !String.IsNullOrEmpty(repository) || !String.IsNullOrEmpty(dateDownload) || !String.IsNullOrEmpty(dateDownload) && dateDownload == "null" || !String.IsNullOrEmpty(username))
                         status = true;
 
                     // solo se è stato modificato qualcosa salvo
@@ -314,21 +314,15 @@ namespace TobaccoNicotineApplication.Controllers
                             Source source = value.Sources.FirstOrDefault();
                             if (source != null)
                             {
-                                string directoryName = source.Name + "-" + source.Date.Day + "-" + source.Date.Month + "-" + source.Date.Year + "-" + source.Time.Hours + "-" + source.Time.Minutes + "-" + source.Time.Seconds;
-
                                 // vedo se esiste già il file
-                                if (System.IO.File.Exists(path + "/" + directoryName + "/" + source.Repository))
-                                    return Json(new { success = false, response = "File already exists.", directoryName }, JsonRequestBehavior.AllowGet);
+                                if (System.IO.File.Exists(path + "/" + source.Repository))
+                                    return Json(new { success = false, response = "File already exists.", directoryName = source.Repository }, JsonRequestBehavior.AllowGet);
 
                                 // aggiorno il nomeFile
                                 source.Repository = file.FileName;
 
-                                // creo directory se non è presente
-                                if (!Directory.Exists(path + "/" + directoryName))
-                                    Directory.CreateDirectory(path + "/" + directoryName);
-
                                 // carico file
-                                string saveAsPath = Path.Combine(path, directoryName, file.FileName);
+                                string saveAsPath = Path.Combine(path, file.FileName);
                                 file.SaveAs(saveAsPath);
 
                                 db.Entry(source).State = EntityState.Modified;

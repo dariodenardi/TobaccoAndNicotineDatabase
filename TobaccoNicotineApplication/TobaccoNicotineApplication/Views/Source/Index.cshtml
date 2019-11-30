@@ -45,6 +45,7 @@
     StringLengthAttribute sourceNameLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("Name").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
     StringLengthAttribute sourceUsernameLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("Username").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
     StringLengthAttribute sourceRepositoryLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("Repository").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
+    StringLengthAttribute dateDownloadLenAttr = typeof(TobaccoNicotineApplication.Models.Source).GetProperty("DateDownload").GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
 
     string serverMap = System.Web.HttpContext.Current.Server.MapPath("~/Uploads/Sources/");
 }
@@ -403,6 +404,7 @@
         var usernameMin = '@sourceUsernameLenAttr.MinimumLength';
         var usernameMax = '@sourceUsernameLenAttr.MaximumLength';
         var repositoryMax = '@sourceRepositoryLenAttr.MaximumLength';
+        var dateDownloadMax = '@dateDownloadLenAttr.MaximumLength';
 
         var sourceLink = '@sourceLink';
         var sourceUsername = '@sourceUsername';

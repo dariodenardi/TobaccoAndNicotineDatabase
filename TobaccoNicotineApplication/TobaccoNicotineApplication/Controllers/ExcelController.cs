@@ -729,7 +729,7 @@ namespace TobaccoNicotineApplication.Controllers
                         {
                             if (columnSelected.Contains("reference data repository"))
                             {
-                                Uri uri = new UriBuilder(path + "/" + export.SourceName + "-" + export.SourceDate.Value.Day + "-" + export.SourceDate.Value.Month + "-" + export.SourceDate.Value.Year + "-" + export.SourceTime.Value.Hours + "-" + export.SourceTime.Value.Minutes + "-" + export.SourceTime.Value.Seconds + "/" + export.Repository).Uri;
+                                Uri uri = new UriBuilder(path + "/" + export.Repository).Uri;
                                 ws.Cells[rowStart, column].Hyperlink = uri;
                                 ws.Cells[rowStart, column].StyleName = namedStyle.Name;
                                 ws.Cells[rowStart, column].Value = path + "/" + export.SourceName + "-" + export.SourceDate.Value.Day + "-" + export.SourceDate.Value.Month + "-" + export.SourceDate.Value.Year + "-" + export.SourceTime.Value.Hours + "-" + export.SourceTime.Value.Minutes + "-" + export.SourceTime.Value.Seconds + "/" + export.Repository;
