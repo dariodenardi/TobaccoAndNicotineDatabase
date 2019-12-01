@@ -1276,10 +1276,10 @@ function pasteFromClipboard(numeroCheck) {
                     else
                         varLc = false;
 
-                    var data = res2[2];
-                    var dataUs = res2[3];
-                    var public = res2[6];
-                    var internal = res2[7];
+                    var data = res2[2].trim(' ');
+                    var dataUs = res2[3].trim(' ');
+                    var public = res2[6].trim(' ');
+                    var internal = res2[7].trim(' ');
 
                     var sourceName = (res2.length > 8) ? res2[8] : null;
                     var link = (res2.length > 9) ? res2[9] : null;

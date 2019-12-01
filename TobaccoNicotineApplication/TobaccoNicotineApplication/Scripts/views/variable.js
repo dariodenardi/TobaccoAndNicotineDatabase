@@ -719,11 +719,11 @@ function pasteFromClipboard(numeroCheck) {
                         return;
                     }
 
-                    var name = res2[0];
-                    var phaseCode = res2[1];
-                    var phaseName = res2[2];
-                    var varLc = res2[3];
-                    var unit = res2[4];
+                    var name = res2[0].trim(' ');
+                    var phaseCode = res2[1].trim(' ');
+                    var phaseName = res2[2].trim(' ');
+                    var varLc = res2[3].trim(' ');
+                    var unit = res2[4].trim(' ');
 
                     // controllo
                     if (Validation(name, phaseCode, phaseName, unit, varLc) == false)

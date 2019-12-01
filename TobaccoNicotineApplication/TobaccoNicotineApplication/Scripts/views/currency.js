@@ -773,8 +773,8 @@ function pasteFromClipboard(numeroCheck) {
                     else
                         year = riga.children[2].outerText;
 
-                    var value = res2[2];
-                    var note = res2[3];
+                    var value = res2[2].trim(' ');
+                    var note = res2[3].trim(' ');
 
                     if (note == null)
                         note = "null";

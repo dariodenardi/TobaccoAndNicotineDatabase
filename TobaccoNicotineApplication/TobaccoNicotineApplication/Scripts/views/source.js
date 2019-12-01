@@ -834,10 +834,10 @@ function pasteFromClipboard(numeroCheck) {
                     var sourceDate = className.split("_")[1];
                     var sourceTime = className.split("_")[2];
 
-                    var link = res2[1];
-                    var repository = res2[2];
-                    var dateDownload = res2[3];
-                    var username = res2[4];
+                    var link = res2[1].trim(' ');
+                    var repository = res2[2].trim(' ');
+                    var dateDownload = res2[3].trim(' ');
+                    var username = res2[4].trim(' ');
 
                     // i valori ammessi sono anche nulli
                     if (link == null || link == "")
@@ -877,10 +877,6 @@ function pasteFromClipboard(numeroCheck) {
 function Validation(link, repository, dateDownload, username) {
 
     // valori nulli?
-    if (username == "null" || username == "") {
-        swal("Attention!", "Username: cannot be null!", "error");
-        return false;
-    }
 
     // repository?
     if (RepositoryNameArray.includes((repository == "null" ? null : repository)) == false) {

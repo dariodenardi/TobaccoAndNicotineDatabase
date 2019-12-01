@@ -785,11 +785,11 @@ function pasteFromClipboard(numeroCheck) {
                         return;
                     }
 
-                    var countryName = res2[0];
-                    var regionName = res2[1];
-                    var continentName = res2[2];
-                    var pmiCoding = res2[3];
-                    var areaCode = res2[4];
+                    var countryName = res2[0].trim(' ');
+                    var regionName = res2[1].trim(' ');
+                    var continentName = res2[2].trim(' ');
+                    var pmiCoding = res2[3].trim(' ');
+                    var areaCode = res2[4].trim(' ');
 
                     // controllo
                     if (Validation(countryName, regionName, continentName, pmiCoding, areaCode) == false)
@@ -866,7 +866,9 @@ function Validation(countryName, regionName, continentName, pmiCoding, areaCode)
     }
 
     // boolean
-    if (!(areaCode == "true" || areaCode == "false")) {
+    console.log(areaCode);
+    alert(areaCode == 'true');
+    if (!(areaCode == "true" || areaCode == "false") ) {
         swal("Attention!", areaCode + ": check value!", "error");
         return false;
     }
