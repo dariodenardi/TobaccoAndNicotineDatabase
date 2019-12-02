@@ -345,8 +345,15 @@ namespace TobaccoNicotineApplication.Controllers
                     } // if split
                     else
                     {
-                        status = false;
-                        message = file.FileName + ": name isn't correct.";
+                        // se decido di caricarlo senza inserire il codice
+
+                        // vedo se esiste già il file
+                        if (System.IO.File.Exists(path + "/" + file.FileName))
+                            return Json(new { success = false, response = "File already exists.", directoryName = file.FileName }, JsonRequestBehavior.AllowGet);
+
+                        // carico file
+                        string saveAsPath = Path.Combine(path, file.FileName);
+                        file.SaveAs(saveAsPath);
                     }
 
                     return Json(new { success = status, response = message }, JsonRequestBehavior.AllowGet);

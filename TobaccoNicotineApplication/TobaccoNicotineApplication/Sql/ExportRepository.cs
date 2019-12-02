@@ -85,7 +85,7 @@ namespace TobaccoNicotineApplication.Sql
 
         private static string QUERY_MR_6 = ")) ORDER BY v.[CountryCode], v.[Number], v.[Year]";
 
-        private static string NUMBER_YEAR = "SELECT COUNT(DISTINCT v.[Year]) FROM [dbo].[Values] v";
+        private static string NUMBER_YEAR = "SELECT COUNT(DISTINCT v.[Year]) FROM [dbo].[Values] v WHERE v.[Year] >= 2010";
 
         public static List<ExportView> getExport(List<short> countrySelected, List<short> variableSelected, List<string> yearSelected, List<string> columnSelected)
         {
@@ -248,7 +248,7 @@ namespace TobaccoNicotineApplication.Sql
                     using (SqlCommand dbCommand = new SqlCommand(execute, dbConn))
                     {
                         if (yearQuery.Contains("MR"))
-                            dbCommand.Parameters.Add("totYear", SqlDbType.Int).Value = getYearTot() - 2;
+                            dbCommand.Parameters.Add("totYear", SqlDbType.Int).Value = getYearTot() - 1;
 
                         //
                         // Instance methods can be used on the SqlCommand.

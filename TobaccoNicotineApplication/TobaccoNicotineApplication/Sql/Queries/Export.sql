@@ -68,7 +68,7 @@ AND v.Year = (SELECT MAX(v4.[Year])
 								HAVING COUNT(v3.[Number]) > 9 OR v3.[Number] = 1 ))
 ORDER BY v.[CountryCode], v.[Number], v.[Year]
 
--- 9: 11 anni disponibili - 1 (anno 0) - 1 anno che è stato selezionato
+-- 9: 11 anni disponibili - 1 anno che è stato selezionato
 
 -----------
 

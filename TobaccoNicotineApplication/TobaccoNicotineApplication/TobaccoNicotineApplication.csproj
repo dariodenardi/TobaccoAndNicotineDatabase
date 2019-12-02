@@ -242,9 +242,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\TobaccoNicotineDatabase.mdf" />
-    <Content Include="App_Data\TobaccoNicotineDatabase_log.ldf">
-      <DependentUpon>TobaccoNicotineDatabase.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />

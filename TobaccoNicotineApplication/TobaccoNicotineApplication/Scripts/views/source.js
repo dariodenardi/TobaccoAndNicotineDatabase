@@ -928,13 +928,15 @@ function Paste() {
     }
 }
 
+
+//www.freeformatter.com/mime-types-list.html
 Dropzone.options.myDropzone = {
     paramName: "file",
     autoProcessQueue: true,
     parallelUploads: 1,
     maxFiles: 150,
-    acceptedFiles: "image/*,text/csv,application/pdf,text/plain,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    maxFilesize: 20, //MB
+    acceptedFiles: "image/*,text/csv,application/pdf,text/plain,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    maxFilesize: 50, //MB
     addRemoveLinks: true,
     headers: { "__RequestVerificationToken": token },
     success: function (file, response) {
