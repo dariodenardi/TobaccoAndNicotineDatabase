@@ -1124,6 +1124,7 @@ namespace TobaccoNicotineApplication.Controllers
                     Value oldValue = db.Values.Where(x => x.NomismaCode == newValue.NomismaCode).FirstOrDefault();
                     // caricamento lazy load
                     db.Entry(oldValue).Collection(x => x.Sources).Load();
+
                     oldValue.Sources = newValue.Sources;
                     oldValue.Data = newValue.Data;
                     oldValue.DataUs = newValue.DataUs;

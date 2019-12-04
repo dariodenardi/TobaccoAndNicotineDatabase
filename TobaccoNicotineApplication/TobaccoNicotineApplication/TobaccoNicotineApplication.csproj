@@ -295,6 +295,8 @@
     <Content Include="Models\TobaccoNicotineModel.edmx.diagram">
       <DependentUpon>TobaccoNicotineModel.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.11.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
@@ -385,7 +387,9 @@
     <Content Include="Sql\Tables\dbo.Sources.sql" />
     <Content Include="Sql\Tables\dbo.Values.sql" />
     <Content Include="Sql\Tables\dbo.Variables.sql" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

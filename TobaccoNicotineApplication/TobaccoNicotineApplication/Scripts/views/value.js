@@ -1428,9 +1428,3 @@ function Paste() {
         pasteFromClipboard(numeroCheck);
     }
 }
-
-// quando seleziono un file
-//$('#filestyle-0').click(function (event) {
-//    alert('ok');
-    // your code
-//});
