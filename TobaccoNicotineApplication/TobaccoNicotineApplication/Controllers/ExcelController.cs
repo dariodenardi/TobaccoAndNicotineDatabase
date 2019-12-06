@@ -1125,7 +1125,16 @@ namespace TobaccoNicotineApplication.Controllers
                     // caricamento lazy load
                     db.Entry(oldValue).Collection(x => x.Sources).Load();
 
-                    oldValue.Sources = newValue.Sources;
+                    if (((oldValue.Sources.FirstOrDefault() != null) ? oldValue.Sources.FirstOrDefault().Name : null) != ((newValue.Sources.FirstOrDefault() != null) ? newValue.Sources.FirstOrDefault().Name : null))
+                    {
+                        // rimuovo vecchia sorgente se è presente
+                        if (oldValue.Sources.Count > 0)
+                            oldValue.Sources.Remove(oldValue.Sources.FirstOrDefault());
+
+                        if (newValue.Sources.Count > 0)
+                            oldValue.Sources.Add(newValue.Sources.FirstOrDefault());
+                    }
+
                     oldValue.Data = newValue.Data;
                     oldValue.DataUs = newValue.DataUs;
                     oldValue.InternalNotes = newValue.InternalNotes;
