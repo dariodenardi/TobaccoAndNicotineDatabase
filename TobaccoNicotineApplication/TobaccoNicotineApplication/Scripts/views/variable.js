@@ -29,48 +29,37 @@ $('document').ready(function () {
 });
 
 // inserisco gli elementi nella table
-function DataBind(VariableList) {
+function DataBind(result) {
 
     $("#LoadingStatus").html("Loading....");
 
     var SetData = $("#SetVariableList");
-    for (var i = 0; i < VariableList.length; i++) {
+    for (var i = 0; i < result.Data.length; i++) {
 
-        var Data = "<tr class='row_" + VariableList[i].Number + "'>";
+        var Data = "<tr class='row_" + result.Data[i].Number + "'>";
 
         if (boolAdmin || boolWriter) {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
-                + "<td>" + "<input id=\"VarNameTable" + i + "\"" + "class=\"form-control\" minlength=" + variableNameMin + " maxlength=" + variableNameMax + " type=\"textbox\" value=\"" + VariableList[i].Name + "\" placeholder=\"Insert " + variableName + "*\" onkeypress=\"saveRow(event, 0, '" + VariableList[i].Number + "', VarNameTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"PhaseCodeTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + VariableList[i].PhaseCode + "\" placeholder=\"Insert " + phaseCode + "*\" onkeypress=\"saveRow(event, 1, '" + VariableList[i].Number + "', PhaseCodeTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"PhaseNameTable" + i + "\"" + "class=\"form-control\" minlength=" + phaseNameMin + " maxlength=" + phaseNameMax + " type=\"textbox\" value=\"" + VariableList[i].PhaseName + "\" placeholder=\"Insert " + phaseName + "*\" onkeypress=\"saveRow(event, 2, '" + VariableList[i].Number + "', PhaseNameTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<select id=\"VarLcTable" + i + "\"" + "class=\"form-control\" onchange=\"saveRowCombo(0, '" + VariableList[i].Number + "', VarLcTable" + i + ")\" ><option";
+                + "<td>" + "<input id=\"VarNameTable" + i + "\"" + "class=\"form-control\" minlength=" + variableNameMin + " maxlength=" + variableNameMax + " type=\"textbox\" value=\"" + result.Data[i].Name + "\" placeholder=\"Insert " + variableName + "*\" onkeypress=\"saveRow(event, 0, '" + result.Data[i].Number + "', VarNameTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"PhaseCodeTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + result.Data[i].PhaseCode + "\" placeholder=\"Insert " + phaseCode + "*\" onkeypress=\"saveRow(event, 1, '" + result.Data[i].Number + "', PhaseCodeTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"PhaseNameTable" + i + "\"" + "class=\"form-control\" minlength=" + phaseNameMin + " maxlength=" + phaseNameMax + " type=\"textbox\" value=\"" + result.Data[i].PhaseName + "\" placeholder=\"Insert " + phaseName + "*\" onkeypress=\"saveRow(event, 2, '" + result.Data[i].Number + "', PhaseNameTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<select id=\"VarLcTable" + i + "\"" + "class=\"form-control\" onchange=\"saveRowCombo(0, '" + result.Data[i].Number + "', VarLcTable" + i + ")\" ><option";
 
-            if (VariableList[i].VarLc == true) {
+            if (result.Data[i].VarLc == true) {
                 Data += " selected>true</option><option>false</option></select></td>";
             } else
                 Data += ">true</option><option selected>false</option></select></td>";
 
-            Data += "<td>" + "<input id=\"UnitNameTable" + i + "\"" + "class=\"form-control\" minlength=" + unitNameMin + " maxlength=" + unitNameMax + " type=\"textbox\" value=\"" + VariableList[i].MeasurementUnitName + "\" placeholder=\"Insert " + unitName + "*\" onkeypress=\"saveRow(event, 3, '" + VariableList[i].Number + "', UnitNameTable" + i + ")\" >" + "</td>";
+            Data += "<td>" + "<input id=\"UnitNameTable" + i + "\"" + "class=\"form-control\" minlength=" + unitNameMin + " maxlength=" + unitNameMax + " type=\"textbox\" value=\"" + result.Data[i].MeasurementUnitName + "\" placeholder=\"Insert " + unitName + "*\" onkeypress=\"saveRow(event, 3, '" + result.Data[i].Number + "', UnitNameTable" + i + ")\" >" + "</td>";
 
         } else {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
-                "<td>" + VariableList[i].Name + "</td>" +
-                "<td>" + VariableList[i].PhaseCode + "</td>" +
-                "<td>" + VariableList[i].PhaseName + "</td>" +
-                "<td>" + VariableList[i].VarLc + "</td>" +
-                "<td>" + VariableList[i].MeasurementUnitName + "</td>";
+                "<td>" + result.Data[i].Name + "</td>" +
+                "<td>" + result.Data[i].PhaseCode + "</td>" +
+                "<td>" + result.Data[i].PhaseName + "</td>" +
+                "<td>" + result.Data[i].VarLc + "</td>" +
+                "<td>" + result.Data[i].MeasurementUnitName + "</td>";
         }
-
-        /*Data = Data + "<td>" +
-            "<div class=\"dropdown\" >" +
-            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
-            "Search" +
-            "<span class=\"caret\"></span></button>" +
-            "<ul class=\"dropdown-menu dropdownTable\" aria-labelledby=\"about-us\">" +
-            "<li><a href=\"#\">Values</a></li>" +
-            "<li><a href=\"#\">Sources</a></li>" +
-            "</ul>" +
-            "</div>";*/
 
         Data = Data + "</td>" + "</tr>";
 
@@ -95,7 +84,15 @@ function DataBind(VariableList) {
 
     $("#LoadingStatus").html(" ");
     var page = $("#showEntry").val();
-    $('#SetVariableList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+    PaggingTemplate(result.TotalPages, result.CurrentPage);
+}
+
+var statusPage = 1;
+function GetPageData(pageNumber) {
+
+    statusPage = pageNumber;
+    FilterVariable(0, pageNumber);
+
 }
 
 function AddNewVariable() {
@@ -208,7 +205,7 @@ $("#CreateVariable").click(function () {
                 $("#MyModal").modal("hide");
                 swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
                     function () {
-                        FilterVariable(0);
+                        FilterVariable(0, statusPage);
                     }
                 );
             }
@@ -252,7 +249,7 @@ var ConfirmDelete = function () {
                     $("#DeleteConfirmation").modal("hide");
                     swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
                         function () {
-                            FilterVariable(0);
+                            FilterVariable(0, statusPage);
                         }
                     );
                 } else {
@@ -385,7 +382,7 @@ function loadFilter() {
 }
 
 // Filter Variable
-function FilterVariable(selectSortable) {
+function FilterVariable(selectSortable, pageNumber) {
 
     var sortable1;
     var pathImg1 = document.getElementById("idSortable1").src;
@@ -446,6 +443,8 @@ function FilterVariable(selectSortable) {
             phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
             varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
             orderName: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
+            pageNumber: pageNumber,
+            pageSize: $("#showEntry").val(),
             orderPhaseCode: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
             orderPhaseName: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
             orderVarLc: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined,
@@ -453,7 +452,7 @@ function FilterVariable(selectSortable) {
         },
         success: function (result) {
             $("#SetVariableList").empty();
-            $("#myPager").empty();
+            $("#paged").empty();
             DataBind(result);
             // resetto stato select all/deselect all
             selectAll = true;
@@ -513,7 +512,7 @@ function SortableName() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
 
-    FilterVariable(1);
+    FilterVariable(1, statusPage);
 
 }
 
@@ -528,7 +527,7 @@ function SortablePhaseCode() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable2").src = "/Images/Sortable/asc.png";
 
-    FilterVariable(2);
+    FilterVariable(2, statusPage);
 
 }
 
@@ -543,7 +542,7 @@ function SortablePhaseName() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
 
-    FilterVariable(3);
+    FilterVariable(3, statusPage);
 
 }
 
@@ -558,7 +557,7 @@ function SortableVarLc() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
 
-    FilterVariable(4);
+    FilterVariable(4, statusPage);
 
 }
 
@@ -573,7 +572,7 @@ function SortableUnitName() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable5").src = "/Images/Sortable/asc.png";
 
-    FilterVariable(5);
+    FilterVariable(5, statusPage);
 
 }
 

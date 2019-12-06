@@ -29,14 +29,16 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Country/GetCountryList
         [HttpPost]
-        public JsonResult GetCountryList(string[] pmiCoding, string[] continentName, string[] regionName, string[] countryName, short[] continentCode, short[] regionCode, short[] countryCode, bool[] areaCode, string orderCountryName, string orderContinentName, string orderRegionName, string orderPmi, string orderAreaCode)
+        public JsonResult GetCountryList(string[] pmiCoding, string[] continentName, string[] regionName, string[] countryName, short[] continentCode, short[] regionCode, short[] countryCode, bool[] areaCode, int pageNumber, int pageSize,
+            string orderCountryName, string orderContinentName, string orderRegionName, string orderPmi, string orderAreaCode)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
                 db.Configuration.LazyLoadingEnabled = false;
 
                 IQueryable<Country> countries = from s in db.Countries
-                                             select s;
+                                                orderby s.CountryCode
+                                                select s;
 
                 if (ArrayUtils.IsNullOrEmpty(pmiCoding) == false)
                     countries = countries.Where(t => pmiCoding.Contains(t.PmiCoding));
@@ -87,7 +89,7 @@ namespace TobaccoNicotineApplication.Controllers
                 else if (orderAreaCode == "asc")
                     countries = countries.OrderBy(x => x.AreaCode);
 
-                return Json(countries.Select(x => new { x.CountryCode, x.ContinentName, x.RegionName, x.PmiCoding, x.CountryName, x.AreaCode }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(Pagination.Pagination.PagedResult(countries.Select(x => new { x.CountryCode, x.ContinentName, x.RegionName, x.PmiCoding, x.CountryName, x.AreaCode }), pageNumber, pageSize), JsonRequestBehavior.AllowGet);
             }
         }
 

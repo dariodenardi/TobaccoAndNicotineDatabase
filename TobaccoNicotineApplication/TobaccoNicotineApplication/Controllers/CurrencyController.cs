@@ -29,14 +29,16 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Currency/GetCurrencyList
         [HttpPost]
-        public JsonResult GetCurrencyList(string[] pmiCoding, string[] continentName, string[] regionName, string[] countryName, short[] continentCode, short[] regionCode, short[] countryCode, bool[] areaCode, short[] year, string orderCountryName, string orderYear, string orderValue, string orderNotes)
+        public JsonResult GetCurrencyList(string[] pmiCoding, string[] continentName, string[] regionName, string[] countryName, short[] continentCode, short[] regionCode, short[] countryCode, bool[] areaCode, short[] year, int pageNumber, int pageSize,
+            string orderCountryName, string orderYear, string orderValue, string orderNotes)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
                 db.Configuration.LazyLoadingEnabled = false;
 
                 IQueryable<Currency> currencies = from s in db.Currencies
-                                                select s;
+                                                  orderby s.CountryCode
+                                                  select s;
 
                 if (ArrayUtils.IsNullOrEmpty(pmiCoding) == false)
                     currencies = currencies.Where(t => pmiCoding.Contains(t.Countries.PmiCoding));
@@ -85,7 +87,7 @@ namespace TobaccoNicotineApplication.Controllers
                 else if (orderNotes == "asc")
                     currencies = currencies.OrderBy(x => x.Notes);
 
-                return Json(currencies.Select(x => new { x.CountryCode, x.Countries.CountryName, x.Year, x.Value, x.Notes }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(Pagination.Pagination.PagedResult(currencies.Select(x => new { x.CountryCode, x.Countries.CountryName, x.Year, x.Value, x.Notes }), pageNumber, pageSize), JsonRequestBehavior.AllowGet);
             }
         }
 

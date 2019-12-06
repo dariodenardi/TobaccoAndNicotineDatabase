@@ -203,7 +203,7 @@
                     </dd>
                 </dl>
 
-                <button type="submit" class="btn btn-primary waves-effect" onclick='FilterValue(0)'>Filter</button>
+                <button type="submit" class="btn btn-primary waves-effect" onclick='FilterValue(0, 1)'>Filter</button>
                 <!--Filter-->
             </div>
         </div>
@@ -255,7 +255,7 @@
 
                     <div style="display: inline-grid">
                         @Html.Label("Show entries", new { @class = "control-label" })
-                        @Html.DropDownList("showEntry", listItems, new { @class = "form-control", @onchange = "FilterValue(0)" })
+                        @Html.DropDownList("showEntry", listItems, new { @class = "form-control", @onchange = "FilterValue(0, 1)" })
                     </div>
                     @if (User.IsInRole("Admin") || User.IsInRole("Writer"))
                     {
@@ -270,8 +270,7 @@
                     <br />
                     <br />
                     <div class="col-md-12 text-center">
-                        <!--<ul class="pagination pagination-lg pager" id="myPager"></ul>-->
-                        <ul class="pagination m-b-5" id="myPager"></ul>
+                        <div id="paged"></div>
                     </div>
                 </div>
                 <!--Table-->

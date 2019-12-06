@@ -40,34 +40,34 @@ $('document').ready(function () {
 var RepositoryNameArray = new Array();
 
 // inserisco gli elementi nella table
-function DataBind(SourceList) {
+function DataBind(result) {
 
     $("#LoadingStatus").html("Loading....");
 
     var SetData = $("#SetSourceList");
-    for (var i = 0; i < SourceList.length; i++) {
+    for (var i = 0; i < result.Data.length; i++) {
 
         // json to dateTime format
-        var seconds2 = parseInt(SourceList[i].Date.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+        var seconds2 = parseInt(result.Data[i].Date.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
         var date2 = new Date(seconds2);
         var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
 
-        var Data = "<tr class='row_" + SourceList[i].Name + "_" + date2.toLocaleDateString("en-US", options) + "_" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "'>";
+        var Data = "<tr class='row_" + result.Data[i].Name + "_" + date2.toLocaleDateString("en-US", options) + "_" + result.Data[i].Time.Hours + ":" + result.Data[i].Time.Minutes + ":" + result.Data[i].Time.Seconds + "'>";
 
         if (boolAdmin || boolWriter) {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
-                + "<td>" + SourceList[i].Name + "</td>"
-                + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + SourceList[i].Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 0, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', SourceLinkTable" + i + ")\" >" + "</td>"
-                + "<td><select id=\"selectRepository" + i + "\" class=\"form-control\" onchange=\"saveRowCombo('" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', selectRepository" + i + ")\"></select></td>"
-                + "<td>" + "<input id=\"DateDownloadTable" + i + "\"" + "class=\"form-control\" maxlength=" + dateDownloadMax + " type=\"textbox\" value=\"" + SourceList[i].DateDownload + "\" placeholder=\"Insert " + sourceDateDownload + "*\" onkeypress=\"saveRow(event, 1, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', DateDownloadTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"SourceUsernameTable" + i + "\"" + "class=\"form-control\" maxlength=" + usernameMax + " type=\"textbox\" value=\"" + SourceList[i].Username + "\" placeholder=\"Insert " + sourceUsername + "\" onkeypress=\"saveRow(event, 2, '" + SourceList[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + SourceList[i].Time.Hours + ":" + SourceList[i].Time.Minutes + ":" + SourceList[i].Time.Seconds + "', SourceUsernameTable" + i + ")\" >" + "</td>";
+                + "<td>" + result.Data[i].Name + "</td>"
+                + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + result.Data[i].Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 0, '" + result.Data[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + result.Data[i].Time.Hours + ":" + result.Data[i].Time.Minutes + ":" + result.Data[i].Time.Seconds + "', SourceLinkTable" + i + ")\" >" + "</td>"
+                + "<td><select id=\"selectRepository" + i + "\" class=\"form-control\" onchange=\"saveRowCombo('" + result.Data[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + result.Data[i].Time.Hours + ":" + result.Data[i].Time.Minutes + ":" + result.Data[i].Time.Seconds + "', selectRepository" + i + ")\"></select></td>"
+                + "<td>" + "<input id=\"DateDownloadTable" + i + "\"" + "class=\"form-control\" maxlength=" + dateDownloadMax + " type=\"textbox\" value=\"" + result.Data[i].DateDownload + "\" placeholder=\"Insert " + sourceDateDownload + "*\" onkeypress=\"saveRow(event, 1, '" + result.Data[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + result.Data[i].Time.Hours + ":" + result.Data[i].Time.Minutes + ":" + result.Data[i].Time.Seconds + "', DateDownloadTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"SourceUsernameTable" + i + "\"" + "class=\"form-control\" maxlength=" + usernameMax + " type=\"textbox\" value=\"" + result.Data[i].Username + "\" placeholder=\"Insert " + sourceUsername + "\" onkeypress=\"saveRow(event, 2, '" + result.Data[i].Name + "', '" + date2.toLocaleDateString("en-US", options) + "', '" + result.Data[i].Time.Hours + ":" + result.Data[i].Time.Minutes + ":" + result.Data[i].Time.Seconds + "', SourceUsernameTable" + i + ")\" >" + "</td>";
         } else {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
-                "<td>" + SourceList[i].Name + "</td>" +
-                "<td>" + SourceList[i].Link + "</td>" +
-                "<td>" + SourceList[i].Repository + "</td>" +
-                "<td>" + SourceList[i].DateDownload + "</td>" +
-                "<td>" + SourceList[i].Username + "</td>";
+                "<td>" + result.Data[i].Name + "</td>" +
+                "<td>" + result.Data[i].Link + "</td>" +
+                "<td>" + result.Data[i].Repository + "</td>" +
+                "<td>" + result.Data[i].DateDownload + "</td>" +
+                "<td>" + result.Data[i].Username + "</td>";
         }
 
         /*Data = Data + "<td>" +
@@ -80,9 +80,9 @@ function DataBind(SourceList) {
             "</ul>" +
             "</div>";*/
 
-        if (SourceList[i].Repository != null) {
+        if (result.Data[i].Repository != null) {
             Data = Data +
-                "<td>" + "<a target=\"_blank\" rel=\"noopener noreferrer\" href='" + serverMap + "/" + SourceList[i].Repository + "' class='btn btn-dark btn-sm waves-effect'><span class='glyphicon glyphicon-file'></span></a>" + "</td>";
+                "<td>" + "<a target=\"_blank\" rel=\"noopener noreferrer\" href='" + serverMap + "/" + result.Data[i].Repository + "' class='btn btn-dark btn-sm waves-effect'><span class='glyphicon glyphicon-file'></span></a>" + "</td>";
         } else {
             Data = Data +
                 "<td>" + "</td>";
@@ -95,7 +95,7 @@ function DataBind(SourceList) {
         for (var t = 0; t < RepositoryNameArray.length; t++) {
             $("#selectRepository" + i).append("<option value='" + RepositoryNameArray[t] + "'>" + RepositoryNameArray[t] + "</option>");
         }
-        $("#selectRepository" + i + " option[value='" + SourceList[i].Repository + "']").attr('selected', 'selected');
+        $("#selectRepository" + i + " option[value='" + result.Data[i].Repository + "']").attr('selected', 'selected');
 
         // aggiungo caratteri campo
         $('input#SourceLinkTable' + i).maxlength({
@@ -116,7 +116,15 @@ function DataBind(SourceList) {
 
     $("#LoadingStatus").html(" ");
     var page = $("#showEntry").val();
-    $('#SetSourceList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+    PaggingTemplate(result.TotalPages, result.CurrentPage);
+}
+
+var statusPage = 1;
+function GetPageData(pageNumber) {
+
+    statusPage = pageNumber;
+    FilterSource(0, pageNumber);
+
 }
 
 function getRepositoryNameArray() {
@@ -306,7 +314,7 @@ $("#CreateSource").click(function () {
                 $("#MyModal").modal("hide");
                 swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
                     function () {
-                        FilterSource(0);
+                        FilterSource(0, statusPage);
                     }
                 );
             }
@@ -354,7 +362,7 @@ var ConfirmDelete = function () {
                     $("#DeleteConfirmation").modal("hide");
                     swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
                         function () {
-                            FilterSource(0);
+                            FilterSource(0, statusPage);
                         }
                     );
                 } else {
@@ -486,7 +494,123 @@ function loadFilter() {
 
 }
 
+// Filter Source
+function FilterSource(selectSortable, pageNumber) {
 
+    var sortable1;
+    var pathImg1 = document.getElementById("idSortable1").src;
+    if (pathImg1.includes("asc"))
+        sortable1 = "asc";
+    else if (pathImg1.includes("desc"))
+        sortable1 = "desc";
+    else //caso in cui non è stato cliccato nessun filtro
+        sortable1 = null;
+
+    var sortable2;
+    var pathImg2 = document.getElementById("idSortable2").src;
+    if (pathImg2.includes("asc"))
+        sortable2 = "asc";
+    else if (pathImg2.includes("desc"))
+        sortable2 = "desc";
+    else //caso in cui non è stato cliccato nessun filtro
+        sortable2 = null;
+
+    var sortable3;
+    var pathImg3 = document.getElementById("idSortable3").src;
+    if (pathImg3.includes("asc"))
+        sortable3 = "asc";
+    else if (pathImg3.includes("desc"))
+        sortable3 = "desc";
+    else //caso in cui non è stato cliccato nessun filtro
+        sortable3 = null;
+
+    var sortable4;
+    var pathImg4 = document.getElementById("idSortable4").src;
+    if (pathImg4.includes("asc"))
+        sortable4 = "asc";
+    else if (pathImg4.includes("desc"))
+        sortable4 = "desc";
+    else //caso in cui non è stato cliccato nessun filtro
+        sortable4 = null;
+
+    var sortable5;
+    var pathImg5 = document.getElementById("idSortable5").src;
+    if (pathImg5.includes("asc"))
+        sortable5 = "asc";
+    else if (pathImg5.includes("desc"))
+        sortable5 = "desc";
+    else //caso in cui non è stato cliccato nessun filtro
+        sortable5 = null;
+
+    $.ajax({
+        type: "POST",
+        dataType: 'json',
+        cache: false,
+        traditional: true,
+        url: "/Source/GetSourceList",
+        headers: { "__RequestVerificationToken": token },
+        data: {
+            sourceName: ($("#sourceNameString").val() != null) ? $("#sourceNameString").chosen().val() : undefined,
+            link: ($("#sourceLinkString").val() != null) ? $("#sourceLinkString").val() : undefined,
+            repository: ($("#sourceRepositoryString").val() != null) ? $("#sourceRepositoryString").val() : undefined,
+            dateSource: ($("#sourceDateSourceString").val() != null) ? $("#sourceDateSourceString").val() : undefined,
+            username: ($("#sourceUsernameString").val() != null) ? $("#sourceUsernameString").val() : undefined,
+            pageNumber: pageNumber,
+            pageSize: $("#showEntry").val(),
+            orderSourceName: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
+            orderLink: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
+            orderRepository: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
+            orderDateDownload: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined,
+            orderUsername: (sortable5 != null && selectSortable == 5) ? sortable5 : undefined
+        },
+        success: function (result) {
+            $("#SetSourceList").empty();
+            $("#paged").empty();
+            DataBind(result);
+            // resetto stato select all/deselect all
+            selectAll = true;
+            // resetto l'immagine dei filtri
+            if (selectSortable == 0) {
+                document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+            } else if (selectSortable == 1) {
+                document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+            } else if (selectSortable == 2) {
+                document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+            } else if (selectSortable == 3) {
+                document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+            } else if (selectSortable == 4) {
+                document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable5").src = "/Images/Sortable/bg.png";
+            } else if (selectSortable == 5) {
+                document.getElementById("idSortable1").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable2").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable3").src = "/Images/Sortable/bg.png";
+                document.getElementById("idSortable4").src = "/Images/Sortable/bg.png";
+            }
+            // passo al tab dei row
+            $("#collapseOne").prop('class', 'panel-collapse collapse');
+            $("#collapseTwo").prop('class', 'panel-collapse collapse in');
+            $("#collapseTitleOne").prop('class', 'collapsed');
+            $("#collapseTitleTwo").prop('class', '');
+        }
+    })
+
+}
 
 //Sortable Source
 
@@ -501,7 +625,7 @@ function SortableName() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
 
-    FilterSource(1);
+    FilterSource(1, statusPage);
 
 }
 
@@ -516,7 +640,7 @@ function SortableLink() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable2").src = "/Images/Sortable/asc.png";
 
-    FilterSource(2);
+    FilterSource(2, statusPage);
 
 }
 
@@ -531,7 +655,7 @@ function SortableRepository() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
 
-    FilterSource(3);
+    FilterSource(3, statusPage);
 
 }
 
@@ -546,7 +670,7 @@ function SortableDateDownload() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
 
-    FilterSource(4);
+    FilterSource(4, statusPage);
 
 }
 
@@ -561,7 +685,7 @@ function SortableUsername() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable5").src = "/Images/Sortable/asc.png";
 
-    FilterSource(5);
+    FilterSource(5, statusPage);
 
 }
 

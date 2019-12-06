@@ -29,52 +29,51 @@ $('document').ready(function () {
 
 });
 
-
 // serve quando nella SourceList posso cambiare file tra quelli già nel repository
 var RepositoryNameArray = new Array();
 
 // inserisco gli elementi nella table
-function DataBind(ValueList) {
+function DataBind(result) {
 
     $("#LoadingStatus").html("Loading....");
 
     var SetData = $("#SetValueList");
-    for (var i = 0; i < ValueList.length; i++) {
+    for (var i = 0; i < result.Data.length; i++) {
 
-        var Data = "<tr class='row_" + ValueList[i].CountryCode + "_" + ValueList[i].Year + "_" + ValueList[i].Number + "'>";
+        var Data = "<tr class='row_" + result.Data[i].CountryCode + "_" + result.Data[i].Year + "_" + result.Data[i].Number + "'>";
 
         if (boolAdmin || boolWriter) {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
-                + "<td>" + ValueList[i].CountryName + "</td>"
-                + "<td>" + ValueList[i].VariableName + "</td>"
-                + "<td>" + "<input id=\"DataTable" + i + "\"" + "class=\"form-control rowFix\" type=\"textbox\" value=\"" + ((typeof ValueList[i].Data == 'number') ? parseFloat(ValueList[i].Data).toFixed(1) : ValueList[i].Data) + "\" placeholder=\"Insert " + data + "\" onkeypress=\"saveRow(event, 0, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", DataTable" + i + ")\" >" + "</td>";
+                + "<td>" + result.Data[i].CountryName + "</td>"
+                + "<td>" + result.Data[i].VariableName + "</td>"
+                + "<td>" + "<input id=\"DataTable" + i + "\"" + "class=\"form-control rowFix\" type=\"textbox\" value=\"" + ((typeof result.Data[i].Data == 'number') ? parseFloat(result.Data[i].Data).toFixed(1) : result.Data[i].Data) + "\" placeholder=\"Insert " + data + "\" onkeypress=\"saveRow(event, 0, '" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", DataTable" + i + ")\" >" + "</td>";
 
-            if (ValueList[i].VarLc == true)
-                Data = Data + "<td>" + "<input id=\"DataUsTable" + i + "\"" + "class=\"form-control rowFix\" type=\"textbox\" value=\"" + ((typeof ValueList[i].DataUs == 'number') ? parseFloat(ValueList[i].DataUs).toFixed(1) : ValueList[i].DataUs) + "\" placeholder=\"Insert " + dataUs + "\" onkeypress=\"saveRow(event, 1, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", DataUsTable" + i + ")\" >" + "</td>";
+            if (result.Data[i].VarLc == true)
+                Data = Data + "<td>" + "<input id=\"DataUsTable" + i + "\"" + "class=\"form-control rowFix\" type=\"textbox\" value=\"" + ((typeof result.Data[i].DataUs == 'number') ? parseFloat(result.Data[i].DataUs).toFixed(1) : result.Data[i].DataUs) + "\" placeholder=\"Insert " + dataUs + "\" onkeypress=\"saveRow(event, 1, '" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", DataUsTable" + i + ")\" >" + "</td>";
             else
                 Data = Data + "<td id=\"DataUsTable>\"" + "</td>";
 
-            Data = Data + "<td>" + ValueList[i].Year + "</td>";
+            Data = Data + "<td>" + result.Data[i].Year + "</td>";
 
-            if (ValueList[i].VarLc == true)
-                Data = Data + "<td>" + ValueList[i].CurrencyValue + "</td>";
+            if (result.Data[i].VarLc == true)
+                Data = Data + "<td>" + result.Data[i].CurrencyValue + "</td>";
             else
                 Data = Data + "<td>" + "</td>";
 
             Data = Data
-                + "<td>" + "<input id=\"PublicNotesTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + publicNotesMax + " type=\"textbox\" value=\"" + ValueList[i].PublicNotes + "\" placeholder=\"Insert " + publicNotes + "\" onkeypress=\"saveRow(event, 2, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", PublicNotesTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"InternalNotesTable" + i + "\"" + "class=\"form-control rowFix\"  maxlength=" + internalNotesMax + " type=\"textbox\" value=\"" + ValueList[i].InternalNotes + "\" placeholder=\"Insert " + internalNotes + "\" onkeypress=\"saveRow(event, 3, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", InternalNotesTable" + i + ")\" >" + "</td>";
+                + "<td>" + "<input id=\"PublicNotesTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + publicNotesMax + " type=\"textbox\" value=\"" + result.Data[i].PublicNotes + "\" placeholder=\"Insert " + publicNotes + "\" onkeypress=\"saveRow(event, 2, '" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", PublicNotesTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"InternalNotesTable" + i + "\"" + "class=\"form-control rowFix\"  maxlength=" + internalNotesMax + " type=\"textbox\" value=\"" + result.Data[i].InternalNotes + "\" placeholder=\"Insert " + internalNotes + "\" onkeypress=\"saveRow(event, 3, '" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", InternalNotesTable" + i + ")\" >" + "</td>";
 
         } else {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
-                "<td>" + ValueList[i].CountryName + "</td>" +
-                "<td>" + ValueList[i].VariableName + "</td>" +
-                "<td>" + ValueList[i].Data + "</td>" +
-                "<td>" + ValueList[i].DataUs + "</td>" +
-                "<td>" + ValueList[i].Year + "</td>" +
-                "<td>" + ValueList[i].CurrencyValue + "</td>" +
-                "<td>" + ValueList[i].PublicNotes + "</td>" +
-                "<td>" + ValueList[i].InternalNotes + "</td>";
+                "<td>" + result.Data[i].CountryName + "</td>" +
+                "<td>" + result.Data[i].VariableName + "</td>" +
+                "<td>" + result.Data[i].Data + "</td>" +
+                "<td>" + result.Data[i].DataUs + "</td>" +
+                "<td>" + result.Data[i].Year + "</td>" +
+                "<td>" + result.Data[i].CurrencyValue + "</td>" +
+                "<td>" + result.Data[i].PublicNotes + "</td>" +
+                "<td>" + result.Data[i].InternalNotes + "</td>";
         }
 
         /*Data = Data + "<td>" +
@@ -90,31 +89,24 @@ function DataBind(ValueList) {
 
         //Data = Data + "<td>";
 
-        //if ((boolAdmin || boolWriter)) {
-        //    if (ValueList[i].IsSource == false) {
-        //        Data = Data +
-        //            "<input type='file' id='filestyle-0' tabindex='-1' style='position: absolute; clip: rect(0px, 0px, 0px, 0px);'><span class='group-span-filestyle ' tabindex='0'><label for='filestyle-0' class='btn btn-sm btn-default '><span class='icon-span-filestyle glyphicon glyphicon-folder-open'></span> </label></span>";
-        //    }
-        //}
-
-        if (ValueList[i].Sources == null) {
-            Data = Data + "<td>" + "<input id=\"SourceNameTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + linkMax + " type=\"textbox\" value=\"null\" placeholder=\"Insert " + sourceName + "*\" onkeypress=\"saveRow(event, 4, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", SourceNameTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + linkMax + " type=\"textbox\" value=\"null\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 5, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", SourceLinkTable" + i + ")\" >" + "</td>"
-                + "<td><select id=\"selectRepository" + i + "\" class=\"form-control rowFix\" onchange=\"saveRowCombo('" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", selectRepository" + i + ")\"></select></td>"
-                + "<td>" + "<input id=\"DateDownloadTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + dateDownloadMax + " type=\"textbox\" value=\"null\" placeholder=\"Insert " + sourceDateDownload + "*\" onkeypress=\"saveRow(event, 6, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", DateDownloadTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"SourceUsernameTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + usernameMax + " type=\"textbox\" value=\"null\" placeholder=\"Insert " + sourceUsername + "*\" onkeypress=\"saveRow(event, 7, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", SourceUsernameTable" + i + ")\" >" + "</td>"
+        if (result.Data[i].Sources == null) {
+            Data = Data + "<td>" + "<input id=\"SourceNameTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + linkMax + " type=\"textbox\" value=\"null\" placeholder=\"Insert " + sourceName + "*\" onkeypress=\"saveRow(event, 4, '" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", SourceNameTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + linkMax + " type=\"textbox\" value=\"null\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 5, '" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", SourceLinkTable" + i + ")\" >" + "</td>"
+                + "<td><select id=\"selectRepository" + i + "\" class=\"form-control rowFix\" onchange=\"saveRowCombo('" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", selectRepository" + i + ")\"></select></td>"
+                + "<td>" + "<input id=\"DateDownloadTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + dateDownloadMax + " type=\"textbox\" value=\"null\" placeholder=\"Insert " + sourceDateDownload + "*\" onkeypress=\"saveRow(event, 6, '" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", DateDownloadTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"SourceUsernameTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + usernameMax + " type=\"textbox\" value=\"null\" placeholder=\"Insert " + sourceUsername + "*\" onkeypress=\"saveRow(event, 7, '" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", SourceUsernameTable" + i + ")\" >" + "</td>"
                 + "<td>" + "</td>";
         } else {
 
-            Data = Data + "<td>" + "<input id=\"SourceNameTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + ValueList[i].Sources.Name + "\" placeholder=\"Insert " + sourceName + "*\" onkeypress=\"saveRow(event, 4, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", SourceNameTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + ValueList[i].Sources.Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 5, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", SourceLinkTable" + i + ")\" >" + "</td>"
-                + "<td><select id=\"selectRepository" + i + "\" class=\"form-control rowFix\" onchange=\"saveRowCombo('" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", selectRepository" + i + ")\"></select></td>"
-                + "<td>" + "<input id=\"DateDownloadTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + dateDownloadMax + " type=\"textbox\" value=\"" + ValueList[i].Sources.DateDownload + "\" placeholder=\"Insert " + sourceDateDownload + "*\" onkeypress=\"saveRow(event, 6, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", DateDownloadTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"SourceUsernameTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + usernameMax + " type=\"textbox\" value=\"" + ValueList[i].Sources.Username + "\" placeholder=\"Insert " + sourceUsername + "*\" onkeypress=\"saveRow(event, 7, '" + ValueList[i].CountryCode + "', '" + ValueList[i].Number + "', " + ValueList[i].Year + ", " + ValueList[i].VarLc + ", SourceUsernameTable" + i + ")\" >" + "</td>";
+            Data = Data + "<td>" + "<input id=\"SourceNameTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + result.Data[i].Sources.Name + "\" placeholder=\"Insert " + sourceName + "*\" onkeypress=\"saveRow(event, 4, '" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", SourceNameTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"SourceLinkTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + linkMax + " type=\"textbox\" value=\"" + result.Data[i].Sources.Link + "\" placeholder=\"Insert " + sourceLink + "*\" onkeypress=\"saveRow(event, 5, '" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", SourceLinkTable" + i + ")\" >" + "</td>"
+                + "<td><select id=\"selectRepository" + i + "\" class=\"form-control rowFix\" onchange=\"saveRowCombo('" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", selectRepository" + i + ")\"></select></td>"
+                + "<td>" + "<input id=\"DateDownloadTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + dateDownloadMax + " type=\"textbox\" value=\"" + result.Data[i].Sources.DateDownload + "\" placeholder=\"Insert " + sourceDateDownload + "*\" onkeypress=\"saveRow(event, 6, '" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", DateDownloadTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"SourceUsernameTable" + i + "\"" + "class=\"form-control rowFix\" maxlength=" + usernameMax + " type=\"textbox\" value=\"" + result.Data[i].Sources.Username + "\" placeholder=\"Insert " + sourceUsername + "*\" onkeypress=\"saveRow(event, 7, '" + result.Data[i].CountryCode + "', '" + result.Data[i].Number + "', " + result.Data[i].Year + ", " + result.Data[i].VarLc + ", SourceUsernameTable" + i + ")\" >" + "</td>";
 
-            if (ValueList[i].Sources.Repository != null) {
+            if (result.Data[i].Sources.Repository != null) {
                 Data = Data +
-                    "<td>" + "<a target=\"_blank\" rel=\"noopener noreferrer\" href='" + serverMap + "/" + ValueList[i].Sources.Repository + "' class='btn btn-dark btn-sm waves-effect'><span class='glyphicon glyphicon-file'></span></a>" + "</td>";
+                    "<td>" + "<a target=\"_blank\" rel=\"noopener noreferrer\" href='" + serverMap + "/" + result.Data[i].Sources.Repository + "' class='btn btn-dark btn-sm waves-effect'><span class='glyphicon glyphicon-file'></span></a>" + "</td>";
             } else {
                 Data = Data +
                     "<td>" + "</td>";
@@ -132,10 +124,10 @@ function DataBind(ValueList) {
             $("#selectRepository" + i).append("<option value='" + RepositoryNameArray[t] + "'>" + RepositoryNameArray[t] + "</option>");
         }
 
-        if (ValueList[i].Sources == null)
+        if (result.Data[i].Sources == null)
             $("#selectRepository" + i + " option[value='null']").attr('selected', 'selected');
         else
-            $("#selectRepository" + i + " option[value='" + ValueList[i].Sources.Repository + "']").attr('selected', 'selected');
+            $("#selectRepository" + i + " option[value='" + result.Data[i].Sources.Repository + "']").attr('selected', 'selected');
 
         // aggiungo caratteri campo
         $('input#PublicNotesTable' + i).maxlength({
@@ -176,9 +168,16 @@ function DataBind(ValueList) {
 
     $("#LoadingStatus").html(" ");
     var page = $("#showEntry").val();
-    $('#SetValueList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+    PaggingTemplate(result.TotalPages, result.CurrentPage);
 }
 
+var statusPage = 1;
+function GetPageData(pageNumber) {
+
+    statusPage = pageNumber;
+    FilterValue(0, pageNumber);
+
+}
 
 function getRepositoryNameArray() {
     $.ajax({
@@ -453,7 +452,7 @@ $("#CreateValue").click(function () {
                 $("#MyModal").modal("hide");
                 swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
                     function () {
-                        FilterValue(0);
+                        FilterValue(0, statusPage);
                     }
                 );
             }
@@ -502,7 +501,7 @@ var ConfirmDelete = function () {
                     swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
                         function () {
                             // si avviano in modo asincrono
-                            FilterValue(0);
+                            FilterValue(0, statusPage);
                         }
                     );
                 } else {
@@ -850,7 +849,7 @@ function loadFilterVariable() {
 }
 
 // Filter Value
-function FilterValue(selectSortable) {
+function FilterValue(selectSortable, pageNumber) {
 
     var sortable1;
     var pathImg1 = document.getElementById("idSortable1").src;
@@ -937,6 +936,8 @@ function FilterValue(selectSortable) {
             phaseCode: ($("#phaseCodeString").val() != null) ? $("#phaseCodeString").val() : undefined,
             phaseName: ($("#phaseNameString").val() != null) ? $("#phaseNameString").val() : undefined,
             varLc: ($("#varLcString").val() != null) ? $("#varLcString").val() : undefined,
+            pageNumber: pageNumber,
+            pageSize: $("#showEntry").val(),
             orderCountryName: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
             orderVariableName: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
             orderData: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
@@ -947,7 +948,7 @@ function FilterValue(selectSortable) {
         },
         success: function (result) {
             $("#SetValueList").empty();
-            $("#myPager").empty();
+            $("#paged").empty();
             DataBind(result);
             // resetto stato select all/deselect all
             selectAll = true;
@@ -1031,7 +1032,7 @@ function SortableName() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
 
-    FilterValue(1);
+    FilterValue(1, statusPage);
 
 }
 
@@ -1046,7 +1047,7 @@ function SortableVariableName() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable2").src = "/Images/Sortable/asc.png";
 
-    FilterValue(2);
+    FilterValue(2, statusPage);
 
 }
 
@@ -1061,7 +1062,7 @@ function SortableData() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
 
-    FilterValue(3);
+    FilterValue(3, statusPage);
 
 }
 
@@ -1076,7 +1077,7 @@ function SortableYear() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
 
-    FilterValue(4);
+    FilterValue(4, statusPage);
 
 }
 
@@ -1091,7 +1092,7 @@ function SortablePublicNotes() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable5").src = "/Images/Sortable/asc.png";
 
-    FilterValue(5);
+    FilterValue(5, statusPage);
 
 }
 
@@ -1106,7 +1107,7 @@ function SortableInternalNotes() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable6").src = "/Images/Sortable/asc.png";
 
-    FilterValue(6);
+    FilterValue(6, statusPage);
 
 }
 
@@ -1121,7 +1122,7 @@ function SortableDataUs() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable7").src = "/Images/Sortable/asc.png";
 
-    FilterValue(7);
+    FilterValue(7, statusPage);
 
 }
 

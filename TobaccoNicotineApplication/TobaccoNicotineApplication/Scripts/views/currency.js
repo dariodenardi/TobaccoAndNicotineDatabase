@@ -20,40 +20,29 @@ $('document').ready(function () {
 });
 
 // inserisco gli elementi nella table
-function DataBind(CurrencyList) {
+function DataBind(result) {
 
     $("#LoadingStatus").html("Loading....");
 
     var SetData = $("#SetCurrencyList");
-    for (var i = 0; i < CurrencyList.length; i++) {
+    for (var i = 0; i < result.Data.length; i++) {
 
-        var Data = "<tr class='row_" + CurrencyList[i].CountryCode + "_" + CurrencyList[i].Year + "'>";
+        var Data = "<tr class='row_" + result.Data[i].CountryCode + "_" + result.Data[i].Year + "'>";
 
         if (boolAdmin || boolWriter) {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
-                + "<td>" + CurrencyList[i].CountryName + "</td>"
-                + "<td>" + CurrencyList[i].Year + "</td>"
-                + "<td>" + "<input id=\"ValueTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + CurrencyList[i].Value + "\" placeholder=\"Insert " + value + "*\" onkeypress=\"saveRow(event, 1, '" + CurrencyList[i].CountryCode + "', " + CurrencyList[i].Year + ", ValueTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"NotesTable" + i + "\"" + "class=\"form-control\" maxlength=" + notesNameMax + " type=\"textbox\" value=\"" + CurrencyList[i].Notes + "\" placeholder=\"Insert " + notes + "\" onkeypress=\"saveRow(event, 2, '" + CurrencyList[i].CountryCode + "', " + CurrencyList[i].Year + ", NotesTable" + i + ")\" >" + "</td>";
+                + "<td>" + result.Data[i].CountryName + "</td>"
+                + "<td>" + result.Data[i].Year + "</td>"
+                + "<td>" + "<input id=\"ValueTable" + i + "\"" + "class=\"form-control\" type=\"textbox\" value=\"" + result.Data[i].Value + "\" placeholder=\"Insert " + value + "*\" onkeypress=\"saveRow(event, 1, '" + result.Data[i].CountryCode + "', " + result.Data[i].Year + ", ValueTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"NotesTable" + i + "\"" + "class=\"form-control\" maxlength=" + notesNameMax + " type=\"textbox\" value=\"" + result.Data[i].Notes + "\" placeholder=\"Insert " + notes + "\" onkeypress=\"saveRow(event, 2, '" + result.Data[i].CountryCode + "', " + result.Data[i].Year + ", NotesTable" + i + ")\" >" + "</td>";
 
         } else {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
-                "<td>" + CurrencyList[i].CountryName + "</td>" +
-                "<td>" + CurrencyList[i].Year + "</td>" +
-                "<td>" + CurrencyList[i].Value + "</td>" +
-                "<td>" + CurrencyList[i].Notes + "</td>";
+                "<td>" + result.Data[i].CountryName + "</td>" +
+                "<td>" + result.Data[i].Year + "</td>" +
+                "<td>" + result.Data[i].Value + "</td>" +
+                "<td>" + result.Data[i].Notes + "</td>";
         }
-
-        /*Data = Data + "<td>" +
-            "<div class=\"dropdown\">" +
-            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
-            "Search" +
-            "<span class=\"caret\"></span></button>" +
-            "<ul class=\"dropdown-menu dropdownTable\" aria-labelledby=\"about-us\">" +
-            "<li><a href=\"#\">Values</a></li>" +
-            "<li><a href=\"#\">Sources</a></li>" +
-            "</ul>" +
-            "</div>";*/
 
         Data = Data + "</td>" + "</tr>";
 
@@ -68,7 +57,15 @@ function DataBind(CurrencyList) {
 
     $("#LoadingStatus").html(" ");
     var page = $("#showEntry").val();
-    $('#SetCurrencyList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+    PaggingTemplate(result.TotalPages, result.CurrentPage);
+}
+
+var statusPage = 1;
+function GetPageData(pageNumber) {
+
+    statusPage = pageNumber;
+    FilterCurrency(0, pageNumber);
+
 }
 
 function AddNewCurrency() {
@@ -193,7 +190,7 @@ $("#CreateCurrency").click(function () {
                 $("#MyModal").modal("hide");
                 swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
                     function () {
-                        FilterCurrency(0);
+                        FilterCurrency(0, statusPage);
                     }
                 );
             }
@@ -240,7 +237,7 @@ var ConfirmDelete = function () {
                     $("#DeleteConfirmation").modal("hide");
                     swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
                         function () {
-                            FilterCurrency(0);
+                            FilterCurrency(0, statusPage);
                         }
                     );
                 } else {
@@ -465,7 +462,7 @@ function loadFilterYear() {
 }
 
 // Filter Currency
-function FilterCurrency(selectSortable) {
+function FilterCurrency(selectSortable, pageNumber) {
 
     var sortable1;
     var pathImg1 = document.getElementById("idSortable1").src;
@@ -521,13 +518,15 @@ function FilterCurrency(selectSortable) {
             areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
             year: ($("#yearString").val() != null) ? $("#yearString").val() : undefined,
             orderCountryName: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
+            pageNumber: pageNumber,
+            pageSize: $("#showEntry").val(),
             orderYear: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
             orderValue: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
             orderNotes: (sortable4 != null && selectSortable == 4) ? sortable4 : undefined
         },
         success: function (result) {
             $("#SetCurrencyList").empty();
-            $("#myPager").empty();
+            $("#paged").empty();
             DataBind(result);
             // resetto stato select all/deselect all
             selectAll = true;
@@ -575,7 +574,7 @@ function SortableName() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
 
-    FilterCurrency(1);
+    FilterCurrency(1, statusPage);
 
 }
 
@@ -590,7 +589,7 @@ function SortableYear() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable2").src = "/Images/Sortable/asc.png";
 
-    FilterCurrency(2);
+    FilterCurrency(2, statusPage);
 
 }
 
@@ -605,7 +604,7 @@ function SortableValue() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
 
-    FilterCurrency(3);
+    FilterCurrency(3, statusPage);
 
 }
 
@@ -620,7 +619,7 @@ function SortableNotes() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
 
-    FilterCurrency(4);
+    FilterCurrency(4, statusPage);
 
 }
 

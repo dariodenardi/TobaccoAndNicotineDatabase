@@ -29,7 +29,7 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Value/GetValueList
         [HttpPost]
-        public JsonResult GetValueList(string[] pmiCoding, string[] continentName, string[] regionName, string[] countryName, short[] continentCode, short[] regionCode, short[] countryCode, bool[] areaCode, short[] year, short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc,
+        public JsonResult GetValueList(string[] pmiCoding, string[] continentName, string[] regionName, string[] countryName, short[] continentCode, short[] regionCode, short[] countryCode, bool[] areaCode, short[] year, short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc, int pageNumber, int pageSize,
             string orderCountryName, string orderVariableName, string orderData, string orderDataUs, string orderYear, string orderPublicNotes, string orderInternalNotes)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
@@ -37,7 +37,8 @@ namespace TobaccoNicotineApplication.Controllers
                 db.Configuration.LazyLoadingEnabled = false;
 
                 IQueryable<Value> values = from s in db.Values
-                                                 select s;
+                                           orderby s.CountryCode
+                                           select s;
 
                 if (ArrayUtils.IsNullOrEmpty(pmiCoding) == false)
                     values = values.Where(t => pmiCoding.Contains(t.Countries.PmiCoding));
@@ -116,7 +117,7 @@ namespace TobaccoNicotineApplication.Controllers
                 else if (orderInternalNotes == "asc")
                     values = values.OrderBy(x => x.InternalNotes);
 
-                return Json(values.Select(x => new { x.CountryCode, x.Number, x.Countries.CountryName, VariableName = x.Variables.Name, x.Data, x.DataUs, x.Year, x.Variables.VarLc, CurrencyValue = (x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault() != null)? x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault().Value : 0, x.PublicNotes, x.InternalNotes, Sources = x.Sources.FirstOrDefault() }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(Pagination.Pagination.PagedResult(values.Select(x => new { x.CountryCode, x.Number, x.Countries.CountryName, VariableName = x.Variables.Name, x.Data, x.DataUs, x.Year, x.Variables.VarLc, CurrencyValue = (x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault() != null) ? x.Countries.Currencies.Where(a => a.Year == x.Year).FirstOrDefault().Value : 0, x.PublicNotes, x.InternalNotes, Sources = x.Sources.FirstOrDefault() }), pageNumber, pageSize), JsonRequestBehavior.AllowGet);
             }
         }
 

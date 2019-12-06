@@ -229,6 +229,8 @@
     <Compile Include="Models\Variable.cs">
       <DependentUpon>TobaccoNicotineModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Pagination\PagedData.cs" />
+    <Compile Include="Pagination\Pagination.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sql\DataSource.cs" />
     <Compile Include="Sql\ExportRepository.cs" />

@@ -34,48 +34,36 @@ $('document').ready(function () {
 });
 
 // inserisco gli elementi nella table
-function DataBind(CountryList) {
+function DataBind(result) {
 
     $("#LoadingStatus").html("Loading....");
 
     var SetData = $("#SetCountryList");
-    for (var i = 0; i < CountryList.length; i++) {
+    for (var i = 0; i < result.Data.length; i++) {
 
-        var Data = "<tr class='row_" + CountryList[i].CountryCode + "'>";
+        var Data = "<tr class='row_" + result.Data[i].CountryCode + "'>";
 
         if (boolAdmin || boolWriter) {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>"
-                + "<td>" + "<input id=\"CountryNameTable" + i + "\"" + "class=\"form-control\" minlength=" + countryNameMin + " maxlength=" + countryNameMax + " type=\"textbox\" value=\"" + CountryList[i].CountryName + "\" placeholder=\"Insert " + countryName + "*\" onkeypress=\"saveRow(event, 0, '" + CountryList[i].CountryCode + "', CountryNameTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"RegionNameTable" + i + "\"" + "class=\"form-control\" minlength=" + regionNameMin + " maxlength=" + regionNameMax + " type=\"textbox\" value=\"" + CountryList[i].RegionName + "\" placeholder=\"Insert " + regionName + "*\" onkeypress=\"saveRow(event, 1, '" + CountryList[i].CountryCode + "', RegionNameTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"ContinentNameTable" + i + "\"" + "class=\"form-control\" minlength=" + continentNameMin + " maxlength=" + continentNameMax + " type=\"textbox\" value=\"" + CountryList[i].ContinentName + "\" placeholder=\"Insert " + continentName + "*\" onkeypress=\"saveRow(event, 2, '" + CountryList[i].CountryCode + "', ContinentNameTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<input id=\"PmiCodingTable" + i + "\"" + "class=\"form-control\" minlength=" + pmiCodingMin + " maxlength=" + pmiCodingMax + " type=\"textbox\" value=\"" + CountryList[i].PmiCoding + "\" placeholder=\"Insert " + pmiCoding + "*\" onkeypress=\"saveRow(event, 3, '" + CountryList[i].CountryCode + "', PmiCodingTable" + i + ")\" >" + "</td>"
-                + "<td>" + "<select id=\"AreaCodeTable" + i + "\"" + "class=\"form-control\" onchange=\"saveRowCombo('" + CountryList[i].CountryCode + "', AreaCodeTable" + i + ")\" ><option";
+                + "<td>" + "<input id=\"CountryNameTable" + i + "\"" + "class=\"form-control\" minlength=" + countryNameMin + " maxlength=" + countryNameMax + " type=\"textbox\" value=\"" + result.Data[i].CountryName + "\" placeholder=\"Insert " + countryName + "*\" onkeypress=\"saveRow(event, 0, '" + result.Data[i].CountryCode + "', CountryNameTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"RegionNameTable" + i + "\"" + "class=\"form-control\" minlength=" + regionNameMin + " maxlength=" + regionNameMax + " type=\"textbox\" value=\"" + result.Data[i].RegionName + "\" placeholder=\"Insert " + regionName + "*\" onkeypress=\"saveRow(event, 1, '" + result.Data[i].CountryCode + "', RegionNameTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"ContinentNameTable" + i + "\"" + "class=\"form-control\" minlength=" + continentNameMin + " maxlength=" + continentNameMax + " type=\"textbox\" value=\"" + result.Data[i].ContinentName + "\" placeholder=\"Insert " + continentName + "*\" onkeypress=\"saveRow(event, 2, '" + result.Data[i].CountryCode + "', ContinentNameTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<input id=\"PmiCodingTable" + i + "\"" + "class=\"form-control\" minlength=" + pmiCodingMin + " maxlength=" + pmiCodingMax + " type=\"textbox\" value=\"" + result.Data[i].PmiCoding + "\" placeholder=\"Insert " + pmiCoding + "*\" onkeypress=\"saveRow(event, 3, '" + result.Data[i].CountryCode + "', PmiCodingTable" + i + ")\" >" + "</td>"
+                + "<td>" + "<select id=\"AreaCodeTable" + i + "\"" + "class=\"form-control\" onchange=\"saveRowCombo('" + result.Data[i].CountryCode + "', AreaCodeTable" + i + ")\" ><option";
 
-            if (CountryList[i].AreaCode == true) {
+            if (result.Data[i].AreaCode == true) {
                 Data += ">false</option><option selected>true</option></select></td>";
             } else
                 Data += " selected>false</option><option>true</option></select></td>";
 
         } else {
             Data = Data + "<td>" + "<div class=\"checkbox checkbox-primary checkbox-single checkBoxZoom\"><input name=\"foo2\" type=\"checkbox\"><label></label></div>" + "</td>" +
-                "<td>" + CountryList[i].CountryName + "</td>" +
-                "<td>" + CountryList[i].RegionName + "</td>" +
-                "<td>" + CountryList[i].ContinentName + "</td>" +
-                "<td>" + CountryList[i].PmiCoding + "</td>" +
-                "<td>" + CountryList[i].AreaCode + "</td>";
+                "<td>" + result.Data[i].CountryName + "</td>" +
+                "<td>" + result.Data[i].RegionName + "</td>" +
+                "<td>" + result.Data[i].ContinentName + "</td>" +
+                "<td>" + result.Data[i].PmiCoding + "</td>" +
+                "<td>" + result.Data[i].AreaCode + "</td>";
         }
-
-        /*Data = Data + "<td>" +
-            "<div class=\"dropdown\">" +
-            "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"about-us\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
-            "Search" +
-            "<span class=\"caret\"></span></button>" +
-            "<ul class=\"dropdown-menu dropdownTable\" aria-labelledby=\"about-us\">" +
-            "<li><a href=\"#\">Values</a></li>" +
-            "<li><a href=\"../Currency/IndexCopia&countryCode=" + CountryList[i].CountryCode + "\">Currencies</a></li>" +
-            "<li><a href=\"#\">Sources</a></li>" +
-            "</ul>" +
-            "</div>";*/
 
         Data = Data + "</td>" + "</tr>";
 
@@ -104,8 +92,15 @@ function DataBind(CountryList) {
     }
 
     $("#LoadingStatus").html(" ");
-    var page = $("#showEntry").val();
-    $('#SetCountryList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+    PaggingTemplate(result.TotalPages, result.CurrentPage);
+}
+
+var statusPage = 1;
+function GetPageData(pageNumber) {
+
+    statusPage = pageNumber;
+    FilterCountry(0, pageNumber);
+
 }
 
 // Show The Popup Modal For Add
@@ -218,7 +213,7 @@ $("#CreateCountry").click(function () {
                 $("#MyModal").modal("hide");
                 swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
                     function () {
-                        FilterCountry(0);
+                        FilterCountry(0, statusPage);
                     }
                 );
             }
@@ -262,7 +257,7 @@ var ConfirmDelete = function () {
                     $("#DeleteConfirmation").modal("hide");
                     swal({ title: "Good job!", text: "Your changes have been applied!", type: "success" },
                         function () {
-                            FilterCountry(0);
+                            FilterCountry(0, statusPage);
                         }
                     );
                 } else {
@@ -450,7 +445,7 @@ function loadFilter() {
 }
 
 // Filter Country
-function FilterCountry(selectSortable) {
+function FilterCountry(selectSortable, pageNumber) {
 
     var sortable1;
     var pathImg1 = document.getElementById("idSortable1").src;
@@ -513,6 +508,8 @@ function FilterCountry(selectSortable) {
             regionCode: ($("#regionCodeString").val() != null) ? $("#regionCodeString").val() : undefined,
             countryCode: ($("#countryCodeString").val() != null) ? $("#countryCodeString").val() : undefined,
             areaCode: ($("#areaCodeString").val() != null) ? $("#areaCodeString").val() : undefined,
+            pageNumber: pageNumber,
+            pageSize: $("#showEntry").val(),
             orderCountryName: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
             orderRegionName: (sortable2 != null && selectSortable == 2) ? sortable2 : undefined,
             orderContinentName: (sortable3 != null && selectSortable == 3) ? sortable3 : undefined,
@@ -521,7 +518,7 @@ function FilterCountry(selectSortable) {
         },
         success: function (result) {
             $("#SetCountryList").empty();
-            $("#myPager").empty();
+            $("#paged").empty();
             DataBind(result);
             // resetto stato select all/deselect all
             selectAll = true;
@@ -579,7 +576,7 @@ function SortableName() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
 
-    FilterCountry(1);
+    FilterCountry(1, statusPage);
 
 }
 
@@ -594,7 +591,7 @@ function SortableRegionName() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable2").src = "/Images/Sortable/asc.png";
 
-    FilterCountry(2);
+    FilterCountry(2, statusPage);
 
 }
 
@@ -609,7 +606,7 @@ function SortableContinentName() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable3").src = "/Images/Sortable/asc.png";
 
-    FilterCountry(3);
+    FilterCountry(3, statusPage);
 
 }
 
@@ -624,7 +621,7 @@ function SortablePmi() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable4").src = "/Images/Sortable/asc.png";
 
-    FilterCountry(4);
+    FilterCountry(4, statusPage);
 
 }
 
@@ -639,7 +636,7 @@ function SortableAreaCode() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable5").src = "/Images/Sortable/asc.png";
 
-    FilterCountry(5);
+    FilterCountry(5, statusPage);
 
 }
 

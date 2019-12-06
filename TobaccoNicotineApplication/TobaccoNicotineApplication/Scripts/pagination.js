@@ -1,101 +1,61 @@
-$.fn.pageMe = function(opts){
-    var $this = this,
-        defaults = {
-            perPage: 7,
-            showPrevNext: false,
-            hidePageNumbers: false
-        },
-        settings = $.extend(defaults, opts);
-    
-    var listElement = $this;
-    var perPage = settings.perPage; 
-    var children = listElement.children();
-    var pager = $('.pager');
-    
-    if (typeof settings.childSelector!="undefined") {
-        children = listElement.find(settings.childSelector);
-    }
-    
-    if (typeof settings.pagerSelector!="undefined") {
-        pager = $(settings.pagerSelector);
-    }
-    
-    var numItems = children.size();
-    var numPages = Math.ceil(numItems/perPage);
+//This is paging temlpate ,you should just copy paste
+function PaggingTemplate(totalPage, currentPage) {
+    var template = "";
+    var TotalPages = totalPage;
+    var CurrentPage = currentPage;
+    var PageNumberArray = Array();
 
-    pager.data("curr",0);
-    
-    if (settings.showPrevNext){
-        $('<li><a href="#" class="prev_link">«</a></li>').appendTo(pager);
-    }
-    
-    var curr = 0;
-    while(numPages > curr && (settings.hidePageNumbers==false)){
-        $('<li><a href="#" class="page_link">'+(curr+1)+'</a></li>').appendTo(pager);
-        curr++;
-    }
-    
-    if (settings.showPrevNext){
-        $('<li><a href="#" class="next_link">»</a></li>').appendTo(pager);
-    }
-    
-    pager.find('.page_link:first').addClass('active');
-    pager.find('.prev_link').hide();
-    if (numPages<=1) {
-        pager.find('.next_link').hide();
-    }
-  	pager.children().eq(1).addClass("active");
-    
-    children.hide();
-    children.slice(0, perPage).show();
-    
-    pager.find('li .page_link').click(function(){
-        var clickedPage = $(this).html().valueOf()-1;
-        goTo(clickedPage,perPage);
-        return false;
-    });
-    pager.find('li .prev_link').click(function(){
-        previous();
-        return false;
-    });
-    pager.find('li .next_link').click(function(){
-        next();
-        return false;
-    });
-    
-    function previous(){
-        var goToPage = parseInt(pager.data("curr")) - 1;
-        goTo(goToPage);
-    }
-     
-    function next(){
-        goToPage = parseInt(pager.data("curr")) + 1;
-        goTo(goToPage);
-    }
-    
-    function goTo(page){
-        var startAt = page * perPage,
-            endOn = startAt + perPage;
-        
-        children.css('display','none').slice(startAt, endOn).show();
-        
-        if (page>=1) {
-            pager.find('.prev_link').show();
+
+    var countIncr = 1;
+    for (var i = currentPage; i <= totalPage; i++) {
+        PageNumberArray[0] = currentPage;
+        if (totalPage != currentPage && PageNumberArray[countIncr - 1] != totalPage) {
+            PageNumberArray[countIncr] = i + 1;
         }
-        else {
-            pager.find('.prev_link').hide();
-        }
-        
-        if (page<(numPages-1)) {
-            pager.find('.next_link').show();
-        }
-        else {
-            pager.find('.next_link').hide();
-        }
-        
-        pager.data("curr",page);
-      	pager.children().removeClass("active");
-        pager.children().eq(page+1).addClass("active");
-    
+        countIncr++;
+    };
+    PageNumberArray = PageNumberArray.slice(0, 5);
+    var FirstPage = 1;
+    var LastPage = totalPage;
+    // imposto questo vincolo perche' se arrivo all'ultima pagina devo restarci. non esiste la pagina + 1
+    var ForwardOne = TotalPages;
+    if (totalPage != currentPage) {
+        ForwardOne = currentPage + 1;
     }
-};
+    var BackwardOne = 1;
+    if (currentPage > 1) {
+        BackwardOne = currentPage - 1;
+    }
+
+    template = template + '<ul class="pagination m-b-5">' +
+        '<li><a href="#" aria-label="Previous" onclick="GetPageData(' + BackwardOne + ')"><i class="fa fa-angle-left"></i></a></li>';
+
+    var numberingLoop = "";
+    for (var i = 0; i < PageNumberArray.length; i++) {
+
+        if (i == 0)
+            numberingLoop = numberingLoop + '<li class="active"><a onclick="GetPageData(' + PageNumberArray[i] + ')" href="#">' + PageNumberArray[i] + '</a></li>'
+        else
+            numberingLoop = numberingLoop + '<li><a onclick="GetPageData(' + PageNumberArray[i] + ')" href="#">' + PageNumberArray[i] + '</a></li>'
+    }
+    template = template + numberingLoop + '<li><a href="#" aria-label="Next" onclick="GetPageData(' + ForwardOne + ')" ><i class="fa fa-angle-right"></i></a></li>' +
+        '</ul>';
+
+    template = template + "<p>" + CurrentPage + " of " + TotalPages + " pages</p>";
+
+    $("#paged").append(template);
+}
+
+//template = "<p>" + CurrentPage + " of " + TotalPages + " pages</p>";
+
+/*template = template + '<ul class="pagination m-b-5">' +
+//'<li class="previous"><a href="#" onclick="GetPageData(' + FirstPage + ')"><i class="fa fa-fast-backward"></i>&nbsp;First</a></li>' +
+'<li><a href="#" onclick="GetPageData(' + BackwardOne + ')"><i class="glyphicon glyphicon-backward"></i></a>';
+
+var numberingLoop = "";
+for (var i = 0; i < PageNumberArray.length; i++) {
+    numberingLoop = numberingLoop + '<a class="page-number active" onclick="GetPageData(' + PageNumberArray[i] + ')" href="#">' + PageNumberArray[i] + ' &nbsp;&nbsp;</a>'
+}
+template = template + numberingLoop + '<a href="#" onclick="GetPageData(' + ForwardOne + ')" ><i class="glyphicon glyphicon-forward"></i></a></li>' +
+//'<li class="next"><a href="#" onclick="GetPageData(' + LastPage + ')">Last&nbsp;<i class="fa fa-fast-forward"></i></a></li>
+'</ul >';*/

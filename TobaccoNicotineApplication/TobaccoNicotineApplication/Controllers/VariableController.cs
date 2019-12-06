@@ -29,14 +29,16 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Variable/GetVariableList
         [HttpPost]
-        public JsonResult GetVariableList(short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc, string orderName, string orderPhaseCode, string orderPhaseName, string orderVarLc, string orderUnitName)
+        public JsonResult GetVariableList(short[] number, string[] variableName, short[] phaseCode, string[] phaseName, bool[] varLc, int pageNumber, int pageSize, 
+            string orderName, string orderPhaseCode, string orderPhaseName, string orderVarLc, string orderUnitName)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
             {
                 db.Configuration.LazyLoadingEnabled = false;
 
                 IQueryable<Variable> variables = from s in db.Variables
-                                                  select s;
+                                                 orderby s.Number
+                                                 select s;
 
                 if (ArrayUtils.IsNullOrEmpty(number) == false)
                     variables = variables.Where(t => number.Contains(t.Number));
@@ -78,7 +80,7 @@ namespace TobaccoNicotineApplication.Controllers
                 else if (orderUnitName == "asc")
                     variables = variables.OrderBy(x => x.MeasurementUnitName);
 
-                return Json(variables.Select(x => new { x.Number, x.Name, x.PhaseCode, x.PhaseName, x.VarLc, x.MeasurementUnitName }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(Pagination.Pagination.PagedResult(variables.Select(x => new { x.Number, x.Name, x.PhaseCode, x.PhaseName, x.VarLc, x.MeasurementUnitName }), pageNumber, pageSize), JsonRequestBehavior.AllowGet);
             }
         }
 

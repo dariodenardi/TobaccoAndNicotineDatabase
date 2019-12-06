@@ -29,7 +29,7 @@ namespace TobaccoNicotineApplication.Controllers
         //
         // POST: /Source/GetSourceList
         [HttpPost]
-        public JsonResult GetSourceList(string[] sourceName, string[] link, string[] repository, string[] dateSource, string[] username, 
+        public JsonResult GetSourceList(string[] sourceName, string[] link, string[] repository, string[] dateSource, string[] username, int pageNumber, int pageSize,
             string orderSourceName, string orderLink, string orderRepository, string orderDateDownload, string orderUsername)
         {
             using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
@@ -37,6 +37,7 @@ namespace TobaccoNicotineApplication.Controllers
                 db.Configuration.LazyLoadingEnabled = false;
 
                 IQueryable<Source> sources = from s in db.Sources
+                                             orderby s.Name
                                              select s;
 
                 if (ArrayUtils.IsNullOrEmpty(sourceName) == false)
@@ -79,7 +80,7 @@ namespace TobaccoNicotineApplication.Controllers
                 else if (orderUsername == "asc")
                     sources = sources.OrderBy(x => x.Username);
 
-                return Json(sources.Select(x => new { x.Name, x.Date, x.Time, x.Link, x.Repository, x.DateDownload, x.Username }).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(Pagination.Pagination.PagedResult(sources.Select(x => new { x.Name, x.Date, x.Time, x.Link, x.Repository, x.DateDownload, x.Username }), pageNumber, pageSize), JsonRequestBehavior.AllowGet);
             }
         }
 
