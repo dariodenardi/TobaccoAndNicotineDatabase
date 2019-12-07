@@ -22,14 +22,13 @@ namespace TobaccoNicotineApplication.Controllers
 
         //
         // GET: /Log/GetLogList
-        public JsonResult GetLogList()
+        public JsonResult GetLogList(int pageNumber, int pageSize)
         {
             using (LogContext context = new LogContext())
             {
-                // carico solo i log del giorno corrente per evitare consumo di banda inutile
-                IQueryable<Log> logs = context.Log.Where(x => (x.TimeAccessed.Year == DateTime.Now.Year) && (x.TimeAccessed.Month == DateTime.Now.Month) && (x.TimeAccessed.Day == DateTime.Now.Day)).OrderByDescending(x => x.TimeAccessed);
+                IQueryable<Log> logs = context.Log.OrderByDescending(x => x.TimeAccessed);
 
-                return Json(logs.ToList(), JsonRequestBehavior.AllowGet);
+                return Json(Pagination.Pagination.PagedResult(logs, pageNumber, pageSize), JsonRequestBehavior.AllowGet);
             }
         }
     }

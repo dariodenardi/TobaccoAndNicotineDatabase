@@ -39,13 +39,12 @@
 
     <div style="display: inline-grid">
         @Html.Label("Show entries", new { @class = "control-label" })
-        @Html.DropDownList("showEntry", listItems, new { @class = "form-control", @onchange = "FilterLog()" })
+        @Html.DropDownList("showEntry", listItems, new { @class = "form-control", @onchange = "FilterLog(1)" })
     </div>
     <br />
     <br />
     <div class="col-md-12 text-center">
-        <!--<ul class="pagination pagination-lg pager" id="myPager"></ul>-->
-        <ul class="pagination m-b-5" id="myPager"></ul>
+        <div id="paged"></div>
     </div>
 </div>
 
