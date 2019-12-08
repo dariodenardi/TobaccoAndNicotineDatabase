@@ -863,8 +863,6 @@ function Validation(countryName, regionName, continentName, pmiCoding, areaCode)
     }
 
     // boolean
-    console.log(areaCode);
-    alert(areaCode == 'true');
     if (!(areaCode == "true" || areaCode == "false") ) {
         swal("Attention!", areaCode + ": check value!", "error");
         return false;

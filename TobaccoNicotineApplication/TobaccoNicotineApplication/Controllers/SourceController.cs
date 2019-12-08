@@ -88,12 +88,16 @@ namespace TobaccoNicotineApplication.Controllers
         // GET: /Source/GetListRepositoryName
         public JsonResult GetListRepositoryName()
         {
-            using (TobaccoNicotineDatabase db = new TobaccoNicotineDatabase())
+            string filepath = Server.MapPath("~/Uploads/Sources");
+            DirectoryInfo d = new DirectoryInfo(filepath);
+            List<string> filesList = new List<string>();
+            filesList.Add("null");
+            foreach (var file in d.GetFiles())
             {
-                db.Configuration.LazyLoadingEnabled = false;
-
-                return Json(db.Sources.Select(x => new { x.Repository }).OrderBy(x => x.Repository).Distinct().ToList(), JsonRequestBehavior.AllowGet);
+                filesList.Add(file.Name);
             }
+
+            return Json(filesList, JsonRequestBehavior.AllowGet);
         }
 
         //
@@ -304,7 +308,7 @@ namespace TobaccoNicotineApplication.Controllers
 
                     // divido il file in due parti
                     string[] slitFileNames = file.FileName.Split('_');
-                    if (slitFileNames.Length > 0)
+                    if (slitFileNames.Length > 1)
                     {
                         // converto la prima parte che dovrebbe essere un numero
                         int number = int.Parse(slitFileNames[0]);

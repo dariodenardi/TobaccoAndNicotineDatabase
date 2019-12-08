@@ -136,7 +136,7 @@ function getRepositoryNameArray() {
         url: "/Source/GetListRepositoryName",
         success: function (data) {
             for (var i = 0, n = data.length; i < n; i++) {
-                RepositoryNameArray.push(data[i].Repository);
+                RepositoryNameArray.push(data[i]);
             }
         }
     })
@@ -876,8 +876,6 @@ function pasteFromClipboard(numeroCheck) {
 
 function Validation(link, repository, dateDownload, username) {
 
-    // valori nulli?
-
     // repository?
     if (RepositoryNameArray.includes((repository == "null" ? null : repository)) == false) {
         swal("Attention!", repository + ": check file name!", "error");
@@ -890,19 +888,25 @@ function Validation(link, repository, dateDownload, username) {
         return false;
     }
 
-    if (dateDownload.length > 10 && (dateDownload != null || dateDownload != "")) {
-        swal("Attention!", dateDownload + ": check length!", "error");
-        return false;
+    if (dateDownload != "null" || dateDownload != "") {
+        if (dateDownload.length > 50 && (dateDownload != null || dateDownload != "")) {
+            swal("Attention!", dateDownload + ": check length!", "error");
+            return false;
+        }
     }
 
-    if (repository.length > repositoryMax) {
-        swal("Attention!", repository + ": check length!", "error");
-        return false;
+    if (repository != "null" || repository != "") {
+        if (repository.length > repositoryMax) {
+            swal("Attention!", repository + ": check length!", "error");
+            return false;
+        }
     }
 
-    if (link.length > linkMax) {
-        swal("Attention!", link + ": check length!", "error");
-        return false;
+    if (link != "null" || link != "") {
+        if (link.length > linkMax) {
+            swal("Attention!", link + ": check length!", "error");
+            return false;
+        }
     }
 
 }

@@ -5,40 +5,47 @@ var token = $('[name=__RequestVerificationToken]').val();
 $('document').ready(function () {
 
     $("#LoadingStatus").html("Loading....");
-    $.get("/Admin/GetUserList", null, DataBind);
+    $.get("/Admin/GetUserList", { pageNumber: 1, pageSize: $("#showEntry").val() }, DataBind);
 
 });
 
 // inserisco gli elementi nella table
-function DataBind(UserList) {
+function DataBind(result) {
 
     $.get("/Admin/GetRolesList", function (rolesList) {
 
         var SetData = $("#SetUserList");
-        for (var i = 0; i < UserList.length; i++) {
+        for (var i = 0; i < result.Data.length; i++) {
 
-            var Data = "<tr class='row_" + UserList[i] + "'>" +
-                "<td>" + UserList[i] + "</td>" +
+            var Data = "<tr class='row_" + result.Data[i] + "'>" +
+                "<td>" + result.Data[i] + "</td>" +
                 "<td>"
-                + "<select id=\"" + 'select_' + UserList[i] + "\" >";
+                + "<select id=\"" + 'select_' + result.Data[i] + "\" >";
 
             for (var j = 0; j < rolesList.length; j++) {
                 Data = Data + "<option>" + rolesList[j] + "</option>";
             }
 
             Data = Data + "</select > "
-                + "<a href='#' class='btn btn-dark btn-sm waves-effect' onclick='SaveUser(\"" + UserList[i] + "\")' ><span class='glyphicon glyphicon-ok'></span></a>"
+                + "<a href='#' class='btn btn-dark btn-sm waves-effect' onclick='SaveUser(\"" + result.Data[i] + "\")' ><span class='glyphicon glyphicon-ok'></span></a>"
                 + "</td>" + "</tr>";
 
             SetData.append(Data);
-            getRoleName(UserList[i]);
+            getRoleName(result.Data[i]);
         }
 
     }, "json");
     
     $("#LoadingStatus").html(" ");
-    var page = $("#showEntry").val();
-    $('#SetUserList').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: parseInt(page) });
+    PaggingTemplate(result.TotalPages, result.CurrentPage);
+}
+
+var statusPage = 1;
+function GetPageData(pageNumber) {
+
+    statusPage = pageNumber;
+    FilterUser(0, pageNumber);
+
 }
 
 function getRoleName(UserName) {
@@ -76,7 +83,7 @@ var SaveUser = function (UserName) {
 }
 
 // Filter User
-function FilterUser(selectSortable) {
+function FilterUser(selectSortable, pageNumber) {
 
     var sortable1;
     var pathImg = document.getElementById("idSortable1").src;
@@ -91,12 +98,14 @@ function FilterUser(selectSortable) {
         type: "POST",
         url: "/Admin/GetUserList",
         data: {
-            order: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined
+            order: (sortable1 != null && selectSortable == 1) ? sortable1 : undefined,
+            pageNumber: pageNumber,
+            pageSize: $("#showEntry").val()
         },
         headers: { "__RequestVerificationToken": token },
         success: function (result) {
             $("#SetUserList").empty();
-            $("#myPager").empty();
+            $("#paged").empty();
             DataBind(result);
             // resetto l'immagine dei filtri
             if (selectSortable == 0) {
@@ -118,6 +127,6 @@ function SortableUser() {
     else // se è ancora l'immagine predefinita
         document.getElementById("idSortable1").src = "/Images/Sortable/asc.png";
 
-    FilterUser(1);
+    FilterUser(1, statusPage);
 
 }

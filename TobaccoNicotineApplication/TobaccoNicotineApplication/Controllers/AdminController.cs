@@ -27,22 +27,22 @@ namespace TobaccoNicotineApplication.Controllers
 
         //
         // GET: /Admin/GetUserList
-        public JsonResult GetUserList(string order)
+        public JsonResult GetUserList(string order, int pageNumber, int pageSize)
         {
             using (ApplicationDbContext db = new ApplicationDbContext())
             {
                 db.Configuration.LazyLoadingEnabled = false;
 
                 // non posso modificarmi il privilegio
-                IQueryable<ApplicationUser> users = db.Users.Where(x => x.UserName != User.Identity.Name);
+                // non metto nella lista il mio username
+                IQueryable<ApplicationUser> users = db.Users.Where(x => x.UserName != User.Identity.Name && x.UserName != "dariodenardi").OrderBy(x => x.Id);
 
                 if (order == "desc")
-                    users = db.Users.OrderByDescending(x => x.UserName);
+                    users = users.OrderByDescending(x => x.UserName);
                 else if (order == "asc")
-                    users = db.Users.OrderBy(x => x.UserName);
-
-                // non metto nella lista il mio username
-                return Json(users.Where(x => x.UserName != "dariodenardi").Select(x => x.UserName).ToList(), JsonRequestBehavior.AllowGet);
+                    users = users.OrderBy(x => x.UserName);
+                
+                return Json(Pagination.Pagination.PagedResult(users.Select(x => x.UserName), pageNumber, pageSize), JsonRequestBehavior.AllowGet);
             }
         }
 

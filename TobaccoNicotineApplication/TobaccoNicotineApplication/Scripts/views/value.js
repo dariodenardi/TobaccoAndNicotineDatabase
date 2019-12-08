@@ -188,7 +188,7 @@ function getRepositoryNameArray() {
         url: "/Source/GetListRepositoryName",
         success: function (data) {
             for (var i = 0, n = data.length; i < n; i++) {
-                RepositoryNameArray.push(data[i].Repository);
+                RepositoryNameArray.push(data[i]);
             }
         }
     })
@@ -1386,7 +1386,7 @@ function Validation(data, dataUs, public, internal, sourceName, link, repository
         }
 
         if (dateDownload != "null" || dateDownload != "") {
-            if (dateDownload.length > 10 && (dateDownload != null || dateDownload != "")) {
+            if (dateDownload.length > 50 && (dateDownload != null || dateDownload != "")) {
                 swal("Attention!", dateDownload + ": check length!", "error");
                 return false;
             }
