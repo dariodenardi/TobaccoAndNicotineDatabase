@@ -1361,7 +1361,7 @@ function Validation(data, dataUs, public, internal, sourceName, link, repository
     }
 
     // repository?
-    if (RepositoryNameArray.includes((repository == "null" ? null : repository)) == false) {
+    if (RepositoryNameArray.includes(repository) == false) {
         swal("Attention!", repository + ": check file name!", "error");
         return false;
     }
@@ -1386,7 +1386,7 @@ function Validation(data, dataUs, public, internal, sourceName, link, repository
         }
 
         if (dateDownload != "null" || dateDownload != "") {
-            if (dateDownload.length > 50 && (dateDownload != null || dateDownload != "")) {
+            if (dateDownload.length > dateDownloadMax) {
                 swal("Attention!", dateDownload + ": check length!", "error");
                 return false;
             }

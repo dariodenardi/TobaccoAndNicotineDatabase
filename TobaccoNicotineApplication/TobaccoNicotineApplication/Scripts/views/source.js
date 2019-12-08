@@ -877,19 +877,21 @@ function pasteFromClipboard(numeroCheck) {
 function Validation(link, repository, dateDownload, username) {
 
     // repository?
-    if (RepositoryNameArray.includes((repository == "null" ? null : repository)) == false) {
+    if (RepositoryNameArray.includes(repository) == false) {
         swal("Attention!", repository + ": check file name!", "error");
         return false;
     }
 
     // lunghezza della stringa
-    if (username.length < usernameMin || username.length > usernameMax) {
-        swal("Attention!", username + ": check length!", "error");
-        return false;
+    if (username != "null" || username != "") {
+        if (username.length < usernameMin || username.length > usernameMax) {
+            swal("Attention!", username + ": check length!", "error");
+            return false;
+        }
     }
 
     if (dateDownload != "null" || dateDownload != "") {
-        if (dateDownload.length > 50 && (dateDownload != null || dateDownload != "")) {
+        if (dateDownload.length > dateDownloadMax) {
             swal("Attention!", dateDownload + ": check length!", "error");
             return false;
         }
