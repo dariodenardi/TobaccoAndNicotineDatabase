@@ -870,7 +870,7 @@ namespace TobaccoNicotineApplication.Controllers
                 string username;
                 bool varLc;
                 string download_source;
-                string reference_data_repository;
+                //string reference_data_repository;
 
                 try
                 {
@@ -921,7 +921,7 @@ namespace TobaccoNicotineApplication.Controllers
                                 download_source = row[20].ToString();
                             else
                                 download_source = null;
-                            reference_data_repository = (!String.IsNullOrEmpty(row[27].ToString())) ? row[27].ToString() : null;
+                            //reference_data_repository = (!String.IsNullOrEmpty(row[27].ToString())) ? row[27].ToString() : null;
 
                             oldValue = db.Values.Where(x => x.NomismaCode == nomismaCode).FirstOrDefault();
 
@@ -958,7 +958,7 @@ namespace TobaccoNicotineApplication.Controllers
                                                 newSource.Time = DateTime.Now.TimeOfDay;
                                                 newSource.Link = link;
                                                 newSource.DateDownload = download_source;
-                                                newSource.Repository = reference_data_repository;
+                                                //newSource.Repository = reference_data_repository;
                                                 newSource.Username = username;
 
                                                 oldValue.Sources.Add(newSource);
@@ -998,7 +998,7 @@ namespace TobaccoNicotineApplication.Controllers
                                                 newSource.Time = DateTime.Now.TimeOfDay;
                                                 newSource.Link = link;
                                                 newSource.DateDownload = download_source;
-                                                newSource.Repository = reference_data_repository;
+                                                //newSource.Repository = reference_data_repository;
                                                 newSource.Username = username;
 
                                                 newValue.Sources.Add(newSource);
@@ -1028,7 +1028,7 @@ namespace TobaccoNicotineApplication.Controllers
                                                 newSource.Time = DateTime.Now.TimeOfDay;
                                                 newSource.Link = link;
                                                 newSource.DateDownload = download_source;
-                                                newSource.Repository = reference_data_repository;
+                                                //newSource.Repository = reference_data_repository;
                                                 newSource.Username = username;
 
                                                 oldValue.Sources.Add(newSource);
@@ -1062,7 +1062,7 @@ namespace TobaccoNicotineApplication.Controllers
                                     newSource.Time = DateTime.Now.TimeOfDay;
                                     newSource.Link = link;
                                     newSource.DateDownload = download_source;
-                                    newSource.Repository = reference_data_repository;
+                                    //newSource.Repository = reference_data_repository;
                                     newSource.Username = username;
 
                                     newValue.Sources.Add(newSource);
