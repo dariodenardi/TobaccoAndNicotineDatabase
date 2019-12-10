@@ -48,8 +48,8 @@
             <!-- LOGO -->
             <div class="topbar-left">
                 <div class="text-center">
-                    <a href="/Home/Index" class="logo"><span>Tobacco</span>Database</a>
-                    <a href="/Home/Index" class="logo-sm"><span>TD</span></a>
+                    <a href="~/Home/Index" class="logo"><span>Tobacco</span>Database</a>
+                    <a href="~/Home/Index" class="logo-sm"><span>TD</span></a>
                 </div>
             </div>
             <!-- Button mobile view to collapse sidebar menu -->
@@ -79,7 +79,7 @@
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="/Manage/Index"> Profile</a></li>
+                                    <li><a href="~/Manage/Index"> Profile</a></li>
                                     <li class="divider"></li>
                                     <li><a href="javascript:document.getElementById('logoutForm').submit()"> Logout</a></li>
                                 </ul>
@@ -109,27 +109,27 @@
                 <div id="sidebar-menu">
                     <ul>
                         <li>
-                            <a href="/Home/Index" class="waves-effect"><i class="mdi mdi-home"></i><span> Dashboard </span></a>
+                            <a href="~/Home/Index" class="waves-effect"><i class="mdi mdi-home"></i><span> Dashboard </span></a>
                         </li>
 
                         <li class="has_sub">
                             <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-database"></i> <span> Views </span> <span class="pull-right"><i class="mdi mdi-plus"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="/Country/Index"> Countries </a></li>
-                                <li><a href="/Currency/Index"> Currencies </a></li>
-                                <li><a href="/Source/Index"> Sources </a></li>
-                                <li><a href="/Value/Index"> Values </a></li>
-                                <li><a href="/Variable/Index"> Variables </a></li>
+                                <li><a href="~/Country/Index"> Countries </a></li>
+                                <li><a href="~/Currency/Index"> Currencies </a></li>
+                                <li><a href="~/Source/Index"> Sources </a></li>
+                                <li><a href="~/Value/Index"> Values </a></li>
+                                <li><a href="~/Variable/Index"> Variables </a></li>
                             </ul>
                         </li>
 
                         <li class="has_sub">
                             <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-layers"></i><span> Excel </span><span class="pull-right"><i class="mdi mdi-plus"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="/Excel/Export"> Export </a></li>
+                                <li><a href="~/Excel/Export"> Export </a></li>
                                 @if (User.IsInRole("Admin"))
                                 {
-                                    <li><a href="/Excel/Import"> Import </a></li>
+                                    <li><a href="~/Excel/Import"> Import </a></li>
                                 }
                             </ul>
                         </li>
@@ -140,7 +140,7 @@
                             <li class="has_sub">
                                 <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-settings"></i><span> Settings </span><span class="pull-right"><i class="mdi mdi-plus"></i></span></a>
                                 <ul class="list-unstyled">
-                                    <li><a href="/Admin/Grant"> Grant </a></li>
+                                    <li><a href="~/Admin/Grant"> Grant </a></li>
                                 </ul>
                             </li>
                         }
@@ -149,16 +149,16 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <li>
-                                <a href="/Log/Index" class="waves-effect"><i class="mdi mdi-chart-bar"></i><span> Log </span></a>
+                                <a href="~/Log/Index" class="waves-effect"><i class="mdi mdi-chart-bar"></i><span> Log </span></a>
                             </li>
                         }
 
                         <li>
-                            <a href="/Home/About" class="waves-effect"><i class="mdi mdi-earth"></i><span> About </span></a>
+                            <a href="~/Home/About" class="waves-effect"><i class="mdi mdi-earth"></i><span> About </span></a>
                         </li>
 
                         <li>
-                            <a href="/Home/Contact" class="waves-effect"><i class="mdi mdi-deskphone"></i><span> Contact </span></a>
+                            <a href="~/Home/Contact" class="waves-effect"><i class="mdi mdi-deskphone"></i><span> Contact </span></a>
                         </li>
 
                         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
